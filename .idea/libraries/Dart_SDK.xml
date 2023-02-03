@@ -1,0 +1,27 @@
+<component name="libraryTable">
+  <library name="Dart SDK">
+    <CLASSES>
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/async" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/cli" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/collection" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/convert" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/core" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/developer" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/ffi" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/html" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/indexed_db" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/io" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/isolate" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/js" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/js_util" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/math" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/mirrors" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/svg" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/typed_data" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/web_audio" />
+      <root url="file://$USER_HOME$/scoop/apps/dart-dev/3.0.0-179.0.dev/lib/web_gl" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
