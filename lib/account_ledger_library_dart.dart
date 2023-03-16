@@ -14,7 +14,7 @@ Future<String> runAccountLedgerGistOperation() async {
       .stdout;
 }
 
-Future<AccountLedgerGistModal> processAccountLedger() async {
+Future<AccountLedgerGistModal> processAccountLedgerGist() async {
   AccountLedgerGistModal accountLedgerGist = AccountLedgerGistModal.fromJson(
       jsonDecode(await runAccountLedgerGistOperation()));
   accountLedgerGist.accountLedgerPages
