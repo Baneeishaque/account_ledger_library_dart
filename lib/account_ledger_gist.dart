@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:account_ledger_library_dart/account_ledger_verification_result_modal.dart';
+import 'package:account_ledger_library_dart/account_ledger_gist_verification_result_modal.dart';
 
 import 'account_ledger_gist_model.dart';
 
@@ -33,10 +33,10 @@ Future<AccountLedgerGistModal> processAccountLedgerGist() async {
   return accountLedgerGist;
 }
 
-AccountLedgerVerificationResultModal verifyAccountLedgerGist(
+AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
     AccountLedgerGistModal accountLedgerGist) {
-  AccountLedgerVerificationResultModal accountLedgerVerificationResult =
-      AccountLedgerVerificationResultModal(status: true);
+  AccountLedgerGistVerificationResultModal accountLedgerVerificationResult =
+      AccountLedgerGistVerificationResultModal(status: true);
   accountLedgerGist.accountLedgerPages
       ?.forEach((AccountLedgerPageModal accountLedgerPage) {
     accountLedgerPage.accountLedgerDatePages

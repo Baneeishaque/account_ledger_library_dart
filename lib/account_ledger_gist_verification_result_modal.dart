@@ -1,9 +1,9 @@
 import 'account_ledger_gist_model.dart';
 
-class AccountLedgerVerificationResultModal {
+class AccountLedgerGistVerificationResultModal {
   bool status;
   List<AccountLedgerPageModal>? failedAccountLedgerPages;
 
-  AccountLedgerVerificationResultModal(
+  AccountLedgerGistVerificationResultModal(
       {required this.status, this.failedAccountLedgerPages});
 }
