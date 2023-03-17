@@ -2,21 +2,21 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:account_ledger_library_dart/account_ledger_gist_verification_result_modal.dart';
+import 'package:account_ledger_library_dart/constants.dart';
 
 import 'account_ledger_gist_model.dart';
 
-Future<String> runAccountLedgerGistOperation() async {
-  return (await Process.run(
-    r"C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat",
+String runAccountLedgerGistOperation() {
+  return (Process.runSync(
+    accountLedgerCliExecutable,
     ["Gist"],
     workingDirectory: r"C:\Programs\Account-Ledger-Cli\bin",
-  ))
-      .stdout;
+  )).stdout;
 }
 
-Future<AccountLedgerGistModal> processAccountLedgerGist() async {
+AccountLedgerGistModal processAccountLedgerGist() {
   AccountLedgerGistModal accountLedgerGist = AccountLedgerGistModal.fromJson(
-      jsonDecode(await runAccountLedgerGistOperation()));
+      jsonDecode(runAccountLedgerGistOperation()));
   accountLedgerGist.accountLedgerPages
       ?.forEach((AccountLedgerPageModal accountLedgerPage) {
     accountLedgerPage.accountLedgerDatePages

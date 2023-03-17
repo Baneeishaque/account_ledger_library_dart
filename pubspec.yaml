@@ -7,7 +7,10 @@ environment:
   sdk: '>=3.0.0-322.0.dev <4.0.0'
 
 # Add regular dependencies here.
-dependencies:
+dependencies: 
+  integer: ^2.0.1
+  intl: ^0.18.0
+  quiver: ^3.2.1
 # path: ^1.8.0
 
 dev_dependencies:

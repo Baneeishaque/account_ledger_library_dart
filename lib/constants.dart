@@ -1,0 +1,1 @@
+String accountLedgerCliExecutable = r"C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat";
