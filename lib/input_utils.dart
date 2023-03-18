@@ -129,5 +129,5 @@ void handleInput(
 }
 
 void printInvalidInputMessage() {
-  printInvalidErrorMessage("Input Data");
+  printInvalidMessage("Input Data");
 }

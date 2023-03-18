@@ -2,7 +2,7 @@ import 'package:integer/integer.dart';
 
 import 'input_utils.dart';
 
-void printInvalidErrorMessage(String dataSpecification) {
+void printInvalidMessage(String dataSpecification) {
   print("Error : Please Enter Valid $dataSpecification...");
 }
 
@@ -36,7 +36,7 @@ u32 inputValidUnsignedInteger({required String dataSpecification}) {
       print("Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidErrorMessage(dataSpecification);
+      printInvalidMessage(dataSpecification);
     },
   );
 }
@@ -47,7 +47,7 @@ u32 inputValidUnsignedPositiveInteger({required String dataSpecification}) {
       print("Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidErrorMessage(dataSpecification);
+      printInvalidMessage(dataSpecification);
     },
   );
 }
@@ -58,7 +58,7 @@ String inputValidText({required String dataSpecification}) {
       print("Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidErrorMessage(dataSpecification);
+      printInvalidMessage(dataSpecification);
     },
   );
 }
@@ -69,7 +69,7 @@ double inputValidDouble({required String dataSpecification}) {
       print("Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidErrorMessage(dataSpecification);
+      printInvalidMessage(dataSpecification);
     },
   );
 }
