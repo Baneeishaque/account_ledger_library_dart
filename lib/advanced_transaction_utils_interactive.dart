@@ -1,4 +1,3 @@
-
 import 'package:account_ledger_library_dart/date_time_utils.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
@@ -60,7 +59,8 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
     ),
   );
 
-  Tuple2<String, String> insertNextTransactionResult = insertNextTransaction(
+  Tuple3<String, String, double> insertNextTransactionResult =
+      insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -73,6 +73,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
 
   insertNextTransactionResult = insertNextTransaction(
     userId,
@@ -85,6 +86,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
 
   insertNextTransaction(
     userId,
@@ -93,5 +95,52 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
     amount,
     party4accountId,
     party1accountId,
+  );
+}
+
+//1 -> 2, 2 -> 3, 3 -> 4
+void insertOneTwoTwoThreeThreeFourTransaction(
+    u32 userId,
+    String eventDateTime,
+    String particulars,
+    double amount,
+    u32 party1accountId,
+    u32 party2accountId,
+    u32 party3accountId,
+    u32 party4accountId) {
+  insertTransaction(
+    TransactionModal(
+      userId,
+      eventDateTime,
+      particulars,
+      amount,
+      party1accountId,
+      party2accountId,
+    ),
+  );
+
+  Tuple3<String, String, double> insertNextTransactionResult =
+      insertNextTransaction(
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party3accountId,
+    party4accountId,
   );
 }

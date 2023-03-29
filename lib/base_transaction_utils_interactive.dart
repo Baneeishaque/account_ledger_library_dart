@@ -1,4 +1,3 @@
-
 import 'package:account_ledger_library_dart/date_time_utils.dart';
 import 'package:account_ledger_library_dart/input_utils.dart';
 import 'package:account_ledger_library_dart/string_utils.dart';
@@ -9,7 +8,7 @@ import 'input_utils_interactive.dart';
 import 'transaction_modal.dart';
 import 'transaction_utils_api_interactive.dart';
 
-Tuple2<String, String> insertNextTransaction(
+Tuple3<String, String, double> insertNextTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
@@ -17,28 +16,18 @@ Tuple2<String, String> insertNextTransaction(
   u32 fromAccountId,
   u32 toAccountId,
 ) {
-  insertTransactionWithNewParticulars(
+  insertTransactionWithAlteredInputs(
     particulars,
-    (newParticulars) {
+    amount,
+    (newParticulars, newAmount) {
       particulars = newParticulars;
+      amount = newAmount;
       insertTransaction(
         TransactionModal(
           userId,
           eventDateTime,
           newParticulars,
-          amount,
-          fromAccountId,
-          toAccountId,
-        ),
-      );
-    },
-    () {
-      insertTransaction(
-        TransactionModal(
-          userId,
-          eventDateTime,
-          particulars,
-          amount,
+          newAmount,
           fromAccountId,
           toAccountId,
         ),
@@ -50,7 +39,7 @@ Tuple2<String, String> insertNextTransaction(
     normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
   );
 
-  return Tuple2(eventDateTime, particulars);
+  return Tuple3(eventDateTime, particulars, amount);
 }
 
 void insertTransaction(
@@ -108,7 +97,7 @@ void insertSplitTransaction(
       'E': () {
         double splitAmount = amount / noOfSplits.value;
         for (int i = 1; i <= noOfSplits.value; i++) {
-          Tuple2<String, String> insertTransactionResult =
+          Tuple3<String, String, double> insertTransactionResult =
               insertNextTransaction(
             userId,
             eventDateTime,
@@ -119,6 +108,7 @@ void insertSplitTransaction(
           );
           eventDateTime = insertTransactionResult.item1;
           particulars = insertTransactionResult.item2;
+          amount = insertTransactionResult.item3;
         }
       },
       'C': () {
@@ -128,10 +118,10 @@ void insertSplitTransaction(
   );
 }
 
-void insertTransactionWithNewParticulars(
+void insertTransactionWithAlteredInputs(
   String particulars,
-  void Function(String newParticulars) actionsWithNewParticulars,
-  void Function() actionsWithOldParticulars,
+  double amount,
+  void Function(String newParticulars, double newAmount) insertFunction,
 ) {
   String newParticulars = particulars;
   handleInput(
@@ -153,8 +143,11 @@ void insertTransactionWithNewParticulars(
             invalidInputActions: printInvalidInputMessage,
             actionsWithKeys: {
               'C': () {
-                insertTransactionWithNewParticulars(particulars,
-                    actionsWithNewParticulars, actionsWithOldParticulars);
+                insertTransactionWithAlteredInputs(
+                  particulars,
+                  amount,
+                  insertFunction,
+                );
               },
               'R': () {
                 newParticulars = reverseText(particulars);
@@ -166,14 +159,25 @@ void insertTransactionWithNewParticulars(
                   invalidInputActions: printInvalidInputMessage,
                   actionsWithKeys: {
                     'Y': () {
-                      actionsWithNewParticulars(newParticulars);
+                      getAlteredAmount(
+                        amount,
+                        insertFunction,
+                        newParticulars,
+                      );
                     },
                     'N': () {
-                      insertTransactionWithNewParticulars(particulars,
-                          actionsWithNewParticulars, actionsWithOldParticulars);
+                      insertTransactionWithAlteredInputs(
+                        particulars,
+                        amount,
+                        insertFunction,
+                      );
                     },
                     '': () {
-                      actionsWithNewParticulars(newParticulars);
+                      getAlteredAmount(
+                        amount,
+                        insertFunction,
+                        newParticulars,
+                      );
                     },
                   },
                 );
@@ -191,14 +195,25 @@ void insertTransactionWithNewParticulars(
                   invalidInputActions: printInvalidInputMessage,
                   actionsWithKeys: {
                     'Y': () {
-                      actionsWithNewParticulars(newParticulars);
+                      getAlteredAmount(
+                        amount,
+                        insertFunction,
+                        newParticulars,
+                      );
                     },
                     'N': () {
-                      insertTransactionWithNewParticulars(particulars,
-                          actionsWithNewParticulars, actionsWithOldParticulars);
+                      insertTransactionWithAlteredInputs(
+                        particulars,
+                        amount,
+                        insertFunction,
+                      );
                     },
                     '': () {
-                      actionsWithNewParticulars(newParticulars);
+                      getAlteredAmount(
+                        amount,
+                        insertFunction,
+                        newParticulars,
+                      );
                     },
                   },
                 );
@@ -207,10 +222,65 @@ void insertTransactionWithNewParticulars(
             });
       },
       'N': () {
-        actionsWithOldParticulars.call();
+        getAlteredAmount(
+          amount,
+          insertFunction,
+          particulars,
+        );
       },
       '': () {
-        actionsWithOldParticulars.call();
+        getAlteredAmount(
+          amount,
+          insertFunction,
+          particulars,
+        );
+      },
+    },
+  );
+}
+
+void getAlteredAmount(
+  double amount,
+  void Function(String newParticulars, double newAmount) insertFunction,
+  String particulars,
+) {
+  handleInput(
+    displayPrompt: () {
+      print("Do You Want to Update Current Amount [$amount], Y/N(Default) : ");
+    },
+    invalidInputActions: printInvalidInputMessage,
+    actionsWithKeys: {
+      'Y': () {
+        double newAmount =
+            inputValidDouble(dataSpecification: "New Amount of Transaction");
+        handleInput(
+          displayPrompt: () {
+            print(
+                "The Modified Amount : $newAmount, Is It OK, Y(Default)/N : ");
+          },
+          invalidInputActions: printInvalidInputMessage,
+          actionsWithKeys: {
+            'Y': () {
+              insertFunction(particulars, newAmount);
+            },
+            'N': () {
+              getAlteredAmount(
+                amount,
+                insertFunction,
+                particulars,
+              );
+            },
+            '': () {
+              insertFunction(particulars, newAmount);
+            },
+          },
+        );
+      },
+      'N': () {
+        insertFunction(particulars, amount);
+      },
+      '': () {
+        insertFunction(particulars, amount);
       },
     },
   );
