@@ -1,63 +1,34 @@
-import 'dart:io';
 
 import 'package:account_ledger_library_dart/date_time_utils.dart';
 import 'package:account_ledger_library_dart/input_utils.dart';
 import 'package:account_ledger_library_dart/string_utils.dart';
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
-import 'constants.dart';
 import 'input_utils_interactive.dart';
 import 'transaction_modal.dart';
+import 'transaction_utils_api_interactive.dart';
 
-void insertThreePartyTransaction(
+Tuple2<String, String> insertNextTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
   double amount,
-  u32 party1accountId,
-  u32 party2accountId,
-  u32 party3accountId,
+  u32 fromAccountId,
+  u32 toAccountId,
 ) {
-  insertTransaction(
-    TransactionModal(
-      userId,
-      eventDateTime,
-      particulars,
-      amount,
-      party1accountId,
-      party2accountId,
-    ),
-  );
-  insertSecondTransaction(
-    userId,
-    normalDateTimeFormat.format(
-      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-    ),
-    particulars,
-    amount,
-    party3accountId,
-    party1accountId,
-  );
-}
-
-void insertSecondTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party3accountId,
-    u32 party1accountId) {
   insertTransactionWithNewParticulars(
     particulars,
     (newParticulars) {
+      particulars = newParticulars;
       insertTransaction(
         TransactionModal(
           userId,
           eventDateTime,
           newParticulars,
           amount,
-          party3accountId,
-          party1accountId,
+          fromAccountId,
+          toAccountId,
         ),
       );
     },
@@ -68,12 +39,18 @@ void insertSecondTransaction(
           eventDateTime,
           particulars,
           amount,
-          party3accountId,
-          party1accountId,
+          fromAccountId,
+          toAccountId,
         ),
       );
     },
   );
+
+  eventDateTime = normalDateTimeFormat.format(
+    normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+  );
+
+  return Tuple2(eventDateTime, particulars);
 }
 
 void insertTransaction(
@@ -88,7 +65,13 @@ void insertTransaction(
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
       'S': () {
-        insertSplitTransaction(transaction);
+        insertSplitTransaction(
+            transaction.userId,
+            transaction.eventDateTime,
+            transaction.particulars,
+            transaction.amount,
+            transaction.fromAccountId,
+            transaction.toAccountId);
       },
       '': () {
         insertTransactionViaApi(transaction);
@@ -97,61 +80,45 @@ void insertTransaction(
   );
 }
 
-void insertTransactionViaApi(TransactionModal transaction){
-  print(transaction.toString());
-  print(runAccountLedgerInsertTransactionOperation(transaction));
-}
-
-String runAccountLedgerInsertTransactionOperation(
-    TransactionModal transaction) {
-  return (Process.runSync(
-    accountLedgerCliExecutable,
-    [
-      "InsertTransaction",
-      transaction.userId.toString(),
-      transaction.eventDateTime,
-      transaction.particulars,
-      transaction.amount.toString(),
-      transaction.fromAccountId.toString(),
-      transaction.toAccountId.toString()
-    ],
-  ))
-      .stdout;
-}
-
 void insertSplitTransaction(
-  TransactionModal transaction,
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 fromAccountId,
+  u32 toAccountId,
 ) {
   u32 noOfSplits =
       inputValidUnsignedPositiveInteger(dataSpecification: "No. of Splits");
   handleInput(
     displayPrompt: () {
-      print("Going to add $transaction as $noOfSplits Splits, "
+      print("Going to add ${TransactionModal(
+        userId,
+        eventDateTime,
+        particulars,
+        amount,
+        fromAccountId,
+        toAccountId,
+      )} as $noOfSplits Splits, "
           "E for Equal Splits, "
           "C for Custom Splits : ");
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
       'E': () {
-        double splitAmount = transaction.amount / noOfSplits.value;
-        String newParticulars = transaction.particulars;
-        String newEventDateTime = transaction.eventDateTime;
+        double splitAmount = amount / noOfSplits.value;
         for (int i = 1; i <= noOfSplits.value; i++) {
-          newParticulars = insertSplitTransactionWithNewParticulars(
-            TransactionModal(
-                transaction.userId,
-                newEventDateTime,
-                newParticulars,
-                transaction.amount,
-                transaction.fromAccountId,
-                transaction.toAccountId),
+          Tuple2<String, String> insertTransactionResult =
+              insertNextTransaction(
+            userId,
+            eventDateTime,
+            particulars,
             splitAmount,
+            fromAccountId,
+            toAccountId,
           );
-          newEventDateTime = normalDateTimeFormat.format(
-            normalDateTimeFormat
-                .parse(newEventDateTime)
-                .add(Duration(minutes: 5)),
-          );
+          eventDateTime = insertTransactionResult.item1;
+          particulars = insertTransactionResult.item2;
         }
       },
       'C': () {
@@ -159,40 +126,6 @@ void insertSplitTransaction(
       },
     },
   );
-}
-
-String insertSplitTransactionWithNewParticulars(
-    TransactionModal transaction, double splitAmount) {
-  String localNewParticulars = transaction.particulars;
-  insertTransactionWithNewParticulars(
-    transaction.particulars,
-    (newParticulars) {
-      localNewParticulars = newParticulars;
-      insertTransactionViaApi(
-        TransactionModal(
-          transaction.userId,
-          transaction.eventDateTime,
-          newParticulars,
-          splitAmount,
-          transaction.fromAccountId,
-          transaction.toAccountId,
-        ),
-      );
-    },
-    () {
-      insertTransactionViaApi(
-        TransactionModal(
-          transaction.userId,
-          transaction.eventDateTime,
-          transaction.particulars,
-          splitAmount,
-          transaction.fromAccountId,
-          transaction.toAccountId,
-        ),
-      );
-    },
-  );
-  return localNewParticulars;
 }
 
 void insertTransactionWithNewParticulars(
