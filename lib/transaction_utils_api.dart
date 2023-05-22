@@ -137,6 +137,49 @@ Future<AccountLedgerApiResultMessageModal>
   }
 }
 
+//1 -> 2, 2 -> 3, 3 -> 4
+Future<AccountLedgerApiResultMessageModal>
+    runAccountLedgerInsertOneTwoTwoThreeThreeFourTransactionOperationAsync(
+  TransactionModal transaction,
+  u32 party3AccountId,
+  u32 party4AccountId,
+  String secondParticulars,
+  double secondAmount,
+  String thirdParticulars,
+  double thirdAmount,
+) async {
+  AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
+      await runAccountLedgerInsertTransactionOperationAsync(transaction);
+  if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
+    accountLedgerApiResultMessage =
+        await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
+            transaction.userId,
+            accountLedgerApiResultMessage.newDateTime!,
+            secondParticulars,
+            secondAmount,
+            transaction.toAccountId,
+            party3AccountId));
+    if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status ==
+        0) {
+      accountLedgerApiResultMessage =
+          await runAccountLedgerInsertTransactionOperationAsync(
+              TransactionModal(
+                  transaction.userId,
+                  accountLedgerApiResultMessage.newDateTime!,
+                  thirdParticulars,
+                  thirdAmount,
+                  party3AccountId,
+                  party4AccountId));
+
+      return accountLedgerApiResultMessage;
+    } else {
+      return accountLedgerApiResultMessage;
+    }
+  } else {
+    return accountLedgerApiResultMessage;
+  }
+}
+
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertOneTwoTwoThreeThreeFourFourOneTransactionOperationAsync(
