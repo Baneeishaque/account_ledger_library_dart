@@ -3,3 +3,4 @@ String accountLedgerCliExecutable =
 String oneTwoThreeOneText = "1 -> 2, 3 -> 1";
 String oneTwoTwoThreeThreeFourFourOneText = "1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1";
 String oneTwoTwoThreeThreeFourText = "1 -> 2, 2 -> 3, 3 -> 4";
+String oneTwoTwoThreeText = "1 -> 2, 2 -> 3";

@@ -38,6 +38,38 @@ void insertOneTwoThreeOneTransaction(
   );
 }
 
+void insertOneTwoTwoThreeTransaction(
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+) {
+  insertTransaction(
+    TransactionModal(
+      userId,
+      eventDateTime,
+      particulars,
+      amount,
+      party1accountId,
+      party2accountId,
+    ),
+  );
+
+  insertNextTransaction(
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
+}
+
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
 void insertOneTwoTwoThreeThreeFourFourOneTransaction(
     u32 userId,

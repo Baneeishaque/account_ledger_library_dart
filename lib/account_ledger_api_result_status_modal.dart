@@ -1,7 +1,7 @@
 class AccountLedgerApiResultStatusModal {
   int? status;
 
-  AccountLedgerApiResultStatusModal({required this.status});
+  AccountLedgerApiResultStatusModal({this.status});
 
   AccountLedgerApiResultStatusModal.fromJson(Map<String, dynamic> json) {
     status = json['status'];

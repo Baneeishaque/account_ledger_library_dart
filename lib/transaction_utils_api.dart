@@ -23,7 +23,7 @@ String runAccountLedgerInsertTransactionOperation(
       transaction.fromAccountId.toString(),
       transaction.toAccountId.toString()
     ],
-    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\19.0.2"},
+    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
   )).stdout;
 }
 
