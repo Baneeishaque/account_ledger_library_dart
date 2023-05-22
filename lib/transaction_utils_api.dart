@@ -9,6 +9,7 @@ import 'constants.dart';
 import 'date_time_utils.dart';
 import 'transaction_modal.dart';
 
+//1->2
 String runAccountLedgerInsertTransactionOperation(
   TransactionModal transaction,
 ) {
@@ -27,6 +28,7 @@ String runAccountLedgerInsertTransactionOperation(
   )).stdout;
 }
 
+//1->2
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertTransactionOperationAsync(
   TransactionModal transaction,
@@ -61,6 +63,7 @@ Future<AccountLedgerApiResultMessageModal>
   }
 }
 
+//1->2, 2->1
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertTwoWayTransactionOperationAsync(
   TransactionModal transaction,
@@ -84,6 +87,7 @@ Future<AccountLedgerApiResultMessageModal>
   }
 }
 
+//1->2, 3->1
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertOneTwoThreeOneTransactionOperationAsync(
   TransactionModal transaction,
@@ -108,9 +112,10 @@ Future<AccountLedgerApiResultMessageModal>
   }
 }
 
+//1->2, 2->3
 Future<AccountLedgerApiResultMessageModal>
-runAccountLedgerInsertOneTwoTwoThreeTransactionOperationAsync(
-    TransactionModal transaction,
+    runAccountLedgerInsertOneTwoTwoThreeTransactionOperationAsync(
+  TransactionModal transaction,
     u32 party3AccountId,
     String secondParticulars,
     double secondAmount,
