@@ -116,22 +116,80 @@ Future<AccountLedgerApiResultMessageModal>
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertOneTwoTwoThreeTransactionOperationAsync(
   TransactionModal transaction,
-    u32 party3AccountId,
-    String secondParticulars,
-    double secondAmount,
-    ) async {
+  u32 party3AccountId,
+  String secondParticulars,
+  double secondAmount,
+) async {
   AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
-  await runAccountLedgerInsertTransactionOperationAsync(transaction);
+      await runAccountLedgerInsertTransactionOperationAsync(transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
     accountLedgerApiResultMessage =
-    await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
-        transaction.userId,
-        accountLedgerApiResultMessage.newDateTime!,
-        secondParticulars,
-        secondAmount,
-        transaction.toAccountId,
-        party3AccountId));
+        await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
+            transaction.userId,
+            accountLedgerApiResultMessage.newDateTime!,
+            secondParticulars,
+            secondAmount,
+            transaction.toAccountId,
+            party3AccountId));
     return accountLedgerApiResultMessage;
+  } else {
+    return accountLedgerApiResultMessage;
+  }
+}
+
+//1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
+Future<AccountLedgerApiResultMessageModal>
+    runAccountLedgerInsertOneTwoTwoThreeThreeFourFourOneTransactionOperationAsync(
+  TransactionModal transaction,
+  u32 party3AccountId,
+  u32 party4AccountId,
+  String secondParticulars,
+  double secondAmount,
+  String thirdParticulars,
+  double thirdAmount,
+  String fourthParticulars,
+  double fourthAmount,
+) async {
+  AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
+      await runAccountLedgerInsertTransactionOperationAsync(transaction);
+  if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
+    accountLedgerApiResultMessage =
+        await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
+            transaction.userId,
+            accountLedgerApiResultMessage.newDateTime!,
+            secondParticulars,
+            secondAmount,
+            transaction.toAccountId,
+            party3AccountId));
+    if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status ==
+        0) {
+      accountLedgerApiResultMessage =
+          await runAccountLedgerInsertTransactionOperationAsync(
+              TransactionModal(
+                  transaction.userId,
+                  accountLedgerApiResultMessage.newDateTime!,
+                  thirdParticulars,
+                  thirdAmount,
+                  party3AccountId,
+                  party4AccountId));
+      if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status ==
+          0) {
+        accountLedgerApiResultMessage =
+            await runAccountLedgerInsertTransactionOperationAsync(
+                TransactionModal(
+                    transaction.userId,
+                    accountLedgerApiResultMessage.newDateTime!,
+                    fourthParticulars,
+                    fourthAmount,
+                    party4AccountId,
+                    transaction.fromAccountId));
+        return accountLedgerApiResultMessage;
+      } else {
+        return accountLedgerApiResultMessage;
+      }
+    } else {
+      return accountLedgerApiResultMessage;
+    }
   } else {
     return accountLedgerApiResultMessage;
   }
