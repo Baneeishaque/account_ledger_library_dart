@@ -107,3 +107,27 @@ Future<AccountLedgerApiResultMessageModal>
     return accountLedgerApiResultMessage;
   }
 }
+
+Future<AccountLedgerApiResultMessageModal>
+runAccountLedgerInsertOneTwoTwoThreeTransactionOperationAsync(
+    TransactionModal transaction,
+    u32 party3AccountId,
+    String secondParticulars,
+    double secondAmount,
+    ) async {
+  AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
+  await runAccountLedgerInsertTransactionOperationAsync(transaction);
+  if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
+    accountLedgerApiResultMessage =
+    await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
+        transaction.userId,
+        accountLedgerApiResultMessage.newDateTime!,
+        secondParticulars,
+        secondAmount,
+        transaction.toAccountId,
+        party3AccountId));
+    return accountLedgerApiResultMessage;
+  } else {
+    return accountLedgerApiResultMessage;
+  }
+}
