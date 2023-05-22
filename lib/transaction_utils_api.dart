@@ -1,8 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:account_ledger_library_dart/account_ledger_api_result_message_modal.dart';
+import 'package:integer/integer.dart';
+
 import 'account_ledger_api_result_status_modal.dart';
 import 'constants.dart';
+import 'date_time_utils.dart';
 import 'transaction_modal.dart';
 
 String runAccountLedgerInsertTransactionOperation(
@@ -23,10 +27,12 @@ String runAccountLedgerInsertTransactionOperation(
   )).stdout;
 }
 
-Future<String> runAccountLedgerInsertTransactionOperationAsync(
+Future<AccountLedgerApiResultMessageModal>
+    runAccountLedgerInsertTransactionOperationAsync(
   TransactionModal transaction,
 ) async {
-  return (await Process.run(
+  AccountLedgerApiResultStatusModal accountLedgerApiResultStatus =
+      jsonDecode((await Process.run(
     accountLedgerCliExecutable,
     [
       "InsertTransaction",
@@ -37,29 +43,67 @@ Future<String> runAccountLedgerInsertTransactionOperationAsync(
       transaction.fromAccountId.toString(),
       transaction.toAccountId.toString()
     ],
-    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\19.0.2"},
+    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
   ))
-      .stdout;
+          .stdout);
+
+  if (accountLedgerApiResultStatus.status == 0) {
+    return AccountLedgerApiResultMessageModal(
+        normalDateTimeFormat.format(
+          normalDateTimeFormat
+              .parse(transaction.eventDateTime)
+              .add(Duration(minutes: 5)),
+        ),
+        accountLedgerApiResultStatus = accountLedgerApiResultStatus);
+  } else {
+    return AccountLedgerApiResultMessageModal(transaction.eventDateTime,
+        accountLedgerApiResultStatus = accountLedgerApiResultStatus);
+  }
 }
 
-Future<String> runAccountLedgerTwoWayInsertTransactionOperation(
+Future<AccountLedgerApiResultMessageModal>
+    runAccountLedgerInsertTwoWayTransactionOperationAsync(
   TransactionModal transaction,
   String secondParticulars,
   double secondAmount,
 ) async {
-  AccountLedgerApiResultStatusModal accountLedgerApiResultStatus = jsonDecode(
-      await runAccountLedgerInsertTransactionOperationAsync(transaction));
-  if (accountLedgerApiResultStatus.status == 0) {
-    accountLedgerApiResultStatus = jsonDecode(
+  AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
+      await runAccountLedgerInsertTransactionOperationAsync(transaction);
+  if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
+    accountLedgerApiResultMessage =
         await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
             transaction.userId,
-            transaction.eventDateTime,
+            accountLedgerApiResultMessage.newDateTime!,
             secondParticulars,
             secondAmount,
             transaction.toAccountId,
-            transaction.fromAccountId)));
-    return accountLedgerApiResultStatus.toJson().toString();
+            transaction.fromAccountId));
+    return accountLedgerApiResultMessage;
   } else {
-    return accountLedgerApiResultStatus.toJson().toString();
+    return accountLedgerApiResultMessage;
+  }
+}
+
+Future<AccountLedgerApiResultMessageModal>
+runAccountLedgerInsertOneTwoThreeOneTransactionOperationAsync(
+    TransactionModal transaction,
+    u32 party3AccountId,
+    String secondParticulars,
+    double secondAmount,
+    ) async {
+  AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
+  await runAccountLedgerInsertTransactionOperationAsync(transaction);
+  if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
+    accountLedgerApiResultMessage =
+    await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
+        transaction.userId,
+        accountLedgerApiResultMessage.newDateTime!,
+        secondParticulars,
+        secondAmount,
+        party3AccountId,
+        transaction.fromAccountId));
+    return accountLedgerApiResultMessage;
+  } else {
+    return accountLedgerApiResultMessage;
   }
 }
