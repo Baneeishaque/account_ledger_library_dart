@@ -19,6 +19,8 @@ void main(List<String> arguments) {
           "\n4 : Add $oneTwoTwoThreeThreeFourFourOneText Transaction"
           "\n5 : Add $oneTwoTwoThreeThreeFourText Transaction"
           "\n6 : Add $oneTwoTwoThreeText (Via.) Transaction"
+          "\n7 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
+          "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -127,7 +129,45 @@ void main(List<String> arguments) {
           userInputs.item7,
         );
       },
-      "0": () {}
+      "7": () {
+        print("$oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
+            "\n------------------------");
+
+        Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
+            getUserInputUpToThreeParties();
+
+        insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
+          userInputs.item1,
+          userInputs.item2,
+          userInputs.item3,
+          userInputs.item4,
+          userInputs.item5,
+          userInputs.item6,
+          userInputs.item7,
+          inputValidUnsignedPositiveInteger(
+              dataSpecification: "Party 4 Account ID"),
+        );
+      },
+      "8": () {
+        print("$oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
+            "\n------------------------");
+
+        Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
+            getUserInputUpToThreeParties();
+
+        insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
+          userInputs.item1,
+          userInputs.item2,
+          userInputs.item3,
+          userInputs.item4,
+          userInputs.item5,
+          userInputs.item6,
+          userInputs.item7,
+          inputValidUnsignedPositiveInteger(
+              dataSpecification: "Party 4 Account ID"),
+        );
+      },
+      "0": () {},
     },
   );
 }

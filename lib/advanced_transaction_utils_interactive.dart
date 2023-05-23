@@ -131,6 +131,165 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
   );
 }
 
+//1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1
+void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
+    u32 userId,
+    String eventDateTime,
+    String particulars,
+    double amount,
+    u32 party1accountId,
+    u32 party2accountId,
+    u32 party3accountId,
+    u32 party4accountId) {
+  insertTransaction(
+    TransactionModal(
+      userId,
+      eventDateTime,
+      particulars,
+      amount,
+      party1accountId,
+      party2accountId,
+    ),
+  );
+
+  Tuple3<String, String, double> insertNextTransactionResult =
+      insertNextTransaction(
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransactionResult = insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party3accountId,
+    party2accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransactionResult = insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party2accountId,
+    party4accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party4accountId,
+    party1accountId,
+  );
+}
+
+//1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1, 4 -> 2
+void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
+    u32 userId,
+    String eventDateTime,
+    String particulars,
+    double amount,
+    u32 party1accountId,
+    u32 party2accountId,
+    u32 party3accountId,
+    u32 party4accountId) {
+  insertTransaction(
+    TransactionModal(
+      userId,
+      eventDateTime,
+      particulars,
+      amount,
+      party1accountId,
+      party2accountId,
+    ),
+  );
+
+  Tuple3<String, String, double> insertNextTransactionResult =
+      insertNextTransaction(
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransactionResult = insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party3accountId,
+    party2accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransactionResult = insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party2accountId,
+    party4accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransactionResult = insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party4accountId,
+    party1accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party4accountId,
+    party2accountId,
+  );
+}
+
 //1 -> 2, 2 -> 3, 3 -> 4
 void insertOneTwoTwoThreeThreeFourTransaction(
     u32 userId,
@@ -199,7 +358,7 @@ void insertOneTwoTwoThreeThreeOneTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-  insertNextTransaction(
+      insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
