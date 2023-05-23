@@ -177,3 +177,49 @@ void insertOneTwoTwoThreeThreeFourTransaction(
     party4accountId,
   );
 }
+
+//1 -> 2, 2 -> 3, 3 -> 1
+void insertOneTwoTwoThreeThreeOneTransaction(
+    u32 userId,
+    String eventDateTime,
+    String particulars,
+    double amount,
+    u32 party1accountId,
+    u32 party2accountId,
+    u32 party3accountId) {
+  insertTransaction(
+    TransactionModal(
+      userId,
+      eventDateTime,
+      particulars,
+      amount,
+      party1accountId,
+      party2accountId,
+    ),
+  );
+
+  Tuple3<String, String, double> insertNextTransactionResult =
+  insertNextTransaction(
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
+
+  eventDateTime = insertNextTransactionResult.item1;
+  particulars = insertNextTransactionResult.item2;
+  amount = insertNextTransactionResult.item3;
+
+  insertNextTransaction(
+    userId,
+    eventDateTime,
+    particulars,
+    amount,
+    party3accountId,
+    party1accountId,
+  );
+}

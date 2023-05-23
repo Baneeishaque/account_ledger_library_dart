@@ -15,7 +15,7 @@ void main(List<String> arguments) {
           "\n-----------------------"
           "\n1 : Manipulate Gist Account Ledger"
           "\n2 : Add $oneTwoThreeOneText Transaction"
-          "\n3 : Add Cyclic Via. Transaction"
+          "\n3 : Add $oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
           "\n4 : Add $oneTwoTwoThreeThreeFourFourOneText Transaction"
           "\n5 : Add $oneTwoTwoThreeThreeFourText Transaction"
           "\n6 : Add $oneTwoTwoThreeText (Via.) Transaction"
@@ -52,7 +52,7 @@ void main(List<String> arguments) {
         );
       },
       "3": () {
-        print("Cyclic Via Transaction"
+        print("$oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
             "\n----------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
@@ -60,6 +60,16 @@ void main(List<String> arguments) {
           party1AccountIdDataSpecification: "From Account ID",
           party2AccountIdDataSpecification: "Via. Account ID",
           party3AccountIdDataSpecification: "To Account ID",
+        );
+
+        insertOneTwoTwoThreeThreeOneTransaction(
+          userInputs.item1,
+          userInputs.item2,
+          userInputs.item3,
+          userInputs.item4,
+          userInputs.item5,
+          userInputs.item6,
+          userInputs.item7,
         );
       },
       "4": () {
@@ -105,7 +115,7 @@ void main(List<String> arguments) {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeTransaction(
           userInputs.item1,
