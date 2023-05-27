@@ -28,6 +28,19 @@ String runAccountLedgerInsertTransactionOperation(
   )).stdout;
 }
 
+String runAccountLedgerGetAccountsOperation(
+  u32 userId,
+) {
+  return (Process.runSync(
+    accountLedgerCliExecutable,
+    [
+      "GetAccounts",
+      userId.toString(),
+    ],
+    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
+  )).stdout;
+}
+
 //1->2
 Future<AccountLedgerApiResultMessageModal>
     runAccountLedgerInsertTransactionOperationAsync(

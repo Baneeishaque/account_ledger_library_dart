@@ -4,6 +4,7 @@ import 'package:account_ledger_library_dart/advanced_transaction_utils_interacti
 import 'package:account_ledger_library_dart/constants.dart';
 import 'package:account_ledger_library_dart/input_utils.dart';
 import 'package:account_ledger_library_dart/input_utils_interactive.dart';
+import 'package:account_ledger_library_dart/transaction_utils_api.dart';
 import 'package:account_ledger_library_dart/user_input_utils_interactive.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
@@ -21,6 +22,7 @@ void main(List<String> arguments) {
           "\n6 : Add $oneTwoTwoThreeText (Via.) Transaction"
           "\n7 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
           "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
+          "\n9 : Get User Account Heads"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -166,6 +168,10 @@ void main(List<String> arguments) {
           inputValidUnsignedPositiveInteger(
               dataSpecification: "Party 4 Account ID"),
         );
+      },
+      "9": () {
+        print(runAccountLedgerGetAccountsOperation(
+            inputValidUnsignedPositiveInteger(dataSpecification: "User ID")));
       },
       "0": () {},
     },
