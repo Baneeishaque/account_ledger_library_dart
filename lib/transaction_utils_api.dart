@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:account_ledger_library_dart/account_ledger_api_result_message_modal.dart';
+import 'package:account_ledger_library_dart/accounts_with_execution_status_modal.dart';
 import 'package:integer/integer.dart';
 
 import 'account_ledger_api_result_status_modal.dart';
@@ -9,23 +10,31 @@ import 'constants.dart';
 import 'date_time_utils.dart';
 import 'transaction_modal.dart';
 
+var executionEnvironment = {
+  "JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1",
+};
+
 //1->2
 String runAccountLedgerInsertTransactionOperation(
   TransactionModal transaction,
 ) {
   return (Process.runSync(
     accountLedgerCliExecutable,
-    [
-      "InsertTransaction",
-      transaction.userId.toString(),
-      transaction.eventDateTime,
-      transaction.particulars,
-      transaction.amount.abs().toString(),
-      transaction.fromAccountId.toString(),
-      transaction.toAccountId.toString()
-    ],
-    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
+    getInsertTransactionArguments(transaction),
+    environment: executionEnvironment,
   )).stdout;
+}
+
+List<String> getInsertTransactionArguments(TransactionModal transaction) {
+  return [
+    "InsertTransaction",
+    transaction.userId.toString(),
+    transaction.eventDateTime,
+    transaction.particulars,
+    transaction.amount.abs().toString(),
+    transaction.fromAccountId.toString(),
+    transaction.toAccountId.toString()
+  ];
 }
 
 String runAccountLedgerGetAccountsOperation(
@@ -33,12 +42,27 @@ String runAccountLedgerGetAccountsOperation(
 ) {
   return (Process.runSync(
     accountLedgerCliExecutable,
-    [
-      "GetAccounts",
-      userId.toString(),
-    ],
-    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
+    getGetAccountsArguments(userId),
+    environment: executionEnvironment,
   )).stdout;
+}
+
+List<String> getGetAccountsArguments(u32 userId) {
+  return [
+    "GetAccounts",
+    userId.toString(),
+  ];
+}
+
+Future<AccountsWithExecutionStatus> runAccountLedgerGetAccountsOperationAsync(
+  u32 userId,
+) async {
+  return AccountsWithExecutionStatus.fromJson(jsonDecode((await Process.run(
+    accountLedgerCliExecutable,
+    getGetAccountsArguments(userId),
+    environment: executionEnvironment,
+  ))
+      .stdout));
 }
 
 //1->2
@@ -49,16 +73,8 @@ Future<AccountLedgerApiResultMessageModal>
   AccountLedgerApiResultStatusModal accountLedgerApiResultStatus =
       AccountLedgerApiResultStatusModal.fromJson(jsonDecode((await Process.run(
     accountLedgerCliExecutable,
-    [
-      "InsertTransaction",
-      transaction.userId.toString(),
-      transaction.eventDateTime,
-      transaction.particulars,
-      transaction.amount.abs().toString(),
-      transaction.fromAccountId.toString(),
-      transaction.toAccountId.toString()
-    ],
-    environment: {"JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1"},
+    getInsertTransactionArguments(transaction),
+    environment: executionEnvironment,
   ))
           .stdout));
 
