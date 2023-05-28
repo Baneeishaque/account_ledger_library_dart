@@ -71,24 +71,31 @@ Future<AccountLedgerApiResultMessageModal>
   TransactionModal transaction,
 ) async {
   AccountLedgerApiResultStatusModal accountLedgerApiResultStatus =
-      AccountLedgerApiResultStatusModal.fromJson(jsonDecode((await Process.run(
-    accountLedgerCliExecutable,
-    getInsertTransactionArguments(transaction),
-    environment: executionEnvironment,
-  ))
-          .stdout));
+      AccountLedgerApiResultStatusModal.fromJson(
+    jsonDecode(
+      (await Process.run(
+        accountLedgerCliExecutable,
+        getInsertTransactionArguments(transaction),
+        environment: executionEnvironment,
+      ))
+          .stdout,
+    ),
+  );
 
   if (accountLedgerApiResultStatus.status == 0) {
     return AccountLedgerApiResultMessageModal(
-        normalDateTimeFormat.format(
-          normalDateTimeFormat
-              .parse(transaction.eventDateTime)
-              .add(Duration(minutes: 5)),
-        ),
-        accountLedgerApiResultStatus = accountLedgerApiResultStatus);
+      normalDateTimeFormat.format(
+        normalDateTimeFormat
+            .parse(transaction.eventDateTime)
+            .add(Duration(minutes: 5)),
+      ),
+      accountLedgerApiResultStatus = accountLedgerApiResultStatus,
+    );
   } else {
-    return AccountLedgerApiResultMessageModal(transaction.eventDateTime,
-        accountLedgerApiResultStatus = accountLedgerApiResultStatus);
+    return AccountLedgerApiResultMessageModal(
+      transaction.eventDateTime,
+      accountLedgerApiResultStatus = accountLedgerApiResultStatus,
+    );
   }
 }
 
@@ -152,15 +159,16 @@ Future<AccountLedgerApiResultMessageModal>
   AccountLedgerApiResultMessageModal accountLedgerApiResultMessage =
       await runAccountLedgerInsertTransactionOperationAsync(transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus!.status == 0) {
-    accountLedgerApiResultMessage =
-        await runAccountLedgerInsertTransactionOperationAsync(TransactionModal(
-            transaction.userId,
-            accountLedgerApiResultMessage.newDateTime!,
-            secondParticulars,
-            secondAmount,
-            transaction.toAccountId,
-            party3AccountId));
-    return accountLedgerApiResultMessage;
+    return (await runAccountLedgerInsertTransactionOperationAsync(
+      TransactionModal(
+        transaction.userId,
+        accountLedgerApiResultMessage.newDateTime!,
+        secondParticulars,
+        secondAmount,
+        transaction.toAccountId,
+        party3AccountId,
+      ),
+    ));
   } else {
     return accountLedgerApiResultMessage;
   }
