@@ -1,6 +1,6 @@
 class AccountsWithExecutionStatus {
   bool? isOK;
-  List<Data>? data;
+  List<AccountHead>? data;
   String? error;
 
   AccountsWithExecutionStatus({this.isOK, this.data, this.error});
@@ -8,9 +8,9 @@ class AccountsWithExecutionStatus {
   AccountsWithExecutionStatus.fromJson(Map<String, dynamic> json) {
     isOK = json['isOK'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <AccountHead>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(AccountHead.fromJson(v));
       });
     }
     error = json['error'];
@@ -27,7 +27,7 @@ class AccountsWithExecutionStatus {
   }
 }
 
-class Data {
+class AccountHead {
   int? id;
   String? fullName;
   String? name;
@@ -40,7 +40,7 @@ class Data {
   String? taxable;
   String? placeHolder;
 
-  Data(
+  AccountHead(
       {this.id,
       this.fullName,
       this.name,
@@ -53,7 +53,7 @@ class Data {
       this.taxable,
       this.placeHolder});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  AccountHead.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     fullName = json['fullName'];
     name = json['name'];
@@ -81,5 +81,9 @@ class Data {
     data['taxable'] = taxable;
     data['placeHolder'] = placeHolder;
     return data;
+  }
+
+  bool isEqual(AccountHead otherAccountHead) {
+    return id == otherAccountHead.id;
   }
 }
