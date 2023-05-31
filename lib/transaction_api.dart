@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:account_ledger_library_dart/account_ledger_api_result_message_modal.dart';
-import 'package:account_ledger_library_dart/accounts_with_execution_status_modal.dart';
 import 'package:integer/integer.dart';
 
-import 'account_ledger_api_result_status_modal.dart';
 import 'constants.dart';
-import 'date_time_utils.dart';
-import 'transaction_modal.dart';
+import 'common_utils/date_time_utils.dart';
+import 'modals/account_ledger_api_result_message_modal.dart';
+import 'modals/accounts_with_execution_status_modal.dart';
+import 'modals/transaction_modal.dart';
 
 var executionEnvironment = {
   "JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1",
@@ -54,10 +53,10 @@ List<String> getGetAccountsArguments(u32 userId) {
   ];
 }
 
-Future<AccountsWithExecutionStatus> runAccountLedgerGetAccountsOperationAsync(
+Future<AccountsWithExecutionStatusModal> runAccountLedgerGetAccountsOperationAsync(
   u32 userId,
 ) async {
-  return AccountsWithExecutionStatus.fromJson(jsonDecode((await Process.run(
+  return AccountsWithExecutionStatusModal.fromJson(jsonDecode((await Process.run(
     accountLedgerCliExecutable,
     getGetAccountsArguments(userId),
     environment: executionEnvironment,

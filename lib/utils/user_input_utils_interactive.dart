@@ -1,7 +1,7 @@
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
-import 'input_utils_interactive.dart';
+import '../common_utils/input_utils_interactive.dart';
 
 Tuple7<u32, String, String, double, u32, u32, u32>
     getUserInputUpToThreeParties({

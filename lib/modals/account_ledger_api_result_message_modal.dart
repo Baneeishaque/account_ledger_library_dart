@@ -1,3 +1,11 @@
+class AccountLedgerApiResultMessageModal {
+  String? newDateTime;
+  AccountLedgerApiResultStatusModal? accountLedgerApiResultStatus;
+
+  AccountLedgerApiResultMessageModal(
+      this.newDateTime, this.accountLedgerApiResultStatus);
+}
+
 class AccountLedgerApiResultStatusModal {
   int? status;
   String? error;

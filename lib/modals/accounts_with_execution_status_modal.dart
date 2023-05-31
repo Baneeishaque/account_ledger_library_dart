@@ -1,11 +1,11 @@
-class AccountsWithExecutionStatus {
+class AccountsWithExecutionStatusModal {
   bool? isOK;
   List<AccountHead>? data;
   String? error;
 
-  AccountsWithExecutionStatus({this.isOK, this.data, this.error});
+  AccountsWithExecutionStatusModal({this.isOK, this.data, this.error});
 
-  AccountsWithExecutionStatus.fromJson(Map<String, dynamic> json) {
+  AccountsWithExecutionStatusModal.fromJson(Map<String, dynamic> json) {
     isOK = json['isOK'];
     if (json['data'] != null) {
       data = <AccountHead>[];

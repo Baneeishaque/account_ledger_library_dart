@@ -1,3 +1,11 @@
+class AccountLedgerGistVerificationResultModal {
+  bool status;
+  List<AccountLedgerPageModal>? failedAccountLedgerPages;
+
+  AccountLedgerGistVerificationResultModal(
+      {required this.status, this.failedAccountLedgerPages});
+}
+
 class AccountLedgerGistModal {
   String? userName;
   List<AccountLedgerPageModal>? accountLedgerPages;

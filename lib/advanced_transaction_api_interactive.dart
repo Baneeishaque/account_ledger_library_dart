@@ -1,9 +1,9 @@
-import 'package:account_ledger_library_dart/date_time_utils.dart';
+import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
-import 'base_transaction_utils_interactive.dart';
-import 'transaction_modal.dart';
+import 'base_transaction_api_interactive.dart';
+import 'modals/transaction_modal.dart';
 
 //1 -> 2, 3 -> 1
 void insertOneTwoThreeOneTransaction(

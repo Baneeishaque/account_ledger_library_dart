@@ -1,12 +1,12 @@
-import 'package:account_ledger_library_dart/date_time_utils.dart';
-import 'package:account_ledger_library_dart/input_utils.dart';
-import 'package:account_ledger_library_dart/string_utils.dart';
+import 'package:account_ledger_library/common_utils/date_time_utils.dart';
+import 'package:account_ledger_library/common_utils/input_utils.dart';
+import 'package:account_ledger_library/common_utils/string_utils.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
-import 'input_utils_interactive.dart';
-import 'transaction_modal.dart';
-import 'transaction_utils_api_interactive.dart';
+import 'common_utils/input_utils_interactive.dart';
+import 'modals/transaction_modal.dart';
+import 'transaction_api_interactive.dart';
 
 Tuple3<String, String, double> insertNextTransaction(
   u32 userId,

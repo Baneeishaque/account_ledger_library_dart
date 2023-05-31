@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:account_ledger_library_dart/account_ledger_gist_verification_result_modal.dart';
-import 'package:account_ledger_library_dart/constants.dart';
-
-import 'account_ledger_gist_model.dart';
+import 'package:account_ledger_library/modals/account_ledger_gist_verification_result_modal.dart';
+import 'package:account_ledger_library/constants.dart';
 
 String runAccountLedgerGistOperation() {
   return (Process.runSync(
