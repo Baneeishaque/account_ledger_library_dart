@@ -4,6 +4,7 @@ import 'package:account_ledger_library/common_utils/input_utils.dart';
 import 'package:account_ledger_library/common_utils/input_utils_interactive.dart';
 import 'package:account_ledger_library/constants.dart';
 import 'package:account_ledger_library/modals/account_ledger_gist_verification_result_modal.dart';
+import 'package:account_ledger_library/relations_of_accounts.dart';
 import 'package:account_ledger_library/transaction_api.dart';
 import 'package:account_ledger_library/utils/user_input_utils_interactive.dart';
 import 'package:integer/integer.dart';
@@ -23,6 +24,7 @@ void main(List<String> arguments) {
           "\n7 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
           "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
           "\n9 : Get User Account Heads"
+          "\n10 : Get Relation of Accounts from file"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -172,6 +174,11 @@ void main(List<String> arguments) {
       "9": () {
         print(runAccountLedgerGetAccountsOperation(
             inputValidUnsignedPositiveInteger(dataSpecification: "User ID")));
+      },
+      "10": () {
+        print(readRelationsOfAccounts());
+        print("------------------------------");
+        print(readRelationsOfAccountsInNormalForm());
       },
       "0": () {},
     },
