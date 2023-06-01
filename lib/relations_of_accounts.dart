@@ -9,22 +9,24 @@ RelationOfAccountsModal readRelationsOfAccounts() {
 }
 
 RelationOfAccountsNormalisedModal readRelationsOfAccountsInNormalForm() {
-  List<UsersNormalisedModal> usersNormalisedList = List.empty(growable: true);
+  Map<int, Map<int, List<Relations>>> usersNormalisedMap = {};
 
   RelationOfAccountsModal relationOfAccounts = readRelationsOfAccounts();
   relationOfAccounts.users?.forEach((user) {
-    List<AccountsNormalisedModal> accountsNormalisedList =
-        List.empty(growable: true);
+    Map<int, List<Relations>> accountsNormalisedMap = {};
 
     user.accounts?.forEach((account) {
       account.accountId?.forEach((accountId) {
-        accountsNormalisedList.add(AccountsNormalisedModal(
-            accountId: accountId, relations: account.relations!));
+        if (accountsNormalisedMap.containsKey(accountId)) {
+          accountsNormalisedMap[accountId] =
+              (accountsNormalisedMap[accountId]!) + account.relations!;
+        } else {
+          accountsNormalisedMap[accountId] = account.relations!;
+        }
       });
     });
 
-    usersNormalisedList.add(UsersNormalisedModal(
-        userId: user.userId!, accounts: accountsNormalisedList));
+    usersNormalisedMap[user.userId!] = accountsNormalisedMap;
   });
-  return RelationOfAccountsNormalisedModal(users: usersNormalisedList);
+  return RelationOfAccountsNormalisedModal(userAccounts: usersNormalisedMap);
 }

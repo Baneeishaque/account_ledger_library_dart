@@ -137,44 +137,14 @@ class Relations {
 }
 
 class RelationOfAccountsNormalisedModal {
-  List<UsersNormalisedModal> users;
+  Map<int, Map<int, List<Relations>>> userAccounts;
 
   RelationOfAccountsNormalisedModal({
-    required this.users,
+    required this.userAccounts,
   });
 
   @override
   String toString() {
-    return 'RelationOfAccountsNormalisedModal{users: $users}';
-  }
-}
-
-class UsersNormalisedModal {
-  int userId;
-  List<AccountsNormalisedModal> accounts;
-
-  UsersNormalisedModal({
-    required this.userId,
-    required this.accounts,
-  });
-
-  @override
-  String toString() {
-    return 'UsersNormalisedModal{userId: $userId, accounts: $accounts}';
-  }
-}
-
-class AccountsNormalisedModal {
-  int accountId;
-  List<Relations> relations;
-
-  AccountsNormalisedModal({
-    required this.accountId,
-    required this.relations,
-  });
-
-  @override
-  String toString() {
-    return 'AccountsNormalisedModal{accountId: $accountId, relations: $relations}';
+    return 'RelationOfAccountsNormalisedModal{users: $userAccounts}';
   }
 }
