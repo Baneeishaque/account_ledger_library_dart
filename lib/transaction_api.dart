@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:integer/integer.dart';
 
-import 'constants.dart';
 import 'common_utils/date_time_utils.dart';
+import 'constants.dart';
 import 'modals/account_ledger_api_result_message_modal.dart';
 import 'modals/accounts_with_execution_status_modal.dart';
 import 'modals/transaction_modal.dart';
@@ -76,15 +76,17 @@ List<String> getOperationArgumentsWithUserId(String operation, u32 userId) {
   ];
 }
 
-Future<AccountsWithExecutionStatusModal> runAccountLedgerGetAccountsOperationAsync(
+Future<AccountsWithExecutionStatusModal>
+    runAccountLedgerGetAccountsOperationAsync(
   u32 userId,
 ) async {
-  return AccountsWithExecutionStatusModal.fromJson(jsonDecode((await Process.run(
+  return AccountsWithExecutionStatusModal.fromJson(
+      jsonDecode((await Process.run(
     accountLedgerCliExecutable,
     getGetAccountsArguments(userId),
     environment: executionEnvironment,
   ))
-      .stdout));
+          .stdout));
 }
 
 //1->2
