@@ -1,5 +1,3 @@
-/// users : [{"userId":25,"accounts":[{"accountId":[6,11],"relations":[{"indicator":"father","associatedAccountId":[38]},{"indicator":"irshad kuri","associatedAccountId":[5419]},{"indicator":"manuppa","associatedAccountId":[3341]},{"indicator":"farseen uber","associatedAccountId":[8740]},{"indicator":"kerala vision broadband","associatedAccountId":[5609]},{"indicator":"breakfast","associatedAccountId":[5619]},{"indicator":"lunch from mubarak hotel","associatedAccountId":[8859]},{"indicator":"ziyad cse","associatedAccountId":[72]},{"indicator":"lunch","associatedAccountId":[1851]},{"indicator":"for mother","associatedAccountId":[8763]}]},{"accountId":[11],"relations":[{"indicator":"paytm banee","associatedAccountId":[8799]}]},{"accountId":[8799],"relations":[{"indicator":"cashback","associatedAccountId":[8771]}]},{"accountId":[8809],"relations":[{"indicator":"profit","associatedAccountId":[8843]}]}]}]
-
 class RelationOfAccountsModal {
   RelationOfAccountsModal({
     required this.users,
