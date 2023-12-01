@@ -39,16 +39,39 @@ List<String> getInsertTransactionArguments(TransactionModal transaction) {
 String runAccountLedgerGetAccountsOperation(
   u32 userId,
 ) {
+  return runAccountLedgerOperationWithUserId(
+      (userId) => getGetAccountsArguments(userId), userId);
+}
+
+String runAccountLedgerGetAccountsUrlOperation(
+  u32 userId,
+) {
+  return runAccountLedgerOperationWithUserId(
+      (userId) => getGetAccountsUrlArguments(userId), userId);
+}
+
+String runAccountLedgerOperationWithUserId(
+  List<String> Function(u32 userId) getOperationArgumentsWithUserId,
+  u32 userId,
+) {
   return (Process.runSync(
     accountLedgerCliExecutable,
-    getGetAccountsArguments(userId),
+    getOperationArgumentsWithUserId(userId),
     environment: executionEnvironment,
   )).stdout;
 }
 
 List<String> getGetAccountsArguments(u32 userId) {
+  return getOperationArgumentsWithUserId("GetAccounts", userId);
+}
+
+List<String> getGetAccountsUrlArguments(u32 userId) {
+  return getOperationArgumentsWithUserId("GetAccountsUrl", userId);
+}
+
+List<String> getOperationArgumentsWithUserId(String operation, u32 userId) {
   return [
-    "GetAccounts",
+    operation,
     userId.toString(),
   ];
 }
