@@ -7,8 +7,8 @@ class AccountLedgerGistVerificationResultModal {
 }
 
 class AccountLedgerGistModal {
-  String? userName;
-  List<AccountLedgerPageModal>? accountLedgerPages;
+  late String userName;
+  late List<AccountLedgerPageModal> accountLedgerPages;
 
   AccountLedgerGistModal(
       {required this.userName, required this.accountLedgerPages});
@@ -18,7 +18,7 @@ class AccountLedgerGistModal {
     if (json['accountLedgerPages'] != null) {
       accountLedgerPages = <AccountLedgerPageModal>[];
       json['accountLedgerPages'].forEach((v) {
-        accountLedgerPages!.add(AccountLedgerPageModal.fromJson(v));
+        accountLedgerPages.add(AccountLedgerPageModal.fromJson(v));
       });
     }
   }
@@ -26,10 +26,8 @@ class AccountLedgerGistModal {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userName'] = userName;
-    if (accountLedgerPages != null) {
-      data['accountLedgerPages'] =
-          accountLedgerPages!.map((v) => v.toJson()).toList();
-    }
+    data['accountLedgerPages'] =
+        accountLedgerPages.map((v) => v.toJson()).toList();
     return data;
   }
 
@@ -40,8 +38,8 @@ class AccountLedgerGistModal {
 }
 
 class AccountLedgerPageModal {
-  int? accountId;
-  List<AccountLedgerDatePageModal>? accountLedgerDatePages;
+  late int accountId;
+  late List<AccountLedgerDatePageModal> accountLedgerDatePages;
 
   AccountLedgerPageModal(
       {required this.accountId, required this.accountLedgerDatePages});
@@ -51,7 +49,7 @@ class AccountLedgerPageModal {
     if (json['accountLedgerDatePages'] != null) {
       accountLedgerDatePages = <AccountLedgerDatePageModal>[];
       json['accountLedgerDatePages'].forEach((v) {
-        accountLedgerDatePages!.add(AccountLedgerDatePageModal.fromJson(v));
+        accountLedgerDatePages.add(AccountLedgerDatePageModal.fromJson(v));
       });
     }
   }
@@ -59,10 +57,8 @@ class AccountLedgerPageModal {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['accountId'] = accountId;
-    if (accountLedgerDatePages != null) {
-      data['accountLedgerDatePages'] =
-          accountLedgerDatePages!.map((v) => v.toJson()).toList();
-    }
+    data['accountLedgerDatePages'] =
+        accountLedgerDatePages.map((v) => v.toJson()).toList();
     return data;
   }
 
@@ -73,9 +69,9 @@ class AccountLedgerPageModal {
 }
 
 class AccountLedgerDatePageModal {
-  String? accountLedgerPageDate;
+  late String accountLedgerPageDate;
   double? initialBalanceOnDate;
-  List<TransactionOnDateModal>? transactionsOnDate;
+  late List<TransactionOnDateModal> transactionsOnDate;
   double? finalBalanceOnDate;
 
   AccountLedgerDatePageModal(
@@ -90,7 +86,7 @@ class AccountLedgerDatePageModal {
     if (json['transactionsOnDate'] != null) {
       transactionsOnDate = <TransactionOnDateModal>[];
       json['transactionsOnDate'].forEach((v) {
-        transactionsOnDate!.add(TransactionOnDateModal.fromJson(v));
+        transactionsOnDate.add(TransactionOnDateModal.fromJson(v));
       });
     }
     finalBalanceOnDate = json['finalBalanceOnDate'];
@@ -100,10 +96,8 @@ class AccountLedgerDatePageModal {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['accountLedgerPageDate'] = accountLedgerPageDate;
     data['initialBalanceOnDate'] = initialBalanceOnDate;
-    if (transactionsOnDate != null) {
-      data['transactionsOnDate'] =
-          transactionsOnDate!.map((v) => v.toJson()).toList();
-    }
+    data['transactionsOnDate'] =
+        transactionsOnDate.map((v) => v.toJson()).toList();
     data['finalBalanceOnDate'] = finalBalanceOnDate;
     return data;
   }
@@ -115,8 +109,8 @@ class AccountLedgerDatePageModal {
 }
 
 class TransactionOnDateModal {
-  String? transactionParticulars;
-  double? transactionAmount;
+  late String transactionParticulars;
+  late double transactionAmount;
 
   TransactionOnDateModal(
       {required this.transactionParticulars, required this.transactionAmount});

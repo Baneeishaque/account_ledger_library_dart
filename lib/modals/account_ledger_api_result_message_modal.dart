@@ -1,16 +1,16 @@
 class AccountLedgerApiResultMessageModal {
-  String? newDateTime;
-  AccountLedgerApiResultStatusModal? accountLedgerApiResultStatus;
+  String newDateTime;
+  AccountLedgerApiResultStatusModal accountLedgerApiResultStatus;
 
   AccountLedgerApiResultMessageModal(
       this.newDateTime, this.accountLedgerApiResultStatus);
 }
 
 class AccountLedgerApiResultStatusModal {
-  int? status;
+  late int status;
   String? error;
 
-  AccountLedgerApiResultStatusModal({this.status, this.error});
+  AccountLedgerApiResultStatusModal({required this.status, this.error});
 
   AccountLedgerApiResultStatusModal.fromJson(Map<String, dynamic> json) {
     status = json['status'];

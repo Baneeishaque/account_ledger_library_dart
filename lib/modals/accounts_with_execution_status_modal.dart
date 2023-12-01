@@ -1,9 +1,9 @@
 class AccountsWithExecutionStatusModal {
-  bool? isOK;
+  late bool isOK;
   List<AccountHead>? data;
   String? error;
 
-  AccountsWithExecutionStatusModal({this.isOK, this.data, this.error});
+  AccountsWithExecutionStatusModal({required this.isOK, this.data, this.error});
 
   AccountsWithExecutionStatusModal.fromJson(Map<String, dynamic> json) {
     isOK = json['isOK'];
@@ -28,30 +28,30 @@ class AccountsWithExecutionStatusModal {
 }
 
 class AccountHead {
-  int? id;
-  String? fullName;
-  String? name;
-  int? parentAccountId;
-  String? accountType;
-  String? notes;
-  String? commodityType;
-  String? commodityValue;
-  int? ownerId;
-  String? taxable;
-  String? placeHolder;
+  late int id;
+  late String fullName;
+  late String name;
+  late int parentAccountId;
+  late String accountType;
+  late String notes;
+  late String commodityType;
+  late String commodityValue;
+  late int ownerId;
+  late String taxable;
+  late String placeHolder;
 
   AccountHead(
-      {this.id,
-      this.fullName,
-      this.name,
-      this.parentAccountId,
-      this.accountType,
-      this.notes,
-      this.commodityType,
-      this.commodityValue,
-      this.ownerId,
-      this.taxable,
-      this.placeHolder});
+      {required this.id,
+      required this.fullName,
+      required this.name,
+      required this.parentAccountId,
+      required this.accountType,
+      required this.notes,
+      required this.commodityType,
+      required this.commodityValue,
+      required this.ownerId,
+      required this.taxable,
+      required this.placeHolder});
 
   AccountHead.fromJson(Map<String, dynamic> json) {
     id = json['id'];
