@@ -1,33 +1,28 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:account_ledger_library/modals/account_ledger_gist_verification_result_modal.dart';
-import 'package:account_ledger_library/constants.dart';
+import 'package:account_ledger_library/utils/account_ledger_kotlin_cli_utils.dart';
 
 String runAccountLedgerGistOperation() {
-  return (Process.runSync(
-    accountLedgerCliExecutable,
-    ["Gist"],
-    workingDirectory: r"C:\Programs\Account-Ledger-Cli\bin",
-  )).stdout;
+  return runAccountLedgerKotlinCliOperation(["Gist"]);
 }
 
 AccountLedgerGistModal processAccountLedgerGist() {
   AccountLedgerGistModal accountLedgerGist = AccountLedgerGistModal.fromJson(
       jsonDecode(runAccountLedgerGistOperation()));
-  accountLedgerGist.accountLedgerPages
-      ?.forEach((AccountLedgerPageModal accountLedgerPage) {
-    accountLedgerPage.accountLedgerDatePages
-        ?.forEach((AccountLedgerDatePageModal accountLedgerDatePage) {
+  for (AccountLedgerPageModal accountLedgerPage
+      in accountLedgerGist.accountLedgerPages) {
+    for (AccountLedgerDatePageModal accountLedgerDatePage
+        in accountLedgerPage.accountLedgerDatePages) {
       print("Initial Balance - ${accountLedgerDatePage.initialBalanceOnDate}");
-      accountLedgerDatePage.transactionsOnDate
-          ?.forEach((TransactionOnDateModal transactionOnDate) {
+      for (TransactionOnDateModal transactionOnDate
+          in accountLedgerDatePage.transactionsOnDate) {
         print(
             "${transactionOnDate.transactionParticulars} - ${transactionOnDate.transactionAmount}");
-      });
+      }
       print("Final Balance - ${accountLedgerDatePage.finalBalanceOnDate}");
-    });
-  });
+    }
+  }
   return accountLedgerGist;
 }
 
@@ -35,18 +30,18 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
     AccountLedgerGistModal accountLedgerGist) {
   AccountLedgerGistVerificationResultModal accountLedgerVerificationResult =
       AccountLedgerGistVerificationResultModal(status: true);
-  accountLedgerGist.accountLedgerPages
-      ?.forEach((AccountLedgerPageModal accountLedgerPage) {
-    accountLedgerPage.accountLedgerDatePages
-        ?.forEach((AccountLedgerDatePageModal accountLedgerDatePage) {
+  for (AccountLedgerPageModal accountLedgerPage
+      in accountLedgerGist.accountLedgerPages) {
+    for (AccountLedgerDatePageModal accountLedgerDatePage
+        in accountLedgerPage.accountLedgerDatePages) {
       double accountLedgerDatePageInitialBalance =
           accountLedgerDatePage.initialBalanceOnDate!;
-      accountLedgerDatePage.transactionsOnDate
-          ?.forEach((TransactionOnDateModal transactionOnDate) {
+      for (TransactionOnDateModal transactionOnDate
+          in accountLedgerDatePage.transactionsOnDate) {
         accountLedgerDatePageInitialBalance =
             accountLedgerDatePageInitialBalance +
-                transactionOnDate.transactionAmount!;
-      });
+                transactionOnDate.transactionAmount;
+      }
       if (accountLedgerDatePageInitialBalance !=
           accountLedgerDatePage.finalBalanceOnDate) {
         accountLedgerVerificationResult.status = false;
@@ -70,7 +65,7 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
                 accountLedgerDatePages: [accountLedgerDatePage]);
           });
           if (isExistingAccountLedgerPage) {
-            currentAccountLedgerPage.accountLedgerDatePages!
+            currentAccountLedgerPage.accountLedgerDatePages
                 .add(accountLedgerDatePage);
 
             accountLedgerVerificationResult.failedAccountLedgerPages!
@@ -82,7 +77,7 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
               .add(currentAccountLedgerPage);
         }
       }
-    });
-  });
+    }
+  }
   return accountLedgerVerificationResult;
 }
