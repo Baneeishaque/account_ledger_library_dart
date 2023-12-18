@@ -16,6 +16,7 @@ jobs:
       - uses: dart-lang/setup-dart@08de7e0c9a57cb3229b052af11c7f8eae4a845bd
         with:
           sdk: 3.3.0-238.0.dev
+          flavor: raw
 
       - name: Install dependencies
         run: dart pub get
