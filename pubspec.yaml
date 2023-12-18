@@ -3,7 +3,7 @@ description: A sample command-line application.
 version: 1.0.0
 
 environment:
-  sdk: '>=3.2.0-128.0.dev <4.0.0'
+  sdk: '>=3.3.0-238.0.dev <4.0.0'
 
 dependencies:
   integer: ^2.0.1
