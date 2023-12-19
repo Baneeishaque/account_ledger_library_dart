@@ -25,6 +25,11 @@ class AccountsWithExecutionStatusModal {
     data['error'] = error;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'AccountsWithExecutionStatusModal{isOK: $isOK, data: $data, error: $error}';
+  }
 }
 
 class AccountHead {
@@ -59,7 +64,7 @@ class AccountHead {
     name = json['name'];
     parentAccountId = json['parentAccountId'];
     accountType = json['accountType'];
-    notes = json['notes'];
+    notes = json['notes'] ?? "";
     commodityType = json['commodityType'];
     commodityValue = json['commodityValue'];
     ownerId = json['ownerId'];
@@ -85,5 +90,10 @@ class AccountHead {
 
   bool isEqual(AccountHead otherAccountHead) {
     return id == otherAccountHead.id;
+  }
+
+  @override
+  String toString() {
+    return 'AccountHead{id: $id, fullName: $fullName, name: $name, parentAccountId: $parentAccountId, accountType: $accountType, notes: $notes, commodityType: $commodityType, commodityValue: $commodityValue, ownerId: $ownerId, taxable: $taxable, placeHolder: $placeHolder}';
   }
 }
