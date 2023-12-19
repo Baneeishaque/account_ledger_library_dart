@@ -16,7 +16,7 @@ void startAccountLedgerCli() {
     displayPrompt: () {
       print("Account Ledger CLI"
           "\n-----------------------"
-          "\n1 : Manipulate Gist Account Ledger"
+          "\n1 : Verify Gist Account Ledger"
           "\n2 : Add $oneTwoThreeOneText Transaction"
           "\n3 : Add $oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
           "\n4 : Add $oneTwoTwoThreeThreeFourFourOneText Transaction"
@@ -35,18 +35,14 @@ void startAccountLedgerCli() {
     },
     actionsWithKeys: {
       "1": () {
-        AccountLedgerGistModal accountLedgerGist = processAccountLedgerGist();
-        if (verifyAccountLedgerGist(accountLedgerGist).status) {
-        } else {
-          print("Gist Account Ledger Verification Failure...");
-        }
+        verifyAccountLedgerGistInteractive();
       },
       "2": () {
         print("$oneTwoThreeOneText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoThreeOneTransaction(
           userInputs.item1,
@@ -63,7 +59,7 @@ void startAccountLedgerCli() {
             "\n----------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties(
+            getUserInputUpToThreeParties(
           party1AccountIdDataSpecification: "From Account ID",
           party2AccountIdDataSpecification: "Via. Account ID",
           party3AccountIdDataSpecification: "To Account ID",
@@ -84,7 +80,7 @@ void startAccountLedgerCli() {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeThreeFourFourOneTransaction(
           userInputs.item1,
@@ -103,7 +99,7 @@ void startAccountLedgerCli() {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeThreeFourTransaction(
           userInputs.item1,
@@ -122,7 +118,7 @@ void startAccountLedgerCli() {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeTransaction(
           userInputs.item1,
@@ -139,7 +135,7 @@ void startAccountLedgerCli() {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
           userInputs.item1,
@@ -158,7 +154,7 @@ void startAccountLedgerCli() {
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
-        getUserInputUpToThreeParties();
+            getUserInputUpToThreeParties();
 
         insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
           userInputs.item1,
@@ -184,4 +180,22 @@ void startAccountLedgerCli() {
       "0": () {},
     },
   );
+}
+
+void verifyAccountLedgerGistInteractive() {
+  AccountLedgerGistModal accountLedgerGist = processAccountLedgerGist();
+  var verifyAccountLedgerGistResult = verifyAccountLedgerGist(accountLedgerGist,
+      (AccountLedgerPageModal accountLedgerPage,
+          AccountLedgerDatePageModal accountLedgerDatePage) {
+    print(
+        "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+  });
+  if (verifyAccountLedgerGistResult.status) {
+    print("Gist Account Ledger Verification Success...");
+  } else {
+    print("Gist Account Ledger Verification Failure...");
+    print("Failed Entries");
+    print("--------------------------");
+    print(verifyAccountLedgerGistResult.failedAccountLedgerPages);
+  }
 }
