@@ -22,59 +22,39 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
   double accountLedgerDatePageInitialBalance = 0;
   for (AccountLedgerPageModal accountLedgerPage
       in accountLedgerGist.accountLedgerPages) {
-    for (AccountLedgerDatePageModal accountLedgerDatePage
-        in accountLedgerPage.accountLedgerDatePages) {
-      if (accountLedgerDatePage.initialBalanceOnDate != null) {
-        accountLedgerDatePageInitialBalance =
-            accountLedgerDatePage.initialBalanceOnDate!;
-      }
-      for (TransactionOnDateModal transactionOnDate
-          in accountLedgerDatePage.transactionsOnDate) {
-        accountLedgerDatePageInitialBalance =
-            accountLedgerDatePageInitialBalance +
-                transactionOnDate.transactionAmount;
-      }
-      if (accountLedgerDatePage.finalBalanceOnDate != null) {
-        if (accountLedgerDatePageInitialBalance !=
-            accountLedgerDatePage.finalBalanceOnDate) {
-          accountLedgerVerificationResult.status = false;
-          if (accountLedgerVerificationResult.failedAccountLedgerPages ==
-              null) {
-            accountLedgerVerificationResult.failedAccountLedgerPages = [
-              AccountLedgerPageModal(
-                  accountId: accountLedgerPage.accountId,
-                  accountLedgerDatePages: [accountLedgerDatePage])
-            ];
+    if (accountLedgerVerificationResult.status) {
+      for (AccountLedgerDatePageModal accountLedgerDatePage
+          in accountLedgerPage.accountLedgerDatePages) {
+        if (accountLedgerDatePage.initialBalanceOnDate != null) {
+          accountLedgerDatePageInitialBalance =
+              accountLedgerDatePage.initialBalanceOnDate!;
+        }
+        for (TransactionOnDateModal transactionOnDate
+            in accountLedgerDatePage.transactionsOnDate) {
+          accountLedgerDatePageInitialBalance =
+              accountLedgerDatePageInitialBalance +
+                  transactionOnDate.transactionAmount;
+        }
+        if (accountLedgerDatePage.finalBalanceOnDate != null) {
+          if (accountLedgerDatePageInitialBalance.round() !=
+              accountLedgerDatePage.finalBalanceOnDate?.round()) {
+            accountLedgerVerificationResult.status = false;
+            accountLedgerVerificationResult.failedAccountLedgerPage =
+                AccountLedgerPageModal.withRemarks(
+              accountId: accountLedgerPage.accountId,
+              accountLedgerDatePages: [accountLedgerDatePage],
+              remarks:
+                  "finalBalance ${accountLedgerDatePage.finalBalanceOnDate} found instead of $accountLedgerDatePageInitialBalance",
+            );
+            break;
           } else {
-            bool isExistingAccountLedgerPage = true;
-            AccountLedgerPageModal currentAccountLedgerPage =
-                accountLedgerVerificationResult.failedAccountLedgerPages!
-                    .firstWhere(
-                        (localAccountLedgerPage) =>
-                            localAccountLedgerPage.accountId ==
-                            accountLedgerPage.accountId, orElse: () {
-              isExistingAccountLedgerPage = false;
-              return AccountLedgerPageModal(
-                  accountId: accountLedgerPage.accountId,
-                  accountLedgerDatePages: [accountLedgerDatePage]);
-            });
-            if (isExistingAccountLedgerPage) {
-              currentAccountLedgerPage.accountLedgerDatePages
-                  .add(accountLedgerDatePage);
-
-              accountLedgerVerificationResult.failedAccountLedgerPages!
-                  .removeWhere((localAccountLedgerPage) =>
-                      localAccountLedgerPage.accountId ==
-                      accountLedgerPage.accountId);
-            }
-            accountLedgerVerificationResult.failedAccountLedgerPages!
-                .add(currentAccountLedgerPage);
+            actionsOnVerificationSuccessForAccountLedgerDatePage(
+                accountLedgerPage, accountLedgerDatePage);
           }
-        } else {
-          actionsOnVerificationSuccessForAccountLedgerDatePage(
-              accountLedgerPage, accountLedgerDatePage);
         }
       }
+    } else {
+      break;
     }
   }
   return accountLedgerVerificationResult;

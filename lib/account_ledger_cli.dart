@@ -194,8 +194,6 @@ void verifyAccountLedgerGistInteractive() {
     print("Gist Account Ledger Verification Success...");
   } else {
     print("Gist Account Ledger Verification Failure...");
-    print("Failed Entries");
-    print("--------------------------");
-    print(verifyAccountLedgerGistResult.failedAccountLedgerPages);
+    print(verifyAccountLedgerGistResult.failedAccountLedgerPage);
   }
 }

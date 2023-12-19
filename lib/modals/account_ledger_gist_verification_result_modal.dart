@@ -1,9 +1,9 @@
 class AccountLedgerGistVerificationResultModal {
   bool status;
-  List<AccountLedgerPageModal>? failedAccountLedgerPages;
+  AccountLedgerPageModal? failedAccountLedgerPage;
 
   AccountLedgerGistVerificationResultModal(
-      {required this.status, this.failedAccountLedgerPages});
+      {required this.status, this.failedAccountLedgerPage});
 }
 
 class AccountLedgerGistModal {
@@ -40,9 +40,18 @@ class AccountLedgerGistModal {
 class AccountLedgerPageModal {
   late int accountId;
   late List<AccountLedgerDatePageModal> accountLedgerDatePages;
+  String? remarks;
 
-  AccountLedgerPageModal(
-      {required this.accountId, required this.accountLedgerDatePages});
+  AccountLedgerPageModal({
+    required this.accountId,
+    required this.accountLedgerDatePages,
+  });
+
+  AccountLedgerPageModal.withRemarks({
+    required this.accountId,
+    required this.accountLedgerDatePages,
+    required this.remarks,
+  });
 
   AccountLedgerPageModal.fromJson(Map<String, dynamic> json) {
     accountId = json['accountId'];
@@ -64,7 +73,7 @@ class AccountLedgerPageModal {
 
   @override
   String toString() {
-    return 'AccountLedgerPageModal{accountId: $accountId, accountLedgerDatePages: $accountLedgerDatePages}';
+    return 'AccountLedgerPageModal{accountId: $accountId, accountLedgerDatePages: $accountLedgerDatePages${remarks != null ? 'remarks: $remarks' : ''}';
   }
 }
 
