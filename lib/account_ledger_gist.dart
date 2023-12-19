@@ -14,13 +14,11 @@ AccountLedgerGistModal processAccountLedgerGist() {
       in accountLedgerGist.accountLedgerPages) {
     for (AccountLedgerDatePageModal accountLedgerDatePage
         in accountLedgerPage.accountLedgerDatePages) {
-      print("Initial Balance - ${accountLedgerDatePage.initialBalanceOnDate}");
       for (TransactionOnDateModal transactionOnDate
           in accountLedgerDatePage.transactionsOnDate) {
         print(
             "${transactionOnDate.transactionParticulars} - ${transactionOnDate.transactionAmount}");
       }
-      print("Final Balance - ${accountLedgerDatePage.finalBalanceOnDate}");
     }
   }
   return accountLedgerGist;
