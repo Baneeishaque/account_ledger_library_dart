@@ -6,7 +6,7 @@ import 'common_utils/input_utils.dart';
 import 'common_utils/input_utils_interactive.dart';
 import 'common_utils/string_utils.dart';
 import 'models/transaction_model.dart';
-import 'transaction_api_interactive.dart';
+import 'transaction_api.dart';
 
 Tuple3<String, String, double> insertNextTransaction(
   u32 userId,
@@ -63,7 +63,7 @@ void insertTransaction(
             transaction.toAccountId);
       },
       '': () {
-        insertTransactionViaApi(transaction);
+        print(runAccountLedgerInsertTransactionOperation(transaction));
       },
     },
   );
