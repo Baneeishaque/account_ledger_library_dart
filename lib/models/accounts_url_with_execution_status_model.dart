@@ -1,15 +1,15 @@
-class AccountsUrlWithExecutionStatusModal {
+class AccountsUrlWithExecutionStatusModel {
   late int status;
   String? textData;
   String? error;
 
-  AccountsUrlWithExecutionStatusModal({
+  AccountsUrlWithExecutionStatusModel({
     required this.status,
     this.textData,
     this.error,
   });
 
-  AccountsUrlWithExecutionStatusModal.fromJson(dynamic json) {
+  AccountsUrlWithExecutionStatusModel.fromJson(dynamic json) {
     status = json['status'];
     textData = json['textData'];
     error = json['error'];

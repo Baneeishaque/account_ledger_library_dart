@@ -1,7 +1,7 @@
-import 'modals/transaction_modal.dart';
+import 'models/transaction_model.dart';
 import 'transaction_api.dart';
 
-void insertTransactionViaApi(TransactionModal transaction) {
+void insertTransactionViaApi(TransactionModel transaction) {
   // print(transaction.toString());
   print(runAccountLedgerInsertTransactionOperation(transaction));
 }

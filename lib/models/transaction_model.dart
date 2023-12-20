@@ -1,6 +1,6 @@
 import 'package:integer/integer.dart';
 
-class TransactionModal {
+class TransactionModel {
   u32 userId;
   String eventDateTime;
   String particulars;
@@ -8,7 +8,7 @@ class TransactionModal {
   u32 fromAccountId;
   u32 toAccountId;
 
-  TransactionModal(
+  TransactionModel(
     this.userId,
     this.eventDateTime,
     this.particulars,

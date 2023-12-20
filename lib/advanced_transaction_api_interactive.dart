@@ -1,9 +1,9 @@
-import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
 import 'base_transaction_api_interactive.dart';
-import 'modals/transaction_modal.dart';
+import 'common_utils/date_time_utils.dart';
+import 'models/transaction_model.dart';
 
 //1 -> 2, 3 -> 1
 void insertOneTwoThreeOneTransaction(
@@ -16,7 +16,7 @@ void insertOneTwoThreeOneTransaction(
   u32 party3accountId,
 ) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -49,7 +49,7 @@ void insertOneTwoTwoThreeTransaction(
   u32 party3accountId,
 ) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -82,7 +82,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
     u32 party3accountId,
     u32 party4accountId) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -142,7 +142,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
     u32 party3accountId,
     u32 party4accountId) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -215,7 +215,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
     u32 party3accountId,
     u32 party4accountId) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -301,7 +301,7 @@ void insertOneTwoTwoThreeThreeFourTransaction(
     u32 party3accountId,
     u32 party4accountId) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,
@@ -347,7 +347,7 @@ void insertOneTwoTwoThreeThreeOneTransaction(
     u32 party2accountId,
     u32 party3accountId) {
   insertTransaction(
-    TransactionModal(
+    TransactionModel(
       userId,
       eventDateTime,
       particulars,

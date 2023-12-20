@@ -1,35 +1,32 @@
-import 'dart:convert';
-
-import 'package:account_ledger_library/modals/account_ledger_gist_verification_result_modal.dart';
-import 'package:account_ledger_library/utils/account_ledger_kotlin_cli_utils.dart';
+import 'models/account_ledger_gist_model_v2.dart';
+import 'models/account_ledger_gist_verification_result_model.dart';
+import 'utils/account_ledger_kotlin_cli_utils.dart';
 
 String runAccountLedgerGistOperation() {
   return runAccountLedgerKotlinCliOperation(["Gist"]);
 }
 
-AccountLedgerGistModal processAccountLedgerGist() {
-  AccountLedgerGistModal accountLedgerGist = AccountLedgerGistModal.fromJson(
-      jsonDecode(runAccountLedgerGistOperation()));
-  return accountLedgerGist;
+String runAccountLedgerGistV2Operation() {
+  return runAccountLedgerKotlinCliOperation(["GistV2"]);
 }
 
-AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
-    AccountLedgerGistModal accountLedgerGist,
-    void Function(AccountLedgerPageModal, AccountLedgerDatePageModal)
+AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
+    AccountLedgerGistModel accountLedgerGist,
+    void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
         actionsOnVerificationSuccessForAccountLedgerDatePage) {
-  AccountLedgerGistVerificationResultModal accountLedgerVerificationResult =
-      AccountLedgerGistVerificationResultModal(status: true);
+  AccountLedgerGistVerificationResultModel accountLedgerVerificationResult =
+      AccountLedgerGistVerificationResultModel(status: true);
   double accountLedgerDatePageInitialBalance = 0;
-  for (AccountLedgerPageModal accountLedgerPage
+  for (AccountLedgerPageModel accountLedgerPage
       in accountLedgerGist.accountLedgerPages) {
     if (accountLedgerVerificationResult.status) {
-      for (AccountLedgerDatePageModal accountLedgerDatePage
+      for (AccountLedgerDatePageModel accountLedgerDatePage
           in accountLedgerPage.accountLedgerDatePages) {
         if (accountLedgerDatePage.initialBalanceOnDate != null) {
           accountLedgerDatePageInitialBalance =
               accountLedgerDatePage.initialBalanceOnDate!;
         }
-        for (TransactionOnDateModal transactionOnDate
+        for (TransactionOnDateModel transactionOnDate
             in accountLedgerDatePage.transactionsOnDate) {
           accountLedgerDatePageInitialBalance =
               accountLedgerDatePageInitialBalance +
@@ -40,7 +37,7 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
               accountLedgerDatePage.finalBalanceOnDate?.round()) {
             accountLedgerVerificationResult.status = false;
             accountLedgerVerificationResult.failedAccountLedgerPage =
-                AccountLedgerPageModal.withRemarks(
+                AccountLedgerPageModel.withRemarks(
               accountId: accountLedgerPage.accountId,
               accountLedgerDatePages: [accountLedgerDatePage],
               remarks:
@@ -58,4 +55,15 @@ AccountLedgerGistVerificationResultModal verifyAccountLedgerGist(
     }
   }
   return accountLedgerVerificationResult;
+}
+
+AccountLedgerGistVerificationResultModel verifyAccountLedgerGistV2(
+    AccountLedgerGistV2Model accountLedgerGistV2,
+    void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
+        actionsOnVerificationSuccessForAccountLedgerDatePage) {
+  return verifyAccountLedgerGist(
+      AccountLedgerGistModel(
+          userName: accountLedgerGistV2.userName,
+          accountLedgerPages: accountLedgerGistV2.accountLedgerPages),
+      actionsOnVerificationSuccessForAccountLedgerDatePage);
 }

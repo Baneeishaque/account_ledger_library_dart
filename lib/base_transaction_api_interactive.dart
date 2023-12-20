@@ -1,11 +1,11 @@
-import 'package:account_ledger_library/common_utils/date_time_utils.dart';
-import 'package:account_ledger_library/common_utils/input_utils.dart';
-import 'package:account_ledger_library/common_utils/string_utils.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
+import 'common_utils/date_time_utils.dart';
+import 'common_utils/input_utils.dart';
 import 'common_utils/input_utils_interactive.dart';
-import 'modals/transaction_modal.dart';
+import 'common_utils/string_utils.dart';
+import 'models/transaction_model.dart';
 import 'transaction_api_interactive.dart';
 
 Tuple3<String, String, double> insertNextTransaction(
@@ -23,7 +23,7 @@ Tuple3<String, String, double> insertNextTransaction(
       particulars = newParticulars;
       amount = newAmount;
       insertTransaction(
-        TransactionModal(
+        TransactionModel(
           userId,
           eventDateTime,
           newParticulars,
@@ -43,7 +43,7 @@ Tuple3<String, String, double> insertNextTransaction(
 }
 
 void insertTransaction(
-  TransactionModal transaction,
+  TransactionModel transaction,
 ) {
   handleInput(
     displayPrompt: () {
@@ -81,7 +81,7 @@ void insertSplitTransaction(
       inputValidUnsignedPositiveInteger(dataSpecification: "No. of Splits");
   handleInput(
     displayPrompt: () {
-      print("Going to add ${TransactionModal(
+      print("Going to add ${TransactionModel(
         userId,
         eventDateTime,
         particulars,

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:account_ledger_library/models/account_ledger_gist_model_v2.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
@@ -6,7 +9,7 @@ import 'advanced_transaction_api_interactive.dart';
 import 'common_utils/input_utils.dart';
 import 'common_utils/input_utils_interactive.dart';
 import 'constants.dart';
-import 'modals/account_ledger_gist_verification_result_modal.dart';
+import 'models/account_ledger_gist_verification_result_model.dart';
 import 'relations_of_accounts_operations.dart';
 import 'transaction_api.dart';
 import 'utils/user_input_utils_interactive.dart';
@@ -26,6 +29,8 @@ void startAccountLedgerCli() {
           "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
           "\n9 : Get User Account Heads"
           "\n10 : Get Relation of Accounts from file"
+          "\n11 : Process Gist Account Ledger"
+          "\n12 : Verify Gist (Version 2) Account Ledger"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -177,19 +182,35 @@ void startAccountLedgerCli() {
         print("------------------------------");
         print(readRelationsOfAccountsInNormalForm());
       },
+      "11": () {
+        printComingSoonMessage();
+      },
+      "12": () {
+        verifyAccountLedgerGistInteractive(isVersion2: true);
+      },
       "0": () {},
     },
   );
 }
 
-void verifyAccountLedgerGistInteractive() {
-  AccountLedgerGistModal accountLedgerGist = processAccountLedgerGist();
-  var verifyAccountLedgerGistResult = verifyAccountLedgerGist(accountLedgerGist,
-      (AccountLedgerPageModal accountLedgerPage,
-          AccountLedgerDatePageModal accountLedgerDatePage) {
-    print(
-        "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
-  });
+void verifyAccountLedgerGistInteractive({bool isVersion2 = false}) {
+  var verifyAccountLedgerGistResult = isVersion2
+      ? verifyAccountLedgerGistV2(
+          AccountLedgerGistV2Model.fromJson(
+              jsonDecode(runAccountLedgerGistV2Operation())),
+          (AccountLedgerPageModel accountLedgerPage,
+              AccountLedgerDatePageModel accountLedgerDatePage) {
+          print(
+              "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+        })
+      : verifyAccountLedgerGist(
+          AccountLedgerGistModel.fromJson(
+              jsonDecode(runAccountLedgerGistOperation())),
+          (AccountLedgerPageModel accountLedgerPage,
+              AccountLedgerDatePageModel accountLedgerDatePage) {
+          print(
+              "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+        });
   if (verifyAccountLedgerGistResult.status) {
     print("Gist Account Ledger Verification Success...");
   } else {

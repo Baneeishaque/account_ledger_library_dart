@@ -132,3 +132,7 @@ void handleInput(
 void printInvalidInputMessage() {
   printInvalidMessage("Input Data");
 }
+
+void printComingSoonMessage() {
+  print("Coming Soon...");
+}

@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:account_ledger_library/modals/relation_of_accounts_modal.dart';
+import 'models/relation_of_accounts_model.dart';
 
-RelationOfAccountsModal readRelationsOfAccounts() {
-  return RelationOfAccountsModal.fromJson(
+RelationOfAccountsModel readRelationsOfAccounts() {
+  return RelationOfAccountsModel.fromJson(
       jsonDecode(File("relationOfAccounts.json").readAsStringSync()));
 }
 
-RelationOfAccountsNormalisedModal readRelationsOfAccountsInNormalForm() {
-  Map<int, Map<int, List<Relations>>> usersNormalisedMap = {};
+RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
+  Map<int, Map<int, List<RelationModel>>> usersNormalisedMap = {};
 
-  RelationOfAccountsModal relationOfAccounts = readRelationsOfAccounts();
-  for (Users user in relationOfAccounts.users) {
-    Map<int, List<Relations>> accountsNormalisedMap = {};
+  RelationOfAccountsModel relationOfAccounts = readRelationsOfAccounts();
+  for (UserModel user in relationOfAccounts.users) {
+    Map<int, List<RelationModel>> accountsNormalisedMap = {};
 
-    for (Accounts account in user.accounts) {
+    for (AccountModel account in user.accounts) {
       for (int accountId in account.accountId) {
         if (accountsNormalisedMap.containsKey(accountId)) {
           accountsNormalisedMap[accountId] =
@@ -28,5 +28,5 @@ RelationOfAccountsNormalisedModal readRelationsOfAccountsInNormalForm() {
 
     usersNormalisedMap[user.userId] = accountsNormalisedMap;
   }
-  return RelationOfAccountsNormalisedModal(userAccounts: usersNormalisedMap);
+  return RelationOfAccountsNormalisedModel(userAccounts: usersNormalisedMap);
 }
