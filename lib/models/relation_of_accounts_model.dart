@@ -128,6 +128,6 @@ class RelationOfAccountsNormalisedModel {
 
   @override
   String toString() {
-    return 'RelationOfAccountsNormalisedModal{users: $userAccounts}';
+    return 'RelationOfAccountsNormalisedModal{userAccounts: $userAccounts}';
   }
 }

@@ -85,9 +85,8 @@ AccountLedgerApiResultMessageModel
   TransactionModel transaction,
 ) {
   AccountLedgerApiResultStatusModel accountLedgerApiResultStatus =
-      AccountLedgerApiResultStatusModel.fromJson(jsonDecode(
-          runAccountLedgerKotlinCliOperation(
-              getInsertTransactionArguments(transaction))));
+      AccountLedgerApiResultStatusModel.fromJson(
+          jsonDecode(runAccountLedgerInsertTransactionOperation(transaction)));
 
   if (accountLedgerApiResultStatus.status == 0) {
     return AccountLedgerApiResultMessageModel(
