@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 
 import 'common_utils.dart';
@@ -100,6 +101,24 @@ double getValidUnsignedDouble({
     );
   }
   return convertedData;
+}
+
+DateTime getValidTimeInNormalTimeFormat({
+  required void Function() displayPrompt,
+  void Function() invalidDataActions = dummyFunction,
+}) {
+  DateTime? convertedTime = normalTimeFormat.tryParse(getNonEmptyText(
+    displayPrompt: displayPrompt,
+    invalidDataActions: invalidDataActions,
+  ));
+  if (convertedTime == null) {
+    invalidDataActions.call();
+    return getValidTimeInNormalTimeFormat(
+      displayPrompt: displayPrompt,
+      invalidDataActions: invalidDataActions,
+    );
+  }
+  return convertedTime;
 }
 
 void handleInput(

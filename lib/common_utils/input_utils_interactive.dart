@@ -1,9 +1,13 @@
+import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 
 import 'input_utils.dart';
 
-void printInvalidMessage(String dataSpecification) {
-  print("Error : Please Enter Valid $dataSpecification...");
+void printInvalidMessage({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
+  print("${inputPromptPrefix}Error : Please Enter Valid $dataSpecification...");
 }
 
 // dynamic getDataFromTerminal<T>({required String dataSpecification}) {
@@ -30,46 +34,82 @@ void printInvalidMessage(String dataSpecification) {
 //   }
 // }
 
-u32 inputValidUnsignedInteger({required String dataSpecification}) {
+u32 inputValidUnsignedInteger({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
   return getValidUnsignedInteger(
     displayPrompt: () {
-      print("Enter $dataSpecification : ");
+      print("${inputPromptPrefix}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidMessage(dataSpecification);
+      printInvalidMessage(dataSpecification: dataSpecification);
     },
   );
 }
 
-u32 inputValidUnsignedPositiveInteger({required String dataSpecification}) {
+u32 inputValidUnsignedPositiveInteger({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
   return getValidUnsignedPositiveInteger(
     displayPrompt: () {
-      print("Enter $dataSpecification : ");
+      print("${inputPromptPrefix}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidMessage(dataSpecification);
+      printInvalidMessage(dataSpecification: dataSpecification);
     },
   );
 }
 
-String inputValidText({required String dataSpecification}) {
+String inputValidText({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
   return getNonEmptyText(
     displayPrompt: () {
-      print("Enter $dataSpecification : ");
+      print("${inputPromptPrefix}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidMessage(dataSpecification);
+      printInvalidMessage(dataSpecification: dataSpecification);
     },
   );
 }
 
-double inputValidDouble({required String dataSpecification}) {
+double inputValidDouble({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
   return getValidUnsignedDouble(
     displayPrompt: () {
-      print("Enter $dataSpecification : ");
+      print("${inputPromptPrefix}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
-      printInvalidMessage(dataSpecification);
+      printInvalidMessage(dataSpecification: dataSpecification);
     },
   );
+}
+
+DateTime inputValidTimeInNormalTimeFormat({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
+  return getValidTimeInNormalTimeFormat(
+    displayPrompt: () {
+      print("${inputPromptPrefix}Enter $dataSpecification : ");
+    },
+    invalidDataActions: () {
+      printInvalidMessage(dataSpecification: dataSpecification);
+    },
+  );
+}
+
+String inputValidTimeInNormalTimeFormatAsText({
+  String? inputPromptPrefix,
+  required String dataSpecification,
+}) {
+  return normalTimeFormat.format(inputValidTimeInNormalTimeFormat(
+    inputPromptPrefix: inputPromptPrefix,
+    dataSpecification: dataSpecification,
+  ));
 }
