@@ -1,3 +1,5 @@
+import 'package:integer/integer.dart';
+
 class AccountLedgerGistVerificationResultModel {
   bool status;
   AccountLedgerPageModel? failedAccountLedgerPage;
@@ -38,7 +40,7 @@ class AccountLedgerGistModel {
 }
 
 class AccountLedgerPageModel {
-  late int accountId;
+  late u32 accountId;
   late List<AccountLedgerDatePageModel> accountLedgerDatePages;
   String? remarks;
 
@@ -54,7 +56,7 @@ class AccountLedgerPageModel {
   });
 
   AccountLedgerPageModel.fromJson(Map<String, dynamic> json) {
-    accountId = json['accountId'];
+    accountId = u32(json['accountId']);
     if (json['accountLedgerDatePages'] != null) {
       accountLedgerDatePages = <AccountLedgerDatePageModel>[];
       json['accountLedgerDatePages'].forEach((v) {

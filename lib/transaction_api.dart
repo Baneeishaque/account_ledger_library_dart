@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:integer/integer.dart';
 
+import 'common_utils/common_utils.dart';
 import 'common_utils/date_time_utils.dart';
 import 'models/account_ledger_api_result_message_model.dart';
 import 'models/accounts_url_with_execution_status_model.dart';
@@ -13,12 +14,7 @@ import 'utils/account_ledger_kotlin_cli_utils.dart';
 String runAccountLedgerInsertTransactionOperation(
   TransactionModel transaction,
 ) {
-  return runAccountLedgerKotlinCliOperation(
-      getInsertTransactionArguments(transaction));
-}
-
-List<String> getInsertTransactionArguments(TransactionModel transaction) {
-  return [
+  return runAccountLedgerKotlinCliOperation([
     "InsertTransaction",
     transaction.userId.toString(),
     transaction.eventDateTime,
@@ -26,28 +22,40 @@ List<String> getInsertTransactionArguments(TransactionModel transaction) {
     transaction.amount.abs().toString(),
     transaction.fromAccountId.toString(),
     transaction.toAccountId.toString()
-  ];
+  ]);
 }
 
 AccountsWithExecutionStatusModel runAccountLedgerGetAccountsOperation(
-    [u32? userId]) {
+    {u32? userId,
+    void Function() actionsBeforeExecution = dummyFunction,
+    void Function() actionsAfterExecution = dummyFunction}) {
   return AccountsWithExecutionStatusModel.fromJson(jsonDecode(
       runAccountLedgerOperationWithUserId(
-          ([userId]) => getGetAccountsArguments(userId), userId)));
+          ([userId]) => getGetAccountsArguments(userId),
+          userId: userId,
+          actionsBeforeExecution: actionsBeforeExecution,
+          actionsAfterExecution: actionsAfterExecution)));
 }
 
 AccountsUrlWithExecutionStatusModel runAccountLedgerGetAccountsUrlOperation(
     [u32? userId]) {
-  return AccountsUrlWithExecutionStatusModel.fromJson(jsonDecode(
-      runAccountLedgerOperationWithUserId(
-          ([userId]) => getGetAccountsUrlArguments(userId), userId)));
+  return AccountsUrlWithExecutionStatusModel.fromJson(
+      jsonDecode(runAccountLedgerOperationWithUserId(
+    ([userId]) => getGetAccountsUrlArguments(userId),
+    userId: userId,
+  )));
 }
 
 String runAccountLedgerOperationWithUserId(
     List<String> Function([u32? userId]) getOperationArgumentsWithUserId,
-    [u32? userId]) {
+    {u32? userId,
+    void Function() actionsBeforeExecution = dummyFunction,
+    void Function() actionsAfterExecution = dummyFunction}) {
   return runAccountLedgerKotlinCliOperation(
-      getOperationArgumentsWithUserId(userId));
+    getOperationArgumentsWithUserId(userId),
+    actionsBeforeExecution: actionsBeforeExecution,
+    actionsAfterExecution: actionsAfterExecution,
+  );
 }
 
 List<String> getGetAccountsArguments([u32? userId]) {

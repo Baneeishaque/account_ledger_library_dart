@@ -1,3 +1,8 @@
+import 'package:dart_extensions_methods/dart_extension_methods.dart';
+import 'package:integer/integer.dart';
+
+import '../common_utils/u32_utils.dart';
+
 class RelationOfAccountsModel {
   RelationOfAccountsModel({
     required this.users,
@@ -27,13 +32,18 @@ class RelationOfAccountsModel {
 }
 
 class UserModel {
+  late List<u32> userIds;
+  late List<AccountModel> accounts;
+
   UserModel({
-    required this.userId,
+    required this.userIds,
     required this.accounts,
   });
 
   UserModel.fromJson(dynamic json) {
-    userId = json['userId'];
+    userIds = json['userIds'] != null
+        ? getUnsignedIntegerList(json['userIds'].cast<int>())
+        : [];
     if (json['accounts'] != null) {
       accounts = [];
       json['accounts'].forEach((v) {
@@ -42,85 +52,85 @@ class UserModel {
     }
   }
 
-  late int userId;
-  late List<AccountModel> accounts;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['userId'] = userId;
+    map['userId'] = userIds;
     map['accounts'] = accounts.map((v) => v.toJson()).toList();
     return map;
   }
 
   @override
   String toString() {
-    return 'Users{userId: $userId, accounts: $accounts}';
+    return 'Users{userId: $userIds, accounts: $accounts}';
   }
 }
 
 class AccountModel {
+  late List<u32> accountIds;
+  late List<AccountRelationModel> relations;
+
   AccountModel({
-    required this.accountId,
+    required this.accountIds,
     required this.relations,
   });
 
   AccountModel.fromJson(dynamic json) {
-    accountId = json['accountId'] != null ? json['accountId'].cast<int>() : [];
+    accountIds = json['accountIds'] != null
+        ? getUnsignedIntegerList(json['accountIds'].cast<int>())
+        : [];
     if (json['relations'] != null) {
       relations = [];
       json['relations'].forEach((v) {
-        relations.add(RelationModel.fromJson(v));
+        relations.add(AccountRelationModel.fromJson(v));
       });
     }
   }
 
-  late List<int> accountId;
-  late List<RelationModel> relations;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['accountId'] = accountId;
+    map['accountId'] = accountIds;
     map['relations'] = relations.map((v) => v.toJson()).toList();
     return map;
   }
 
   @override
   String toString() {
-    return 'Accounts{accountId: $accountId, relations: $relations}';
+    return 'Accounts{accountId: $accountIds, relations: $relations}';
   }
 }
 
-class RelationModel {
-  RelationModel({
+class AccountRelationModel {
+  late String indicator;
+  late List<Pair<u32, String>> associatedAccountIds;
+
+  AccountRelationModel({
     required this.indicator,
-    required this.associatedAccountId,
+    required this.associatedAccountIds,
   });
 
-  RelationModel.fromJson(dynamic json) {
+  AccountRelationModel.fromJson(dynamic json) {
     indicator = json['indicator'];
-    associatedAccountId = json['associatedAccountId'] != null
-        ? json['associatedAccountId'].cast<int>()
+    associatedAccountIds = json['associatedAccountId'] != null
+        ? getUnsignedIntegerListWithMetaTextFromIntegers(
+            json['associatedAccountId'].cast<int>())
         : [];
   }
-
-  late String indicator;
-  late List<int> associatedAccountId;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['indicator'] = indicator;
-    map['associatedAccountId'] = associatedAccountId;
+    map['associatedAccountId'] = associatedAccountIds;
     return map;
   }
 
   @override
   String toString() {
-    return 'Relations{indicator: $indicator, associatedAccountId: $associatedAccountId}';
+    return 'Relations{indicator: $indicator, associatedAccountId: $associatedAccountIds}';
   }
 }
 
 class RelationOfAccountsNormalisedModel {
-  Map<int, Map<int, List<RelationModel>>> userAccounts;
+  Map<u32, Map<u32, List<AccountRelationModel>>> userAccounts;
 
   RelationOfAccountsNormalisedModel({
     required this.userAccounts,

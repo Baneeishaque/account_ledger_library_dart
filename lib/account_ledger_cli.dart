@@ -1,15 +1,15 @@
 import 'dart:convert';
 
+import 'package:account_ledger_library/account_ledger_gist_api_interactive.dart';
 import 'package:account_ledger_library/models/account_ledger_gist_model_v2.dart';
 import 'package:integer/integer.dart';
 import 'package:tuple/tuple.dart';
 
-import 'account_ledger_gist.dart';
+import 'account_ledger_gist_api.dart';
 import 'advanced_transaction_api_interactive.dart';
 import 'common_utils/input_utils.dart';
 import 'common_utils/input_utils_interactive.dart';
 import 'constants.dart';
-import 'models/account_ledger_gist_verification_result_model.dart';
 import 'relations_of_accounts_operations.dart';
 import 'transaction_api.dart';
 import 'utils/user_input_utils_interactive.dart';
@@ -29,8 +29,9 @@ void startAccountLedgerCli() {
           "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
           "\n9 : Get User Account Heads"
           "\n10 : Get Relation of Accounts from file"
-          "\n11 : Process Gist Account Ledger"
+          "\n11 : Process Gist (Version 2) Account Ledger (Interactive)"
           "\n12 : Verify Gist (Version 2) Account Ledger"
+          "\n13 : Process Gist (Version 2) Account Ledger (Auto)"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -175,46 +176,29 @@ void startAccountLedgerCli() {
       },
       "9": () {
         print(runAccountLedgerGetAccountsOperation(
-            inputValidUnsignedPositiveInteger(dataSpecification: "User ID")));
+            userId: inputValidUnsignedPositiveInteger(
+                dataSpecification: "User ID")));
       },
       "10": () {
-        print(readRelationsOfAccounts());
+        print(readRelationsOfAccountsJsonFile());
         print("------------------------------");
         print(readRelationsOfAccountsInNormalForm());
       },
       "11": () {
-        printComingSoonMessage();
+        processAccountLedgerGistV2InterActive(AccountLedgerGistV2Model.fromJson(
+            jsonDecode(runAccountLedgerGistV2Operation(
+          actionsBeforeExecution: () {
+            print('Running GistV2 Operation');
+          },
+        ))));
       },
       "12": () {
         verifyAccountLedgerGistInteractive(isVersion2: true);
       },
+      "13": () {
+        printComingSoonMessage();
+      },
       "0": () {},
     },
   );
-}
-
-void verifyAccountLedgerGistInteractive({bool isVersion2 = false}) {
-  var verifyAccountLedgerGistResult = isVersion2
-      ? verifyAccountLedgerGistV2(
-          AccountLedgerGistV2Model.fromJson(
-              jsonDecode(runAccountLedgerGistV2Operation())),
-          (AccountLedgerPageModel accountLedgerPage,
-              AccountLedgerDatePageModel accountLedgerDatePage) {
-          print(
-              "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
-        })
-      : verifyAccountLedgerGist(
-          AccountLedgerGistModel.fromJson(
-              jsonDecode(runAccountLedgerGistOperation())),
-          (AccountLedgerPageModel accountLedgerPage,
-              AccountLedgerDatePageModel accountLedgerDatePage) {
-          print(
-              "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
-        });
-  if (verifyAccountLedgerGistResult.status) {
-    print("Gist Account Ledger Verification Success...");
-  } else {
-    print("Gist Account Ledger Verification Failure...");
-    print(verifyAccountLedgerGistResult.failedAccountLedgerPage);
-  }
 }

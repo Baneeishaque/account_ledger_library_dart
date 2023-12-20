@@ -7,7 +7,7 @@ void printInvalidMessage({
   String? inputPromptPrefix,
   required String dataSpecification,
 }) {
-  print("${inputPromptPrefix}Error : Please Enter Valid $dataSpecification...");
+  print("${inputPromptPrefix ?? ''}Error : Please Enter Valid $dataSpecification...");
 }
 
 // dynamic getDataFromTerminal<T>({required String dataSpecification}) {
@@ -40,7 +40,7 @@ u32 inputValidUnsignedInteger({
 }) {
   return getValidUnsignedInteger(
     displayPrompt: () {
-      print("${inputPromptPrefix}Enter $dataSpecification : ");
+      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
@@ -54,7 +54,7 @@ u32 inputValidUnsignedPositiveInteger({
 }) {
   return getValidUnsignedPositiveInteger(
     displayPrompt: () {
-      print("${inputPromptPrefix}Enter $dataSpecification : ");
+      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
@@ -68,7 +68,7 @@ String inputValidText({
 }) {
   return getNonEmptyText(
     displayPrompt: () {
-      print("${inputPromptPrefix}Enter $dataSpecification : ");
+      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
@@ -82,7 +82,7 @@ double inputValidDouble({
 }) {
   return getValidUnsignedDouble(
     displayPrompt: () {
-      print("${inputPromptPrefix}Enter $dataSpecification : ");
+      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
@@ -96,7 +96,7 @@ DateTime inputValidTimeInNormalTimeFormat({
 }) {
   return getValidTimeInNormalTimeFormat(
     displayPrompt: () {
-      print("${inputPromptPrefix}Enter $dataSpecification : ");
+      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);

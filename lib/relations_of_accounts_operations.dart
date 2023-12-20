@@ -1,22 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:account_ledger_library/common_utils/u32_utils.dart';
+import 'package:account_ledger_library/utils/account_utils.dart';
+import 'package:dart_extensions_methods/dart_extension_methods.dart';
+import 'package:integer/integer.dart';
+
+import 'models/accounts_with_execution_status_model.dart';
 import 'models/relation_of_accounts_model.dart';
 
-RelationOfAccountsModel readRelationsOfAccounts() {
+RelationOfAccountsModel readRelationsOfAccountsJsonFile() {
   return RelationOfAccountsModel.fromJson(
       jsonDecode(File("relationOfAccounts.json").readAsStringSync()));
 }
 
 RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
-  Map<int, Map<int, List<RelationModel>>> usersNormalisedMap = {};
+  Map<u32, Map<u32, List<AccountRelationModel>>> usersNormalisedMap = {};
 
-  RelationOfAccountsModel relationOfAccounts = readRelationsOfAccounts();
+  RelationOfAccountsModel relationOfAccounts =
+      readRelationsOfAccountsJsonFile();
   for (UserModel user in relationOfAccounts.users) {
-    Map<int, List<RelationModel>> accountsNormalisedMap = {};
+    Map<u32, List<AccountRelationModel>> accountsNormalisedMap = {};
 
     for (AccountModel account in user.accounts) {
-      for (int accountId in account.accountId) {
+      for (u32 accountId in account.accountIds) {
         if (accountsNormalisedMap.containsKey(accountId)) {
           accountsNormalisedMap[accountId] =
               (accountsNormalisedMap[accountId]!) + account.relations;
@@ -24,19 +31,96 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
           accountsNormalisedMap[accountId] = account.relations;
         }
       }
+
+      for (AccountRelationModel accountRelation in account.relations) {
+        for (Pair<u32, String> associatedAccountId
+            in accountRelation.associatedAccountIds) {
+          if (accountsNormalisedMap.containsKey(associatedAccountId.left)) {
+            accountsNormalisedMap[associatedAccountId.left!] =
+                (accountsNormalisedMap[associatedAccountId.left]!) +
+                    [
+                      AccountRelationModel(
+                          indicator: accountRelation.indicator,
+                          associatedAccountIds:
+                              getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
+                                  account.accountIds)),
+                    ];
+          } else {
+            accountsNormalisedMap[associatedAccountId.left!] = [
+              AccountRelationModel(
+                  indicator: accountRelation.indicator,
+                  associatedAccountIds:
+                      getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
+                          account.accountIds)),
+            ];
+          }
+        }
+      }
     }
 
-    usersNormalisedMap[user.userId] = accountsNormalisedMap;
+    for (u32 userId in user.userIds) {
+      usersNormalisedMap[userId] = accountsNormalisedMap;
+    }
   }
   return RelationOfAccountsNormalisedModel(userAccounts: usersNormalisedMap);
 }
 
-List<RelationModel>? getAccountRelationList(
-    int userId, int accountId, String transactionParticulars) {
-  RelationOfAccountsNormalisedModel relationOfAccountsNormalised =
-      readRelationsOfAccountsInNormalForm();
-  return relationOfAccountsNormalised.userAccounts[userId]?[accountId]
-      ?.where((RelationModel relation) =>
+List<AccountRelationModel>? getAccountRelations(
+  u32 userId,
+  u32 accountId,
+  String transactionParticulars,
+) {
+  return (readRelationsOfAccountsInNormalForm())
+      .userAccounts[userId]?[accountId]
+      ?.where((AccountRelationModel relation) =>
           transactionParticulars.toLowerCase().contains(relation.indicator))
       .toList();
+}
+
+List<AccountRelationModel>? getDetailedAccountRelations(
+  u32 userId,
+  u32 accountId,
+  String transactionParticulars,
+  List<AccountHeadModel> accountHeads,
+) {
+  return (getDetailedRelationsOfAccounts(
+          readRelationsOfAccountsInNormalForm(), accountHeads))
+      .userAccounts[userId]?[accountId]
+      ?.where((AccountRelationModel relation) =>
+          transactionParticulars.toLowerCase().contains(relation.indicator))
+      .toList();
+}
+
+RelationOfAccountsNormalisedModel getDetailedRelationsOfAccounts(
+  RelationOfAccountsNormalisedModel relationOfAccounts,
+  List<AccountHeadModel> accountHeads,
+) {
+  RelationOfAccountsNormalisedModel result = relationOfAccounts;
+  relationOfAccounts.userAccounts
+      .forEach((u32 userId, Map<u32, List<AccountRelationModel>> accounts) {
+    accounts
+        .forEach((u32 accountId, List<AccountRelationModel> accountRelations) {
+      for (int i = 0; i < accountRelations.length; i++) {
+        AccountRelationModel accountRelation = accountRelations[i];
+
+        for (int j = 0; j < accountRelation.associatedAccountIds.length; j++) {
+          u32 associatedAccountId =
+              accountRelation.associatedAccountIds[j].left!;
+
+          result.userAccounts[userId]![accountId]![i].associatedAccountIds[j] =
+              Pair(
+            associatedAccountId,
+            accountHeads
+                .firstWhere(
+                    (AccountHeadModel accountHead) =>
+                        accountHead.id == associatedAccountId,
+                    orElse: () => dummyAccountHead)
+                .fullName,
+          );
+        }
+      }
+    });
+  });
+
+  return result;
 }

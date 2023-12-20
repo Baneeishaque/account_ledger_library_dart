@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import '../common_utils/common_utils.dart';
 import '../constants.dart';
 
 String runAccountLedgerKotlinCliOperation(
-    List<String> accountLedgerKotlinCliArguments) {
-  return (Process.runSync(
+    List<String> accountLedgerKotlinCliArguments,
+    {void Function() actionsBeforeExecution = dummyFunction,
+    void Function() actionsAfterExecution = dummyFunction}) {
+  actionsBeforeExecution();
+  String result = (Process.runSync(
     accountLedgerCliExecutable,
     accountLedgerKotlinCliArguments,
     environment: {
@@ -12,4 +16,6 @@ String runAccountLedgerKotlinCliOperation(
     },
     workingDirectory: File(accountLedgerCliExecutable).parent.path,
   )).stdout;
+  actionsAfterExecution();
+  return result;
 }

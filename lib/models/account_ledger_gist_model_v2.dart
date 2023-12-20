@@ -1,7 +1,9 @@
+import 'package:integer/integer.dart';
+
 import 'account_ledger_gist_verification_result_model.dart';
 
 class AccountLedgerGistV2Model extends AccountLedgerGistModel {
-  late int userId;
+  late u32 userId;
 
   AccountLedgerGistV2Model({
     required super.userName,
@@ -12,7 +14,7 @@ class AccountLedgerGistV2Model extends AccountLedgerGistModel {
   AccountLedgerGistV2Model.fromJson(Map<String, dynamic> json)
       : super.fromJson(json) {
     userName = json['userName'];
-    userId = json['userId'];
+    userId = u32(json['userId']);
     if (json['accountLedgerPages'] != null) {
       accountLedgerPages = <AccountLedgerPageModel>[];
       json['accountLedgerPages'].forEach((v) {

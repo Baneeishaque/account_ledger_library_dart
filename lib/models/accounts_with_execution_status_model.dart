@@ -1,3 +1,5 @@
+import 'package:integer/integer.dart';
+
 class AccountsWithExecutionStatusModel {
   late bool isOK;
   List<AccountHeadModel>? data;
@@ -33,15 +35,15 @@ class AccountsWithExecutionStatusModel {
 }
 
 class AccountHeadModel {
-  late int id;
+  late u32 id;
   late String fullName;
   late String name;
-  late int parentAccountId;
+  late u32 parentAccountId;
   late String accountType;
   late String notes;
   late String commodityType;
   late String commodityValue;
-  late int ownerId;
+  late u32 ownerId;
   late String taxable;
   late String placeHolder;
 
@@ -59,15 +61,15 @@ class AccountHeadModel {
       required this.placeHolder});
 
   AccountHeadModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = u32(json['id']);
     fullName = json['fullName'];
     name = json['name'];
-    parentAccountId = json['parentAccountId'];
+    parentAccountId = u32(json['parentAccountId']);
     accountType = json['accountType'];
     notes = json['notes'] ?? "";
     commodityType = json['commodityType'];
     commodityValue = json['commodityValue'];
-    ownerId = json['ownerId'];
+    ownerId = u32(json['ownerId']);
     taxable = json['taxable'];
     placeHolder = json['placeHolder'];
   }
