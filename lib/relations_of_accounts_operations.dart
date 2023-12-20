@@ -30,3 +30,13 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
   }
   return RelationOfAccountsNormalisedModel(userAccounts: usersNormalisedMap);
 }
+
+List<RelationModel>? getAccountRelationList(
+    int userId, int accountId, String transactionParticulars) {
+  RelationOfAccountsNormalisedModel relationOfAccountsNormalised =
+      readRelationsOfAccountsInNormalForm();
+  return relationOfAccountsNormalised.userAccounts[userId]?[accountId]
+      ?.where((RelationModel relation) =>
+          transactionParticulars.toLowerCase().contains(relation.indicator))
+      .toList();
+}
