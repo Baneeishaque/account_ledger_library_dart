@@ -113,3 +113,11 @@ String inputValidTimeInNormalTimeFormatAsText({
     dataSpecification: dataSpecification,
   ));
 }
+
+void printInvalidInputMessage() {
+  printInvalidMessage(dataSpecification: "Input Data");
+}
+
+void printComingSoonMessage() {
+  print("Coming Soon...");
+}

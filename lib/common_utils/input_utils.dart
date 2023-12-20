@@ -4,7 +4,6 @@ import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 
 import 'common_utils.dart';
-import 'input_utils_interactive.dart';
 
 String getNonEmptyText({
   required void Function() displayPrompt,
@@ -146,12 +145,4 @@ void handleInput(
           actionsWithKeys: actionsWithKeys);
     }
   }
-}
-
-void printInvalidInputMessage() {
-  printInvalidMessage("Input Data");
-}
-
-void printComingSoonMessage() {
-  print("Coming Soon...");
 }
