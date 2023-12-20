@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  dart_extensions_methods:
+    dependency: "direct main"
+    description:
+      name: dart_extensions_methods
+      sha256: bef567e30143b6bb360ac5b79b4a4c90b51c69d20055331ff0bc4fc06e960197
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   file:
     dependency: transitive
     description:
