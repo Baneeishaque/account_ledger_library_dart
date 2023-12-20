@@ -121,3 +121,7 @@ void printInvalidInputMessage() {
 void printComingSoonMessage() {
   print("Coming Soon...");
 }
+
+void printErrorMessage(String message) {
+  print('Error : $message');
+}
