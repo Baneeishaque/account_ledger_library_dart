@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:account_ledger_library/account_ledger_kotlin_cli_operations.dart';
 import 'package:account_ledger_library/common_utils/input_utils.dart';
 import 'package:account_ledger_library/common_utils/u32_utils.dart';
+import 'package:account_ledger_library/models/account_ledger_api_result_message_model.dart';
 import 'package:account_ledger_library/models/account_ledger_gist_model_v2.dart';
 import 'package:account_ledger_library/models/account_ledger_gist_verification_result_model.dart';
 import 'package:account_ledger_library/models/accounts_with_execution_status_model.dart';
@@ -15,6 +16,7 @@ import 'package:integer/integer.dart';
 
 import 'account_ledger_gist_api.dart';
 import 'common_utils/input_utils_interactive.dart';
+import 'transaction_api.dart';
 
 late List<AccountHeadModel> _accountHeads;
 
@@ -259,18 +261,66 @@ String processTransactionForAccountIds(
         );
       },
       '': () {
-        print(TransactionModel(
-          accountLedgerGistV2.userId,
+        currentEventTime = insertTransactionWithRetryOption(
+          accountLedgerGistV2,
           currentEventDate,
-          currentTransactionOnDate.transactionParticulars,
-          currentTransactionOnDate.transactionAmount,
+          currentTransactionOnDate,
           fromAccountId,
           toAccountId,
-        ));
-        // print(runAccountLedgerInsertTransactionOperation(transaction));
+          currentEventTime,
+        );
       }
     },
   );
+  return currentEventTime;
+}
+
+String insertTransactionWithRetryOption(
+  AccountLedgerGistV2Model accountLedgerGistV2,
+  String currentEventDate,
+  TransactionOnDateModel currentTransactionOnDate,
+  u32 fromAccountId,
+  u32 toAccountId,
+  String currentEventTime,
+) {
+  AccountLedgerApiResultMessageModel insertTransactionResult =
+      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+          TransactionModel(
+    accountLedgerGistV2.userId,
+    currentEventDate,
+    currentTransactionOnDate.transactionParticulars,
+    currentTransactionOnDate.transactionAmount,
+    fromAccountId,
+    toAccountId,
+  ));
+  if (insertTransactionResult.accountLedgerApiResultStatus.status == 0) {
+    currentEventTime = insertTransactionResult.newDateTime.split(' ').first;
+  } else {
+    handleInput(
+      displayPrompt: () {
+        print(
+            'Insert Transaction Operation Failure due to ${insertTransactionResult.accountLedgerApiResultStatus.error}, '
+            'E to Exit, '
+            'Enter to Retry : ');
+      },
+      invalidInputActions: printInvalidInputMessage,
+      actionsWithKeys: {
+        'E': () {
+          printExitMessage();
+        },
+        '': () {
+          currentEventTime = insertTransactionWithRetryOption(
+            accountLedgerGistV2,
+            currentEventDate,
+            currentTransactionOnDate,
+            fromAccountId,
+            toAccountId,
+            currentEventTime,
+          );
+        },
+      },
+    );
+  }
   return currentEventTime;
 }
 

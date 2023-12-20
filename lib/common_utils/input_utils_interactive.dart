@@ -1,13 +1,15 @@
 import 'package:account_ledger_library/common_utils/date_time_utils.dart';
 import 'package:integer/integer.dart';
 
+import 'common_utils.dart';
 import 'input_utils.dart';
 
 void printInvalidMessage({
   String? inputPromptPrefix,
   required String dataSpecification,
 }) {
-  print("${inputPromptPrefix ?? ''}Error : Please Enter Valid $dataSpecification...");
+  print(
+      "${inputPromptPrefix ?? ''}Error : Please Enter Valid $dataSpecification...");
 }
 
 // dynamic getDataFromTerminal<T>({required String dataSpecification}) {
@@ -124,4 +126,12 @@ void printComingSoonMessage() {
 
 void printErrorMessage(String message) {
   print('Error : $message');
+}
+
+void printExitMessage(
+    {void Function() actionsBeforeExecution = dummyFunction,
+    void Function() actionsAfterExecution = dummyFunction}) {
+  actionsBeforeExecution();
+  print('Good Bye...');
+  actionsAfterExecution();
 }
