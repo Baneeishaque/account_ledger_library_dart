@@ -107,7 +107,7 @@ AccountLedgerApiResultMessageModel
 
 //1->2, 2->1
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertTwoWayTransactionOperationAsync(
+    runAccountLedgerInsertTwoWayTransactionOperation(
   TransactionModel transaction,
   String secondParticulars,
   double secondAmount,
@@ -133,7 +133,7 @@ AccountLedgerApiResultMessageModel
 
 //1->2, 3->1
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertOneTwoThreeOneTransactionOperationAsync(
+    runAccountLedgerInsertOneTwoThreeOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   String secondParticulars,
@@ -160,7 +160,7 @@ AccountLedgerApiResultMessageModel
 
 //1->2, 2->3
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertOneTwoTwoThreeTransactionOperationAsync(
+    runAccountLedgerInsertOneTwoTwoThreeTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   String secondParticulars,
@@ -187,7 +187,7 @@ AccountLedgerApiResultMessageModel
 
 //1 -> 2, 2 -> 3, 3 -> 4
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertOneTwoTwoThreeThreeFourTransactionOperationAsync(
+    runAccountLedgerInsertOneTwoTwoThreeThreeFourTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   u32 party4AccountId,
@@ -232,7 +232,7 @@ AccountLedgerApiResultMessageModel
 
 //1 -> 2, 2 -> 3, 4 -> 1
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertOneTwoTwoThreeFourOneTransactionOperationAsync(
+    runAccountLedgerInsertOneTwoTwoThreeFourOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   u32 party4AccountId,
@@ -277,7 +277,7 @@ AccountLedgerApiResultMessageModel
 
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
 AccountLedgerApiResultMessageModel
-    runAccountLedgerInsertOneTwoTwoThreeThreeFourFourOneTransactionOperationAsync(
+    runAccountLedgerInsertOneTwoTwoThreeThreeFourFourOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   u32 party4AccountId,
