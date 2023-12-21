@@ -5,7 +5,7 @@ import 'utils/account_ledger_kotlin_cli_utils.dart';
 
 String runAccountLedgerGistOperation(
     {void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+    void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
     //TODO : Use Enums
     ["Gist"],
@@ -16,7 +16,7 @@ String runAccountLedgerGistOperation(
 
 String runAccountLedgerGistV2Operation(
     {void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+    void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV2"],
     actionsBeforeExecution: actionsBeforeExecution,

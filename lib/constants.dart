@@ -1,5 +1,6 @@
-String accountLedgerCliExecutable =
-    r"C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat";
+import "package:os_detect/os_detect.dart" as platform;
+
+String accountLedgerCliExecutable = platform.isWindows ? r"C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat" : '/workspace/Account-Ledger-Cli/bin/Account-Ledger-Cli';
 String oneTwoThreeOneText = "1 -> 2, 3 -> 1";
 String oneTwoTwoThreeThreeFourFourOneText = "1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1";
 String oneTwoTwoThreeThreeFourText = "1 -> 2, 2 -> 3, 3 -> 4";

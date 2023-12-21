@@ -1,21 +1,27 @@
 import 'dart:io';
 
+import 'package:os_detect/os_detect.dart' as platform;
+
 import '../common_utils/common_utils.dart';
 import '../constants.dart';
 
 String runAccountLedgerKotlinCliOperation(
     List<String> accountLedgerKotlinCliArguments,
     {void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+    void Function(String)? actionsAfterExecution}) {
   actionsBeforeExecution();
   String result = (Process.runSync(
     accountLedgerCliExecutable,
     accountLedgerKotlinCliArguments,
-    environment: {
-      "JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1",
-    },
+    environment: platform.isWindows
+        ? {
+            "JAVA_HOME": r"C:\Users\dk\.jabba\jdk\openjdk@20.0.1",
+          }
+        : {},
     workingDirectory: File(accountLedgerCliExecutable).parent.path,
   )).stdout;
-  actionsAfterExecution();
+  if (actionsAfterExecution != null) {
+    actionsAfterExecution(result);
+  }
   return result;
 }

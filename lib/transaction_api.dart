@@ -28,7 +28,7 @@ String runAccountLedgerInsertTransactionOperation(
 AccountsWithExecutionStatusModel runAccountLedgerGetAccountsOperation(
     {u32? userId,
     void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+    void Function(String)? actionsAfterExecution}) {
   return AccountsWithExecutionStatusModel.fromJson(jsonDecode(
       runAccountLedgerOperationWithUserId(
           ([userId]) => getGetAccountsArguments(userId),
@@ -50,7 +50,7 @@ String runAccountLedgerOperationWithUserId(
     List<String> Function([u32? userId]) getOperationArgumentsWithUserId,
     {u32? userId,
     void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+    void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
     getOperationArgumentsWithUserId(userId),
     actionsBeforeExecution: actionsBeforeExecution,

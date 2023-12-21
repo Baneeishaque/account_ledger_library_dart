@@ -1,4 +1,3 @@
-import 'package:account_ledger_library/models/relation_of_accounts_model.dart';
 import 'package:integer/integer.dart';
 
 import 'common_utils/common_utils.dart';
@@ -12,7 +11,7 @@ List<AccountHeadModel> getUserAccountHeads(
       actionsOnApiError, {
   String? filter,
   void Function() actionsBeforeExecution = dummyFunction,
-  void Function() actionsAfterExecution = dummyFunction,
+  void Function(String)? actionsAfterExecution,
 }) {
   if (accountHeads.isEmpty) {
     AccountsWithExecutionStatusModel accountsWithExecutionStatus =
