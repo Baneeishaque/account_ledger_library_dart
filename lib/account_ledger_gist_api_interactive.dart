@@ -5,6 +5,7 @@ import 'package:integer/integer.dart';
 
 import 'account_ledger_gist_api.dart';
 import 'account_ledger_kotlin_cli_operations.dart';
+import 'common_utils/date_time_utils.dart';
 import 'common_utils/input_utils.dart';
 import 'common_utils/input_utils_interactive.dart';
 import 'common_utils/u32_utils.dart';
@@ -59,6 +60,17 @@ bool verifyAccountLedgerGistInteractive({
   }
 }
 
+String _currentEventTime = '09:00:00';
+String _skipInputPrompt = 'Enter S to Skip, '
+    'Enter ST to Skip with Time Increment fo 5 Minutes, ';
+Map<String, void Function()> _skipMap = {
+  'S': () {},
+  'ST': () {
+    _currentEventTime = get5MinutesIncrementedNormalTimeTextFromNormalTimeText(
+        _currentEventTime);
+  }
+};
+
 void processAccountLedgerGistV2InterActive(
   AccountLedgerGistV2Model accountLedgerGistV2,
 ) {
@@ -77,7 +89,6 @@ void processAccountLedgerGistV2InterActive(
     accountLedgerGistV2: accountLedgerGistV2,
     isVersion2: true,
   )) {
-    String currentEventTime = '09:00:00';
     for (AccountLedgerPageModel currentAccountLedgerPage
         in accountLedgerGistV2.accountLedgerPages) {
       for (AccountLedgerDatePageModel currentAccountLedgerDatePage
@@ -93,13 +104,12 @@ void processAccountLedgerGistV2InterActive(
             toAccountId = currentAccountLedgerPage.accountId;
           }
 
-          currentEventTime = processTransactionForTime(
+          processTransactionForTime(
             accountLedgerGistV2,
             currentAccountLedgerDatePage.accountLedgerPageDate,
             currentTransactionOnDate,
             fromAccountId,
             toAccountId,
-            currentEventTime,
           );
         }
       }
@@ -107,76 +117,71 @@ void processAccountLedgerGistV2InterActive(
   }
 }
 
-String processTransactionForTime(
+void processTransactionForTime(
   AccountLedgerGistV2Model accountLedgerGistV2,
   String currentEventDate,
   TransactionOnDateModel currentTransactionOnDate,
   u32 fromAccountId,
   u32 toAccountId,
-  String currentEventTime,
 ) {
   if (isNonZeroUnsignedNumbers([fromAccountId, toAccountId])) {
-    currentEventTime = processTransactionForAccountIds(
+    processTransactionForAccountIds(
       fromAccountId,
       accountLedgerGistV2,
       currentTransactionOnDate,
       toAccountId,
       currentEventDate,
-      currentEventTime,
     );
   } else {
     handleInput(
       displayPrompt: () {
         printTransactionDetails(
           accountLedgerGistV2.userId,
-          '$currentEventDate $currentEventTime',
+          '$currentEventDate $_currentEventTime',
           currentTransactionOnDate,
           fromAccountId,
           toAccountId,
         );
 
         print('Enter T to Change Time, '
+            '$_skipInputPrompt'
             'Enter to Continue : ');
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
         'T': () {
-          currentEventTime = processTransactionForTime(
+          _currentEventTime = inputValidTimeInNormalTimeFormatAsText(
+            inputPromptPrefix: 'Current Event Date Time is $currentEventDate, ',
+            dataSpecification: 'New Event Time',
+          );
+          processTransactionForTime(
             accountLedgerGistV2,
             currentEventDate,
             currentTransactionOnDate,
             fromAccountId,
             toAccountId,
-            inputValidTimeInNormalTimeFormatAsText(
-              inputPromptPrefix:
-                  'Current Event Date Time is $currentEventDate, ',
-              dataSpecification: 'New Event Time',
-            ),
           );
         },
         '': () {
-          currentEventTime = processTransactionForAccountIds(
+          processTransactionForAccountIds(
             fromAccountId,
             accountLedgerGistV2,
             currentTransactionOnDate,
             toAccountId,
             currentEventDate,
-            currentEventTime,
           );
-        },
-      },
+        }
+      }..addAll(_skipMap),
     );
   }
-  return currentEventTime;
 }
 
-String processTransactionForAccountIds(
+void processTransactionForAccountIds(
   u32 fromAccountId,
   AccountLedgerGistV2Model accountLedgerGistV2,
   TransactionOnDateModel currentTransactionOnDate,
   u32 toAccountId,
   String currentEventDate,
-  String currentEventTime,
 ) {
   fromAccountId = fromAccountId == u32(0)
       ? getValidAccountIdFromRelations(
@@ -202,7 +207,7 @@ String processTransactionForAccountIds(
     displayPrompt: () {
       printTransactionDetails(
         accountLedgerGistV2.userId,
-        '$currentEventDate $currentEventTime',
+        '$currentEventDate $_currentEventTime',
         currentTransactionOnDate,
         fromAccountId,
         toAccountId,
@@ -211,25 +216,26 @@ String processTransactionForAccountIds(
       print('Enter T to Change Time, '
           'Enter AF to Change From A/C ID, '
           'Enter AT to Change To A/C ID, '
+          '$_skipInputPrompt'
           'Enter to Continue : ');
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
       'T': () {
-        currentEventTime = processTransactionForTime(
+        _currentEventTime = inputValidTimeInNormalTimeFormatAsText(
+          inputPromptPrefix: 'Current Event Date Time is $currentEventDate, ',
+          dataSpecification: 'New Event Time',
+        );
+        processTransactionForTime(
           accountLedgerGistV2,
           currentEventDate,
           currentTransactionOnDate,
           fromAccountId,
           toAccountId,
-          inputValidTimeInNormalTimeFormatAsText(
-            inputPromptPrefix: 'Current Event Date Time is $currentEventDate, ',
-            dataSpecification: 'New Event Time',
-          ),
         );
       },
       'AF': () {
-        currentEventTime = processTransactionForAccountIds(
+        processTransactionForAccountIds(
           getValidAccountIdFromRelations(
             fromAccountId,
             accountLedgerGistV2,
@@ -241,11 +247,10 @@ String processTransactionForAccountIds(
           currentTransactionOnDate,
           toAccountId,
           currentEventDate,
-          currentEventTime,
         );
       },
       'AT': () {
-        currentEventTime = processTransactionForAccountIds(
+        processTransactionForAccountIds(
           fromAccountId,
           accountLedgerGistV2,
           currentTransactionOnDate,
@@ -257,49 +262,47 @@ String processTransactionForAccountIds(
             fromAccountId,
           ),
           currentEventDate,
-          currentEventTime,
         );
       },
       '': () {
-        currentEventTime = insertTransactionWithRetryOption(
+        insertTransactionWithRetryOption(
           accountLedgerGistV2,
           currentEventDate,
           currentTransactionOnDate,
           fromAccountId,
           toAccountId,
-          currentEventTime,
         );
-      }
-    },
+      },
+    }..addAll(_skipMap),
   );
-  return currentEventTime;
 }
 
-String insertTransactionWithRetryOption(
+void insertTransactionWithRetryOption(
   AccountLedgerGistV2Model accountLedgerGistV2,
   String currentEventDate,
   TransactionOnDateModel currentTransactionOnDate,
   u32 fromAccountId,
   u32 toAccountId,
-  String currentEventTime,
 ) {
   AccountLedgerApiResultMessageModel insertTransactionResult =
       runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           TransactionModel(
     accountLedgerGistV2.userId,
-    '$currentEventDate $currentEventTime',
+    '$currentEventDate $_currentEventTime',
     currentTransactionOnDate.transactionParticulars,
     currentTransactionOnDate.transactionAmount,
     fromAccountId,
     toAccountId,
   ));
   if (insertTransactionResult.accountLedgerApiResultStatus.status == 0) {
-    currentEventTime = insertTransactionResult.newDateTime.split(' ').first;
+    _currentEventTime =
+        insertTransactionResult.newDateTime.split(' ').elementAt(1);
   } else {
     handleInput(
       displayPrompt: () {
         print(
             'Insert Transaction Operation Failure due to ${insertTransactionResult.accountLedgerApiResultStatus.error}, '
+            '$_skipInputPrompt'
             'E to Exit, '
             'Enter to Retry : ');
       },
@@ -309,19 +312,17 @@ String insertTransactionWithRetryOption(
           printExitMessage();
         },
         '': () {
-          currentEventTime = insertTransactionWithRetryOption(
+          insertTransactionWithRetryOption(
             accountLedgerGistV2,
             currentEventDate,
             currentTransactionOnDate,
             fromAccountId,
             toAccountId,
-            currentEventTime,
           );
         },
-      },
+      }..addAll(_skipMap),
     );
   }
-  return currentEventTime;
 }
 
 void printTransactionDetails(
