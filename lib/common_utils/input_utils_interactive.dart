@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:integer/integer.dart';
 
 import 'common_utils.dart';
@@ -134,4 +136,5 @@ void printExitMessage(
   actionsBeforeExecution();
   print('Good Bye...');
   actionsAfterExecution();
+  exit(0);
 }
