@@ -287,7 +287,7 @@ String insertTransactionWithRetryOption(
       runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           TransactionModel(
     accountLedgerGistV2.userId,
-    currentEventDate,
+    '$currentEventDate $currentEventTime',
     currentTransactionOnDate.transactionParticulars,
     currentTransactionOnDate.transactionAmount,
     fromAccountId,
