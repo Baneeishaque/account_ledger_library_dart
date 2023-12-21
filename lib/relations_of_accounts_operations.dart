@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:account_ledger_library/common_utils/u32_utils.dart';
-import 'package:account_ledger_library/utils/account_utils.dart';
 import 'package:dart_extensions_methods/dart_extension_methods.dart';
 import 'package:integer/integer.dart';
 
+import 'common_utils/u32_utils.dart';
 import 'models/accounts_with_execution_status_model.dart';
 import 'models/relation_of_accounts_model.dart';
+import 'utils/account_utils.dart';
 
 RelationOfAccountsModel readRelationsOfAccountsJsonFile() {
   return RelationOfAccountsModel.fromJson(
