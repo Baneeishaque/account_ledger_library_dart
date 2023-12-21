@@ -9,6 +9,7 @@ String runAccountLedgerKotlinCliOperation(
     List<String> accountLedgerKotlinCliArguments,
     {void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) {
+  // print(accountLedgerKotlinCliArguments);
   actionsBeforeExecution();
   String result = (Process.runSync(
     accountLedgerCliExecutable,
