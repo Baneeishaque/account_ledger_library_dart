@@ -98,11 +98,7 @@ AccountLedgerApiResultMessageModel
 
   if (accountLedgerApiResultStatus.status == 0) {
     return AccountLedgerApiResultMessageModel(
-      normalDateTimeFormat.format(
-        normalDateTimeFormat
-            .parse(transaction.eventDateTime)
-            .add(Duration(minutes: 5)),
-      ),
+      get5MinutesIncrementedNormalDateTimeTextFromNormalDateTimeText(transaction.eventDateTime),
       accountLedgerApiResultStatus = accountLedgerApiResultStatus,
     );
   } else {
