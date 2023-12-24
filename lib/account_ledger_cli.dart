@@ -174,8 +174,8 @@ void startAccountLedgerCli() {
               dataSpecification: "Party 4 Account ID"),
         );
       },
-      "9": () {
-        print(runAccountLedgerGetAccountsOperation(
+      "9": () async {
+        print(await runAccountLedgerGetAccountsOperation(
             userId: inputValidUnsignedPositiveInteger(
                 dataSpecification: "User ID")));
       },
@@ -184,8 +184,8 @@ void startAccountLedgerCli() {
         print("------------------------------");
         print(readRelationsOfAccountsInNormalForm());
       },
-      "11": () {
-        processAccountLedgerGistV2InterActive(AccountLedgerGistV2Model.fromJson(
+      "11": () async {
+        await processAccountLedgerGistV2InterActive(AccountLedgerGistV2Model.fromJson(
             jsonDecode(runAccountLedgerGistV2Operation(
           actionsBeforeExecution: () {
             print('Running GistV2 Operation');

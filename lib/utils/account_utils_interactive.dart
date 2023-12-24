@@ -5,13 +5,13 @@ import '../account_ledger_kotlin_cli_operations.dart';
 import '../common_utils/input_utils_interactive.dart';
 import '../models/accounts_with_execution_status_model.dart';
 
-Pair<u32, List<AccountHeadModel>> getValidAccountId(
+Future<Pair<u32, List<AccountHeadModel>>> getValidAccountId(
     u32 Function() getValidUnsignedPositiveInteger,
     u32 userId,
     List<AccountHeadModel> accountHeads,
     void Function() actionsOnInvalidAccountId,
     {bool isNotRefresh = true,
-    u32? accountIdToCheck}) {
+    u32? accountIdToCheck}) async {
   if (isNotRefresh) {
     accountIdToCheck = getValidUnsignedPositiveInteger();
   }
@@ -21,7 +21,7 @@ Pair<u32, List<AccountHeadModel>> getValidAccountId(
     }
   }
   if (isNotRefresh) {
-    accountHeads = getUserAccountHeads(
+    accountHeads = await getUserAccountHeads(
       [],
       userId,
       (AccountsWithExecutionStatusModel accountsWithExecutionStatus) {

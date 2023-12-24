@@ -71,10 +71,10 @@ Map<String, void Function()> _skipMap = {
   }
 };
 
-void processAccountLedgerGistV2InterActive(
+Future<void> processAccountLedgerGistV2InterActive(
   AccountLedgerGistV2Model accountLedgerGistV2,
-) {
-  _accountHeads = getUserAccountHeads(
+) async {
+  _accountHeads = await getUserAccountHeads(
     [],
     accountLedgerGistV2.userId,
     (AccountsWithExecutionStatusModel accountsWithExecutionStatus) {
@@ -359,8 +359,8 @@ u32 getValidAccountIdFromRelations(
         alreadyKnownAccountId,
       );
     },
-    '': () {
-      desiredAccountId = getValidAccountIdFromUserInput(
+    '': () async {
+      desiredAccountId = await getValidAccountIdFromUserInput(
         dataSpecification,
         accountLedgerGistV2.userId,
         _accountHeads,
@@ -406,12 +406,12 @@ u32 getValidAccountIdFromRelations(
   return desiredAccountId;
 }
 
-u32 getValidAccountIdFromUserInput(
+Future<u32> getValidAccountIdFromUserInput(
   String dataSpecification,
   u32 userId,
   List<AccountHeadModel> accountHeads,
-) {
-  Pair<u32, List<AccountHeadModel>> getValidAccountIdResult = getValidAccountId(
+) async {
+  Pair<u32, List<AccountHeadModel>> getValidAccountIdResult = await getValidAccountId(
       () {
         return inputValidUnsignedPositiveInteger(
             dataSpecification: dataSpecification);

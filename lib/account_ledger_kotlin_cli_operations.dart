@@ -4,7 +4,7 @@ import 'common_utils/common_utils.dart';
 import 'models/accounts_with_execution_status_model.dart';
 import 'transaction_api.dart';
 
-List<AccountHeadModel> getUserAccountHeads(
+Future<List<AccountHeadModel>> getUserAccountHeads(
   List<AccountHeadModel> accountHeads,
   u32 userId,
   void Function(AccountsWithExecutionStatusModel accountsWithExecutionStatus)
@@ -12,10 +12,10 @@ List<AccountHeadModel> getUserAccountHeads(
   String? filter,
   void Function() actionsBeforeExecution = dummyFunction,
   void Function(String)? actionsAfterExecution,
-}) {
+}) async {
   if (accountHeads.isEmpty) {
     AccountsWithExecutionStatusModel accountsWithExecutionStatus =
-        runAccountLedgerGetAccountsOperation(
+        await runAccountLedgerGetAccountsOperation(
       userId: userId,
       actionsBeforeExecution: actionsBeforeExecution,
       actionsAfterExecution: actionsAfterExecution,

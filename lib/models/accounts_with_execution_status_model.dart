@@ -61,17 +61,17 @@ class AccountHeadModel {
       required this.placeHolder});
 
   AccountHeadModel.fromJson(Map<String, dynamic> json) {
-    id = u32(json['id']);
-    fullName = json['fullName'];
+    id = u32(int.parse(json['id'] ?? json['account_id']));
+    fullName = json['fullName'] ?? json['full_name'];
     name = json['name'];
-    parentAccountId = u32(json['parentAccountId']);
-    accountType = json['accountType'];
+    parentAccountId = u32(int.parse(json['parentAccountId'] ?? json['parent_account_id']));
+    accountType = json['accountType'] ?? json['account_id'];
     notes = json['notes'] ?? "";
-    commodityType = json['commodityType'];
-    commodityValue = json['commodityValue'];
-    ownerId = u32(json['ownerId']);
+    commodityType = json['commodityType'] ?? json['commodity_type'];
+    commodityValue = json['commodityValue'] ?? json['commodity_value'];
+    ownerId = u32(int.parse(json['ownerId'] ?? json['owner_id']));
     taxable = json['taxable'];
-    placeHolder = json['placeHolder'];
+    placeHolder = json['placeHolder'] ?? json['place_holder'];
   }
 
   Map<String, dynamic> toJson() {

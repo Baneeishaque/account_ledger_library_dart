@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:account_ledger_library/models/get_accounts_from_server_response_model.dart';
+import 'package:http/http.dart' as http;
 import 'package:integer/integer.dart';
 
 import 'common_utils/common_utils.dart';
@@ -25,16 +27,29 @@ String runAccountLedgerInsertTransactionOperation(
   ]);
 }
 
-AccountsWithExecutionStatusModel runAccountLedgerGetAccountsOperation(
+Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
     {u32? userId,
     void Function() actionsBeforeExecution = dummyFunction,
-    void Function(String)? actionsAfterExecution}) {
-  return AccountsWithExecutionStatusModel.fromJson(jsonDecode(
-      runAccountLedgerOperationWithUserId(
-          ([userId]) => getGetAccountsArguments(userId),
-          userId: userId,
-          actionsBeforeExecution: actionsBeforeExecution,
-          actionsAfterExecution: actionsAfterExecution)));
+    void Function(String)? actionsAfterExecution}) async {
+  http.Response getAccountsFromServerHttpResponse =
+      await http.get(Uri.parse('getAccountsUrl'));
+  if (getAccountsFromServerHttpResponse.statusCode == 200) {
+    GetAccountsFromServerResponseModel getAccountsFromServerResponse =
+        GetAccountsFromServerResponseModel.fromJson(
+            jsonDecode((getAccountsFromServerHttpResponse).body));
+
+    bool isOK = getAccountsFromServerResponse.status == 0;
+    return AccountsWithExecutionStatusModel(
+        isOK: isOK,
+        data: isOK ? getAccountsFromServerResponse.accounts : null,
+        error:
+            isOK ? null : 'status => ${getAccountsFromServerResponse.status}');
+  } else {
+    return AccountsWithExecutionStatusModel(
+        isOK: false,
+        error:
+            'HTTP Status Code => ${getAccountsFromServerHttpResponse.statusCode}');
+  }
 }
 
 AccountsUrlWithExecutionStatusModel runAccountLedgerGetAccountsUrlOperation(
