@@ -1,23 +1,27 @@
-import 'package:dart_extensions_methods/dart_extension_methods.dart';
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
 import '../account_ledger_kotlin_cli_operations.dart';
 import '../common_utils/input_utils_interactive.dart';
 import '../models/accounts_with_execution_status_model.dart';
 
-Future<Pair<u32, List<AccountHeadModel>>> getValidAccountId(
-    u32 Function() getValidUnsignedPositiveInteger,
+Future<Tuple3<u32, List<AccountHeadModel>, bool>> getValidAccountId(
     u32 userId,
     List<AccountHeadModel> accountHeads,
     void Function() actionsOnInvalidAccountId,
     {bool isNotRefresh = true,
-    u32? accountIdToCheck}) async {
-  if (isNotRefresh) {
-    accountIdToCheck = getValidUnsignedPositiveInteger();
+    u32 Function()? getValidUnsignedPositiveIntegerFunction,
+    u32? accountIdToCheck,
+    bool isZeroUsedForBack = false}) async {
+  if (isNotRefresh && (getValidUnsignedPositiveIntegerFunction != null)) {
+    accountIdToCheck = getValidUnsignedPositiveIntegerFunction();
+  }
+  if (isZeroUsedForBack && (accountIdToCheck?.value == 0)) {
+    return Tuple3(u32(0), accountHeads, false);
   }
   for (AccountHeadModel accountHead in accountHeads) {
     if (accountHead.id == accountIdToCheck) {
-      return Pair(accountIdToCheck!, accountHeads);
+      return Tuple3(accountIdToCheck!, accountHeads, true);
     }
   }
   if (isNotRefresh) {
@@ -32,7 +36,6 @@ Future<Pair<u32, List<AccountHeadModel>>> getValidAccountId(
       },
     );
     return getValidAccountId(
-      getValidUnsignedPositiveInteger,
       userId,
       accountHeads,
       actionsOnInvalidAccountId,
@@ -43,10 +46,11 @@ Future<Pair<u32, List<AccountHeadModel>>> getValidAccountId(
 
   actionsOnInvalidAccountId();
 
-  return getValidAccountId(
-    getValidUnsignedPositiveInteger,
-    userId,
-    accountHeads,
-    actionsOnInvalidAccountId,
-  );
+  if (getValidUnsignedPositiveIntegerFunction == null) {
+    return Tuple3(accountIdToCheck!, accountHeads, false);
+  } else {
+    return getValidAccountId(userId, accountHeads, actionsOnInvalidAccountId,
+        getValidUnsignedPositiveIntegerFunction:
+            getValidUnsignedPositiveIntegerFunction);
+  }
 }

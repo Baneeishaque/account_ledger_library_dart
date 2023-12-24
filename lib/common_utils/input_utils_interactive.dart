@@ -55,14 +55,17 @@ u32 inputValidUnsignedInteger({
 u32 inputValidUnsignedPositiveInteger({
   String? inputPromptPrefix,
   required String dataSpecification,
+  bool isZeroUsedForBack = false,
 }) {
   return getValidUnsignedPositiveInteger(
     displayPrompt: () {
-      print("${inputPromptPrefix ?? ''}Enter $dataSpecification : ");
+      print(
+          '${inputPromptPrefix ?? ''}Enter $dataSpecification${isZeroUsedForBack ? ', or 0 to back' : ''} : ');
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
     },
+    isZeroUsedAsBack: isZeroUsedForBack,
   );
 }
 

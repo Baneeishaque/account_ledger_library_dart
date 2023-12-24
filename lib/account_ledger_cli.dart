@@ -14,8 +14,8 @@ import 'relations_of_accounts_operations.dart';
 import 'transaction_api.dart';
 import 'utils/user_input_utils_interactive.dart';
 
-void startAccountLedgerCli() {
-  handleInput(
+Future<void> startAccountLedgerCli() async {
+  await handleInput(
     displayPrompt: () {
       print("Account Ledger CLI"
           "\n-----------------------"
@@ -40,17 +40,17 @@ void startAccountLedgerCli() {
       printInvalidInputMessage();
     },
     actionsWithKeys: {
-      "1": () {
+      "1": () async {
         verifyAccountLedgerGistInteractive();
       },
-      "2": () {
+      "2": () async {
         print("$oneTwoThreeOneText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoThreeOneTransaction(
+        await insertOneTwoThreeOneTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -60,7 +60,7 @@ void startAccountLedgerCli() {
           userInputs.item7,
         );
       },
-      "3": () {
+      "3": () async {
         print("$oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
             "\n----------------------------");
 
@@ -71,7 +71,7 @@ void startAccountLedgerCli() {
           party3AccountIdDataSpecification: "To Account ID",
         );
 
-        insertOneTwoTwoThreeThreeOneTransaction(
+        await insertOneTwoTwoThreeThreeOneTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -81,14 +81,14 @@ void startAccountLedgerCli() {
           userInputs.item7,
         );
       },
-      "4": () {
+      "4": () async {
         print("$oneTwoTwoThreeThreeFourFourOneText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoTwoThreeThreeFourFourOneTransaction(
+        await insertOneTwoTwoThreeThreeFourFourOneTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -100,14 +100,14 @@ void startAccountLedgerCli() {
               dataSpecification: "Party 4 Account ID"),
         );
       },
-      "5": () {
+      "5": () async {
         print("$oneTwoTwoThreeThreeFourText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoTwoThreeThreeFourTransaction(
+        await insertOneTwoTwoThreeThreeFourTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -119,14 +119,14 @@ void startAccountLedgerCli() {
               dataSpecification: "Party 4 Account ID"),
         );
       },
-      "6": () {
+      "6": () async {
         print("$oneTwoTwoThreeText (Via.) Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoTwoThreeTransaction(
+        await insertOneTwoTwoThreeTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -136,14 +136,14 @@ void startAccountLedgerCli() {
           userInputs.item7,
         );
       },
-      "7": () {
+      "7": () async {
         print("$oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
+        await insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -155,14 +155,14 @@ void startAccountLedgerCli() {
               dataSpecification: "Party 4 Account ID"),
         );
       },
-      "8": () {
+      "8": () async {
         print("$oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
             "\n------------------------");
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
 
-        insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
+        await insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
           userInputs.item1,
           userInputs.item2,
           userInputs.item3,
@@ -179,26 +179,27 @@ void startAccountLedgerCli() {
             userId: inputValidUnsignedPositiveInteger(
                 dataSpecification: "User ID")));
       },
-      "10": () {
+      "10": () async {
         print(readRelationsOfAccountsJsonFile());
         print("------------------------------");
         print(readRelationsOfAccountsInNormalForm());
       },
       "11": () async {
-        await processAccountLedgerGistV2InterActive(AccountLedgerGistV2Model.fromJson(
-            jsonDecode(runAccountLedgerGistV2Operation(
+        await processAccountLedgerGistV2InterActive(
+            AccountLedgerGistV2Model.fromJson(
+                jsonDecode(runAccountLedgerGistV2Operation(
           actionsBeforeExecution: () {
             print('Running GistV2 Operation');
           },
         ))));
       },
-      "12": () {
+      "12": () async {
         verifyAccountLedgerGistInteractive(isVersion2: true);
       },
-      "13": () {
+      "13": () async {
         printComingSoonMessage();
       },
-      "0": () {},
+      "0": () async {},
     },
   );
 }

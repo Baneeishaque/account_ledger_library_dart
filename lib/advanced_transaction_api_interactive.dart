@@ -6,7 +6,7 @@ import 'common_utils/date_time_utils.dart';
 import 'models/transaction_model.dart';
 
 //1 -> 2, 3 -> 1
-void insertOneTwoThreeOneTransaction(
+Future<void> insertOneTwoThreeOneTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
@@ -14,8 +14,8 @@ void insertOneTwoThreeOneTransaction(
   u32 party1accountId,
   u32 party2accountId,
   u32 party3accountId,
-) {
-  insertTransaction(
+) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -26,7 +26,7 @@ void insertOneTwoThreeOneTransaction(
     ),
   );
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -39,7 +39,7 @@ void insertOneTwoThreeOneTransaction(
 }
 
 //1->2, 2->3
-void insertOneTwoTwoThreeTransaction(
+Future<void> insertOneTwoTwoThreeTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
@@ -47,8 +47,8 @@ void insertOneTwoTwoThreeTransaction(
   u32 party1accountId,
   u32 party2accountId,
   u32 party3accountId,
-) {
-  insertTransaction(
+) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -59,7 +59,7 @@ void insertOneTwoTwoThreeTransaction(
     ),
   );
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -72,7 +72,7 @@ void insertOneTwoTwoThreeTransaction(
 }
 
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
-void insertOneTwoTwoThreeThreeFourFourOneTransaction(
+Future<void> insertOneTwoTwoThreeThreeFourFourOneTransaction(
     u32 userId,
     String eventDateTime,
     String particulars,
@@ -80,8 +80,8 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
     u32 party1accountId,
     u32 party2accountId,
     u32 party3accountId,
-    u32 party4accountId) {
-  insertTransaction(
+    u32 party4accountId) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -93,7 +93,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-      insertNextTransaction(
+      await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -108,7 +108,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -121,7 +121,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -132,7 +132,7 @@ void insertOneTwoTwoThreeThreeFourFourOneTransaction(
 }
 
 //1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1
-void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
+Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
     u32 userId,
     String eventDateTime,
     String particulars,
@@ -140,8 +140,8 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
     u32 party1accountId,
     u32 party2accountId,
     u32 party3accountId,
-    u32 party4accountId) {
-  insertTransaction(
+    u32 party4accountId) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -153,7 +153,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-      insertNextTransaction(
+      await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -168,7 +168,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -181,7 +181,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -194,7 +194,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -205,7 +205,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
 }
 
 //1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1, 4 -> 2
-void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
+Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
     u32 userId,
     String eventDateTime,
     String particulars,
@@ -213,8 +213,8 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
     u32 party1accountId,
     u32 party2accountId,
     u32 party3accountId,
-    u32 party4accountId) {
-  insertTransaction(
+    u32 party4accountId) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -226,7 +226,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-      insertNextTransaction(
+      await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -241,7 +241,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -254,7 +254,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -267,7 +267,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransactionResult = insertNextTransaction(
+  insertNextTransactionResult = await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -280,7 +280,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -291,7 +291,7 @@ void insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
 }
 
 //1 -> 2, 2 -> 3, 3 -> 4
-void insertOneTwoTwoThreeThreeFourTransaction(
+Future<void> insertOneTwoTwoThreeThreeFourTransaction(
     u32 userId,
     String eventDateTime,
     String particulars,
@@ -299,8 +299,8 @@ void insertOneTwoTwoThreeThreeFourTransaction(
     u32 party1accountId,
     u32 party2accountId,
     u32 party3accountId,
-    u32 party4accountId) {
-  insertTransaction(
+    u32 party4accountId) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -312,7 +312,7 @@ void insertOneTwoTwoThreeThreeFourTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-      insertNextTransaction(
+      await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -327,7 +327,7 @@ void insertOneTwoTwoThreeThreeFourTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,
@@ -338,15 +338,15 @@ void insertOneTwoTwoThreeThreeFourTransaction(
 }
 
 //1 -> 2, 2 -> 3, 3 -> 1
-void insertOneTwoTwoThreeThreeOneTransaction(
+Future<void> insertOneTwoTwoThreeThreeOneTransaction(
     u32 userId,
     String eventDateTime,
     String particulars,
     double amount,
     u32 party1accountId,
     u32 party2accountId,
-    u32 party3accountId) {
-  insertTransaction(
+    u32 party3accountId) async {
+  await insertTransaction(
     TransactionModel(
       userId,
       eventDateTime,
@@ -358,7 +358,7 @@ void insertOneTwoTwoThreeThreeOneTransaction(
   );
 
   Tuple3<String, String, double> insertNextTransactionResult =
-      insertNextTransaction(
+      await insertNextTransaction(
     userId,
     normalDateTimeFormat.format(
       normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
@@ -373,7 +373,7 @@ void insertOneTwoTwoThreeThreeOneTransaction(
   particulars = insertNextTransactionResult.item2;
   amount = insertNextTransactionResult.item3;
 
-  insertNextTransaction(
+  await insertNextTransaction(
     userId,
     eventDateTime,
     particulars,

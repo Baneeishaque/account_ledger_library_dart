@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:account_ledger_library/common_utils/mysql_utils.dart';
 import 'package:account_ledger_library/models/get_accounts_from_server_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:integer/integer.dart';
@@ -13,26 +14,27 @@ import 'models/transaction_model.dart';
 import 'utils/account_ledger_kotlin_cli_utils.dart';
 
 //1->2
-String runAccountLedgerInsertTransactionOperation(
-  TransactionModel transaction,
-) {
-  return runAccountLedgerKotlinCliOperation([
-    "InsertTransaction",
-    transaction.userId.toString(),
-    transaction.eventDateTime,
-    transaction.particulars,
-    transaction.amount.abs().toString(),
-    transaction.fromAccountId.toString(),
-    transaction.toAccountId.toString()
-  ]);
+Future<String> runAccountLedgerInsertTransactionOperation(
+    TransactionModel transaction,
+    {void Function()? beforeOperationActions = dummyFunction}) async {
+  return (await http.post(
+          body: {
+        'user_id': transaction.userId.toString(),
+        'event_date_time':
+            normalDateTimeTextToMySqlDateTimeText(transaction.eventDateTime),
+        'particulars': transaction.particulars,
+        'amount': transaction.amount.abs().toString(),
+        'from_account_id': transaction.fromAccountId.toString(),
+        'to_account_id': transaction.toAccountId.toString(),
+      }))
+      .body;
 }
 
 Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
     {u32? userId,
     void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) async {
-  http.Response getAccountsFromServerHttpResponse =
-      await http.get(Uri.parse('getAccountsUrl'));
+  http.Response getAccountsFromServerHttpResponse = await http.get(Uri.parse(
   if (getAccountsFromServerHttpResponse.statusCode == 200) {
     GetAccountsFromServerResponseModel getAccountsFromServerResponse =
         GetAccountsFromServerResponseModel.fromJson(
@@ -103,13 +105,13 @@ List<String> getOperationArgumentsWithUserId(String operation, [u32? userId]) {
 }
 
 //1->2 With Time+5 Minutes on Success
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
-  TransactionModel transaction,
-) {
+        TransactionModel transaction,
+        {void Function()? beforeOperationActions = dummyFunction}) async {
   AccountLedgerApiResultStatusModel accountLedgerApiResultStatus =
-      AccountLedgerApiResultStatusModel.fromJson(
-          jsonDecode(runAccountLedgerInsertTransactionOperation(transaction)));
+      AccountLedgerApiResultStatusModel.fromJson(jsonDecode(
+          await runAccountLedgerInsertTransactionOperation(transaction)));
 
   if (accountLedgerApiResultStatus.status == 0) {
     return AccountLedgerApiResultMessageModel(
@@ -126,18 +128,18 @@ AccountLedgerApiResultMessageModel
 }
 
 //1->2, 2->1
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertTwoWayTransactionOperation(
   TransactionModel transaction,
   String secondParticulars,
   double secondAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
     accountLedgerApiResultMessage =
-        runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+        await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
             TransactionModel(
                 transaction.userId,
                 accountLedgerApiResultMessage.newDateTime,
@@ -152,19 +154,19 @@ AccountLedgerApiResultMessageModel
 }
 
 //1->2, 3->1
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertOneTwoThreeOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   String secondParticulars,
   double secondAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
     accountLedgerApiResultMessage =
-        runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+        await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
             TransactionModel(
                 transaction.userId,
                 accountLedgerApiResultMessage.newDateTime,
@@ -179,18 +181,18 @@ AccountLedgerApiResultMessageModel
 }
 
 //1->2, 2->3
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertOneTwoTwoThreeTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
   String secondParticulars,
   double secondAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
-    return (runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+    return (await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
       TransactionModel(
         transaction.userId,
         accountLedgerApiResultMessage.newDateTime,
@@ -206,7 +208,7 @@ AccountLedgerApiResultMessageModel
 }
 
 //1 -> 2, 2 -> 3, 3 -> 4
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertOneTwoTwoThreeThreeFourTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
@@ -215,13 +217,13 @@ AccountLedgerApiResultMessageModel
   double secondAmount,
   String thirdParticulars,
   double thirdAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
     accountLedgerApiResultMessage =
-        runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+        await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
             TransactionModel(
                 transaction.userId,
                 accountLedgerApiResultMessage.newDateTime,
@@ -232,7 +234,7 @@ AccountLedgerApiResultMessageModel
     if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status ==
         0) {
       accountLedgerApiResultMessage =
-          runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+          await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
               TransactionModel(
                   transaction.userId,
                   accountLedgerApiResultMessage.newDateTime,
@@ -251,7 +253,7 @@ AccountLedgerApiResultMessageModel
 }
 
 //1 -> 2, 2 -> 3, 4 -> 1
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertOneTwoTwoThreeFourOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
@@ -260,13 +262,13 @@ AccountLedgerApiResultMessageModel
   double secondAmount,
   String thirdParticulars,
   double thirdAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
     accountLedgerApiResultMessage =
-        runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+        await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
             TransactionModel(
                 transaction.userId,
                 accountLedgerApiResultMessage.newDateTime,
@@ -277,7 +279,7 @@ AccountLedgerApiResultMessageModel
     if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status ==
         0) {
       accountLedgerApiResultMessage =
-          runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+          await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
               TransactionModel(
                   transaction.userId,
                   accountLedgerApiResultMessage.newDateTime,
@@ -296,7 +298,7 @@ AccountLedgerApiResultMessageModel
 }
 
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
-AccountLedgerApiResultMessageModel
+Future<AccountLedgerApiResultMessageModel>
     runAccountLedgerInsertOneTwoTwoThreeThreeFourFourOneTransactionOperation(
   TransactionModel transaction,
   u32 party3AccountId,
@@ -307,13 +309,13 @@ AccountLedgerApiResultMessageModel
   double thirdAmount,
   String fourthParticulars,
   double fourthAmount,
-) {
+) async {
   AccountLedgerApiResultMessageModel accountLedgerApiResultMessage =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
           transaction);
   if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status == 0) {
     accountLedgerApiResultMessage =
-        runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+        await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
             TransactionModel(
                 transaction.userId,
                 accountLedgerApiResultMessage.newDateTime,
@@ -324,7 +326,7 @@ AccountLedgerApiResultMessageModel
     if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status ==
         0) {
       accountLedgerApiResultMessage =
-          runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+          await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
               TransactionModel(
                   transaction.userId,
                   accountLedgerApiResultMessage.newDateTime,
@@ -335,7 +337,7 @@ AccountLedgerApiResultMessageModel
       if (accountLedgerApiResultMessage.accountLedgerApiResultStatus.status ==
           0) {
         accountLedgerApiResultMessage =
-            runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+            await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
                 TransactionModel(
                     transaction.userId,
                     accountLedgerApiResultMessage.newDateTime,

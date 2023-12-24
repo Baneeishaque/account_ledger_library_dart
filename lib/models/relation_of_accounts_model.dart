@@ -1,5 +1,5 @@
-import 'package:dart_extensions_methods/dart_extension_methods.dart';
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
 import '../common_utils/u32_utils.dart';
 
@@ -101,7 +101,7 @@ class AccountModel {
 
 class AccountRelationModel {
   late String indicator;
-  late List<Pair<u32, String>> associatedAccountIds;
+  late List<Tuple2<u32, String>> associatedAccountIds;
 
   AccountRelationModel({
     required this.indicator,

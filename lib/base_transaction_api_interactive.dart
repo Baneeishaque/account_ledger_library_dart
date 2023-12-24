@@ -8,21 +8,21 @@ import 'common_utils/string_utils.dart';
 import 'models/transaction_model.dart';
 import 'transaction_api.dart';
 
-Tuple3<String, String, double> insertNextTransaction(
+Future<Tuple3<String, String, double>> insertNextTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
   double amount,
   u32 fromAccountId,
   u32 toAccountId,
-) {
-  insertTransactionWithAlteredInputs(
+) async {
+  await insertTransactionWithAlteredInputs(
     particulars,
     amount,
-    (newParticulars, newAmount) {
+    (newParticulars, newAmount) async {
       particulars = newParticulars;
       amount = newAmount;
-      insertTransaction(
+      await insertTransaction(
         TransactionModel(
           userId,
           eventDateTime,
@@ -42,10 +42,10 @@ Tuple3<String, String, double> insertNextTransaction(
   return Tuple3(eventDateTime, particulars, amount);
 }
 
-void insertTransaction(
+Future<void> insertTransaction(
   TransactionModel transaction,
-) {
-  handleInput(
+) async {
+  await handleInput(
     displayPrompt: () {
       print("Going to add $transaction, "
           "S to Split Transaction, "
@@ -53,8 +53,8 @@ void insertTransaction(
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
-      'S': () {
-        insertSplitTransaction(
+      'S': () async {
+        await insertSplitTransaction(
             transaction.userId,
             transaction.eventDateTime,
             transaction.particulars,
@@ -62,24 +62,24 @@ void insertTransaction(
             transaction.fromAccountId,
             transaction.toAccountId);
       },
-      '': () {
-        print(runAccountLedgerInsertTransactionOperation(transaction));
+      '': () async {
+        print(await runAccountLedgerInsertTransactionOperation(transaction));
       },
     },
   );
 }
 
-void insertSplitTransaction(
+Future<void> insertSplitTransaction(
   u32 userId,
   String eventDateTime,
   String particulars,
   double amount,
   u32 fromAccountId,
   u32 toAccountId,
-) {
+) async {
   u32 noOfSplits =
       inputValidUnsignedPositiveInteger(dataSpecification: "No. of Splits");
-  handleInput(
+  await handleInput(
     displayPrompt: () {
       print("Going to add ${TransactionModel(
         userId,
@@ -94,11 +94,11 @@ void insertSplitTransaction(
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
-      'E': () {
+      'E': () async {
         double splitAmount = amount / noOfSplits.value;
         for (int i = 1; i <= noOfSplits.value; i++) {
           Tuple3<String, String, double> insertTransactionResult =
-              insertNextTransaction(
+              await insertNextTransaction(
             userId,
             eventDateTime,
             particulars,
@@ -111,28 +111,28 @@ void insertSplitTransaction(
           amount = insertTransactionResult.item3;
         }
       },
-      'C': () {
+      'C': () async {
         //TODO : Insert Custom Split Transaction
       },
     },
   );
 }
 
-void insertTransactionWithAlteredInputs(
+Future<void> insertTransactionWithAlteredInputs(
   String particulars,
   double amount,
-  void Function(String newParticulars, double newAmount) insertFunction,
-) {
+  Future<void> Function(String newParticulars, double newAmount) insertFunction,
+) async {
   String newParticulars = particulars;
-  handleInput(
+  await handleInput(
     displayPrompt: () {
       print(
           "Do You Want to Update Current Particulars [$particulars], Y/N(Default) : ");
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
-      'Y': () {
-        handleInput(
+      'Y': () async {
+        await handleInput(
             displayPrompt: () {
               print("C to Cancel the update of Particulars, "
                   "R to Reverse the Particulars [${reverseText(particulars)}], "
@@ -142,38 +142,38 @@ void insertTransactionWithAlteredInputs(
             },
             invalidInputActions: printInvalidInputMessage,
             actionsWithKeys: {
-              'C': () {
-                insertTransactionWithAlteredInputs(
+              'C': () async {
+                await insertTransactionWithAlteredInputs(
                   particulars,
                   amount,
                   insertFunction,
                 );
               },
-              'R': () {
+              'R': () async {
                 newParticulars = reverseText(particulars);
-                handleInput(
+                await handleInput(
                   displayPrompt: () {
                     print(
                         "The Modified Particulars : $newParticulars, Is It OK, Y(Default)/N : ");
                   },
                   invalidInputActions: printInvalidInputMessage,
                   actionsWithKeys: {
-                    'Y': () {
-                      getAlteredAmount(
+                    'Y': () async {
+                      await getAlteredAmount(
                         amount,
                         insertFunction,
                         newParticulars,
                       );
                     },
-                    'N': () {
-                      insertTransactionWithAlteredInputs(
+                    'N': () async {
+                      await insertTransactionWithAlteredInputs(
                         particulars,
                         amount,
                         insertFunction,
                       );
                     },
-                    '': () {
-                      getAlteredAmount(
+                    '': () async {
+                      await getAlteredAmount(
                         amount,
                         insertFunction,
                         newParticulars,
@@ -182,34 +182,34 @@ void insertTransactionWithAlteredInputs(
                   },
                 );
               },
-              'N': () {},
-              'A': () {
+              'N': () async {},
+              'A': () async {
                 String dataToAppend = inputValidText(
                     dataSpecification: "Text to Append with Particulars");
                 newParticulars = "$particulars$dataToAppend";
-                handleInput(
+                await handleInput(
                   displayPrompt: () {
                     print(
                         "The Modified Particulars : $newParticulars, Is It OK, Y(Default)/N : ");
                   },
                   invalidInputActions: printInvalidInputMessage,
                   actionsWithKeys: {
-                    'Y': () {
-                      getAlteredAmount(
+                    'Y': () async {
+                      await getAlteredAmount(
                         amount,
                         insertFunction,
                         newParticulars,
                       );
                     },
-                    'N': () {
-                      insertTransactionWithAlteredInputs(
+                    'N': () async {
+                      await insertTransactionWithAlteredInputs(
                         particulars,
                         amount,
                         insertFunction,
                       );
                     },
-                    '': () {
-                      getAlteredAmount(
+                    '': () async {
+                      await getAlteredAmount(
                         amount,
                         insertFunction,
                         newParticulars,
@@ -218,18 +218,18 @@ void insertTransactionWithAlteredInputs(
                   },
                 );
               },
-              'P': () {},
+              'P': () async {},
             });
       },
-      'N': () {
-        getAlteredAmount(
+      'N': () async {
+        await getAlteredAmount(
           amount,
           insertFunction,
           particulars,
         );
       },
-      '': () {
-        getAlteredAmount(
+      '': () async {
+        await getAlteredAmount(
           amount,
           insertFunction,
           particulars,
@@ -239,48 +239,48 @@ void insertTransactionWithAlteredInputs(
   );
 }
 
-void getAlteredAmount(
+Future<void> getAlteredAmount(
   double amount,
-  void Function(String newParticulars, double newAmount) insertFunction,
+  Future<void> Function(String newParticulars, double newAmount) insertFunction,
   String particulars,
-) {
-  handleInput(
+) async {
+  await handleInput(
     displayPrompt: () {
       print("Do You Want to Update Current Amount [$amount], Y/N(Default) : ");
     },
     invalidInputActions: printInvalidInputMessage,
     actionsWithKeys: {
-      'Y': () {
+      'Y': () async {
         double newAmount =
             inputValidDouble(dataSpecification: "New Amount of Transaction");
-        handleInput(
+        await handleInput(
           displayPrompt: () {
             print(
                 "The Modified Amount : $newAmount, Is It OK, Y(Default)/N : ");
           },
           invalidInputActions: printInvalidInputMessage,
           actionsWithKeys: {
-            'Y': () {
-              insertFunction(particulars, newAmount);
+            'Y': () async {
+              await insertFunction(particulars, newAmount);
             },
-            'N': () {
-              getAlteredAmount(
+            'N': () async {
+              await getAlteredAmount(
                 amount,
                 insertFunction,
                 particulars,
               );
             },
-            '': () {
-              insertFunction(particulars, newAmount);
+            '': () async {
+              await insertFunction(particulars, newAmount);
             },
           },
         );
       },
-      'N': () {
-        insertFunction(particulars, amount);
+      'N': () async {
+        await insertFunction(particulars, amount);
       },
-      '': () {
-        insertFunction(particulars, amount);
+      '': () async {
+        await insertFunction(particulars, amount);
       },
     },
   );

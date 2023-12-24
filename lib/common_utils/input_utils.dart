@@ -68,6 +68,7 @@ u32 getValidUnsignedInteger({
 u32 getValidUnsignedPositiveInteger({
   required void Function() displayPrompt,
   void Function() invalidDataActions = dummyFunction,
+  bool isZeroUsedAsBack = false,
 }) {
   u32 data = getValidUnsignedInteger(
     displayPrompt: displayPrompt,
@@ -76,10 +77,14 @@ u32 getValidUnsignedPositiveInteger({
   if (data.value > 0) {
     return data;
   } else {
+    if (isZeroUsedAsBack && (data.value == 0)) {
+      return u32(0);
+    }
     invalidDataActions.call();
     return getValidUnsignedPositiveInteger(
       displayPrompt: displayPrompt,
       invalidDataActions: invalidDataActions,
+      isZeroUsedAsBack: isZeroUsedAsBack,
     );
   }
 }
@@ -120,26 +125,26 @@ DateTime getValidTimeInNormalTimeFormat({
   return convertedTime;
 }
 
-void handleInput(
+Future<void> handleInput(
     {required void Function() displayPrompt,
     required void Function() invalidInputActions,
-    required Map<String, void Function()> actionsWithKeys}) {
+    required Map<String, Future<void> Function()> actionsWithKeys}) async {
   displayPrompt.call();
   String? input = stdin.readLineSync();
   if (input == null) {
     invalidInputActions.call();
-    handleInput(
+    await handleInput(
         displayPrompt: displayPrompt,
         invalidInputActions: invalidInputActions,
         actionsWithKeys: actionsWithKeys);
   } else {
     if (actionsWithKeys.containsKey(input.toLowerCase())) {
-      actionsWithKeys[input]!.call();
+      await actionsWithKeys[input.toLowerCase()]!.call();
     } else if (actionsWithKeys.containsKey(input.toUpperCase())) {
-      actionsWithKeys[input]!.call();
+      await actionsWithKeys[input.toUpperCase()]!.call();
     } else {
       invalidInputActions.call();
-      handleInput(
+      await handleInput(
           displayPrompt: displayPrompt,
           invalidInputActions: invalidInputActions,
           actionsWithKeys: actionsWithKeys);

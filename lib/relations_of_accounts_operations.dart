@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dart_extensions_methods/dart_extension_methods.dart';
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
 import 'common_utils/u32_utils.dart';
 import 'models/accounts_with_execution_status_model.dart';
@@ -33,11 +33,11 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
       }
 
       for (AccountRelationModel accountRelation in account.relations) {
-        for (Pair<u32, String> associatedAccountId
+        for (Tuple2<u32, String> associatedAccountId
             in accountRelation.associatedAccountIds) {
-          if (accountsNormalisedMap.containsKey(associatedAccountId.left)) {
-            accountsNormalisedMap[associatedAccountId.left!] =
-                (accountsNormalisedMap[associatedAccountId.left]!) +
+          if (accountsNormalisedMap.containsKey(associatedAccountId.item1)) {
+            accountsNormalisedMap[associatedAccountId.item1] =
+                (accountsNormalisedMap[associatedAccountId.item1]!) +
                     [
                       AccountRelationModel(
                           indicator: accountRelation.indicator,
@@ -46,7 +46,7 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
                                   account.accountIds)),
                     ];
           } else {
-            accountsNormalisedMap[associatedAccountId.left!] = [
+            accountsNormalisedMap[associatedAccountId.item1] = [
               AccountRelationModel(
                   indicator: accountRelation.indicator,
                   associatedAccountIds:
@@ -105,10 +105,10 @@ RelationOfAccountsNormalisedModel getDetailedRelationsOfAccounts(
 
         for (int j = 0; j < accountRelation.associatedAccountIds.length; j++) {
           u32 associatedAccountId =
-              accountRelation.associatedAccountIds[j].left!;
+              accountRelation.associatedAccountIds[j].item1;
 
           result.userAccounts[userId]![accountId]![i].associatedAccountIds[j] =
-              Pair(
+              Tuple2(
             associatedAccountId,
             accountHeads
                 .firstWhere(

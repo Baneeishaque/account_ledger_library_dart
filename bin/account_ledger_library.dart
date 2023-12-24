@@ -1,5 +1,5 @@
 import 'package:account_ledger_library/account_ledger_cli.dart';
 
-void main(List<String> arguments) {
-  startAccountLedgerCli();
+Future<void> main(List<String> arguments) async {
+  await startAccountLedgerCli();
 }

@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:dart_extensions_methods/dart_extension_methods.dart';
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
 import 'account_ledger_gist_api.dart';
 import 'account_ledger_kotlin_cli_operations.dart';
@@ -63,20 +64,44 @@ bool verifyAccountLedgerGistInteractive({
 String _currentEventTime = '09:00:00';
 String _skipInputPrompt = 'Enter S to Skip, '
     'Enter ST to Skip with Time Increment fo 5 Minutes, ';
-Map<String, void Function()> _skipMap = {
-  'S': () {},
-  'ST': () {
+Map<String, Future<void> Function()> _skipOperationsMap = {
+  'S': () async {},
+  'ST': () async {
     _currentEventTime = get5MinutesIncrementedNormalTimeTextFromNormalTimeText(
         _currentEventTime);
-  }
+  },
+};
+
+late AccountLedgerGistV2Model _accountLedgerGistV2;
+late String _currentEventDate;
+late TransactionOnDateModel _currentTransactionOnDate;
+late u32 _fromAccountId;
+late u32 _toAccountId;
+
+String _timeInputPrompt = 'Enter T to Change Time, '
+    'Enter T5 to add 5 Minutes to Current Time, ';
+Map<String, Future<void> Function()> _timeOperationsMap = {
+  'T': () async {
+    _currentEventTime = inputValidTimeInNormalTimeFormatAsText(
+      inputPromptPrefix: 'Current Event Date Time is $_currentEventDate, ',
+      dataSpecification: 'New Event Time',
+    );
+    await processTransactionForTime();
+  },
+  'T5': () async {
+    _currentEventTime = get5MinutesIncrementedNormalTimeTextFromNormalTimeText(
+        _currentEventTime);
+    await processTransactionForTime();
+  },
 };
 
 Future<void> processAccountLedgerGistV2InterActive(
   AccountLedgerGistV2Model accountLedgerGistV2,
 ) async {
+  _accountLedgerGistV2 = accountLedgerGistV2;
   _accountHeads = await getUserAccountHeads(
     [],
-    accountLedgerGistV2.userId,
+    _accountLedgerGistV2.userId,
     (AccountsWithExecutionStatusModel accountsWithExecutionStatus) {
       printErrorMessage(accountsWithExecutionStatus.error!);
     },
@@ -86,219 +111,136 @@ Future<void> processAccountLedgerGistV2InterActive(
   );
 
   if (verifyAccountLedgerGistInteractive(
-    accountLedgerGistV2: accountLedgerGistV2,
+    accountLedgerGistV2: _accountLedgerGistV2,
     isVersion2: true,
   )) {
     for (AccountLedgerPageModel currentAccountLedgerPage
-        in accountLedgerGistV2.accountLedgerPages) {
+        in _accountLedgerGistV2.accountLedgerPages) {
       for (AccountLedgerDatePageModel currentAccountLedgerDatePage
           in currentAccountLedgerPage.accountLedgerDatePages) {
-        for (TransactionOnDateModel currentTransactionOnDate
+        for (TransactionOnDateModel localCurrentTransactionOnDate
             in currentAccountLedgerDatePage.transactionsOnDate) {
-          u32 fromAccountId, toAccountId;
-          if (currentTransactionOnDate.transactionAmount.isNegative) {
-            fromAccountId = currentAccountLedgerPage.accountId;
-            toAccountId = u32(0);
+          _currentTransactionOnDate = localCurrentTransactionOnDate;
+          if (_currentTransactionOnDate.transactionAmount.isNegative) {
+            _fromAccountId = currentAccountLedgerPage.accountId;
+            _toAccountId = u32(0);
           } else {
-            fromAccountId = u32(0);
-            toAccountId = currentAccountLedgerPage.accountId;
+            _fromAccountId = u32(0);
+            _toAccountId = currentAccountLedgerPage.accountId;
           }
 
-          processTransactionForTime(
-            accountLedgerGistV2,
-            currentAccountLedgerDatePage.accountLedgerPageDate,
-            currentTransactionOnDate,
-            fromAccountId,
-            toAccountId,
-          );
+          _currentEventDate =
+              currentAccountLedgerDatePage.accountLedgerPageDate;
+          await processTransactionForTime();
         }
       }
     }
   }
 }
 
-void processTransactionForTime(
-  AccountLedgerGistV2Model accountLedgerGistV2,
-  String currentEventDate,
-  TransactionOnDateModel currentTransactionOnDate,
-  u32 fromAccountId,
-  u32 toAccountId,
-) {
-  if (isNonZeroUnsignedNumbers([fromAccountId, toAccountId])) {
-    processTransactionForAccountIds(
-      fromAccountId,
-      accountLedgerGistV2,
-      currentTransactionOnDate,
-      toAccountId,
-      currentEventDate,
-    );
+Future<void> processTransactionForTime() async {
+  if (isNonZeroUnsignedNumbers([_fromAccountId, _toAccountId])) {
+    await processTransactionForAccountIds();
   } else {
-    handleInput(
+    await handleInput(
       displayPrompt: () {
-        printTransactionDetails(
-          accountLedgerGistV2.userId,
-          '$currentEventDate $_currentEventTime',
-          currentTransactionOnDate,
-          fromAccountId,
-          toAccountId,
-        );
+        printTransactionDetails();
 
-        print('Enter T to Change Time, '
+        print('$_timeInputPrompt'
             '$_skipInputPrompt'
             'Enter to Continue : ');
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
-        'T': () {
-          _currentEventTime = inputValidTimeInNormalTimeFormatAsText(
-            inputPromptPrefix: 'Current Event Date Time is $currentEventDate, ',
-            dataSpecification: 'New Event Time',
-          );
-          processTransactionForTime(
-            accountLedgerGistV2,
-            currentEventDate,
-            currentTransactionOnDate,
-            fromAccountId,
-            toAccountId,
-          );
+        '': () async {
+          await processTransactionForAccountIds();
         },
-        '': () {
-          processTransactionForAccountIds(
-            fromAccountId,
-            accountLedgerGistV2,
-            currentTransactionOnDate,
-            toAccountId,
-            currentEventDate,
-          );
-        }
-      }..addAll(_skipMap),
+      }
+        ..addAll(_timeOperationsMap)
+        ..addAll(_skipOperationsMap),
     );
   }
 }
 
-void processTransactionForAccountIds(
-  u32 fromAccountId,
-  AccountLedgerGistV2Model accountLedgerGistV2,
-  TransactionOnDateModel currentTransactionOnDate,
-  u32 toAccountId,
-  String currentEventDate,
-) {
-  fromAccountId = fromAccountId == u32(0)
-      ? getValidAccountIdFromRelations(
-          fromAccountId,
-          accountLedgerGistV2,
-          currentTransactionOnDate,
+Future<void> processTransactionForAccountIds() async {
+  _fromAccountId = _fromAccountId == u32(0)
+      ? await getValidAccountIdFromRelations(
           'From A/C ID',
-          toAccountId,
+          _toAccountId,
         )
-      : fromAccountId;
+      : _fromAccountId;
 
-  toAccountId = toAccountId == u32(0)
-      ? getValidAccountIdFromRelations(
-          toAccountId,
-          accountLedgerGistV2,
-          currentTransactionOnDate,
+  _toAccountId = _toAccountId == u32(0)
+      ? await getValidAccountIdFromRelations(
           'To A/C ID',
-          fromAccountId,
+          _fromAccountId,
         )
-      : toAccountId;
+      : _toAccountId;
 
-  handleInput(
-    displayPrompt: () {
-      printTransactionDetails(
-        accountLedgerGistV2.userId,
-        '$currentEventDate $_currentEventTime',
-        currentTransactionOnDate,
-        fromAccountId,
-        toAccountId,
-      );
+  if (isNonZeroUnsignedNumbers([_fromAccountId, _toAccountId])) {
+    await handleInput(
+      displayPrompt: () {
+        printTransactionDetails();
 
-      print('Enter T to Change Time, '
-          'Enter AF to Change From A/C ID, '
-          'Enter AT to Change To A/C ID, '
-          '$_skipInputPrompt'
-          'Enter to Continue : ');
-    },
-    invalidInputActions: printInvalidInputMessage,
-    actionsWithKeys: {
-      'T': () {
-        _currentEventTime = inputValidTimeInNormalTimeFormatAsText(
-          inputPromptPrefix: 'Current Event Date Time is $currentEventDate, ',
-          dataSpecification: 'New Event Time',
-        );
-        processTransactionForTime(
-          accountLedgerGistV2,
-          currentEventDate,
-          currentTransactionOnDate,
-          fromAccountId,
-          toAccountId,
-        );
+        print('$_timeInputPrompt'
+            'Enter AF to Change From A/C ID, '
+            'Enter AT to Change To A/C ID, '
+            '$_skipInputPrompt'
+            'Enter to Continue : ');
       },
-      'AF': () {
-        processTransactionForAccountIds(
-          getValidAccountIdFromRelations(
-            fromAccountId,
-            accountLedgerGistV2,
-            currentTransactionOnDate,
+      invalidInputActions: printInvalidInputMessage,
+      actionsWithKeys: {
+        'AF': () async {
+          _fromAccountId = await getValidAccountIdFromRelations(
             'From A/C ID',
-            toAccountId,
-          ),
-          accountLedgerGistV2,
-          currentTransactionOnDate,
-          toAccountId,
-          currentEventDate,
-        );
-      },
-      'AT': () {
-        processTransactionForAccountIds(
-          fromAccountId,
-          accountLedgerGistV2,
-          currentTransactionOnDate,
-          getValidAccountIdFromRelations(
-            toAccountId,
-            accountLedgerGistV2,
-            currentTransactionOnDate,
+            _toAccountId,
+          );
+          await processTransactionForAccountIds();
+        },
+        'AT': () async {
+          _toAccountId = await getValidAccountIdFromRelations(
             'To A/C ID',
-            fromAccountId,
-          ),
-          currentEventDate,
-        );
-      },
-      '': () {
-        insertTransactionWithRetryOption(
-          accountLedgerGistV2,
-          currentEventDate,
-          currentTransactionOnDate,
-          fromAccountId,
-          toAccountId,
-        );
-      },
-    }..addAll(_skipMap),
-  );
+            _fromAccountId,
+          );
+          await processTransactionForAccountIds();
+        },
+        '': () async {
+          await insertTransactionWithRetryOption(
+            _toAccountId,
+          );
+        },
+      }
+        ..addAll(_timeOperationsMap)
+        ..addAll(_skipOperationsMap),
+    );
+  } else {
+    await processTransactionForAccountIds();
+  }
 }
 
-void insertTransactionWithRetryOption(
-  AccountLedgerGistV2Model accountLedgerGistV2,
-  String currentEventDate,
-  TransactionOnDateModel currentTransactionOnDate,
-  u32 fromAccountId,
+Future<void> insertTransactionWithRetryOption(
   u32 toAccountId,
-) {
+) async {
   AccountLedgerApiResultMessageModel insertTransactionResult =
-      runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
-          TransactionModel(
-    accountLedgerGistV2.userId,
-    '$currentEventDate $_currentEventTime',
-    currentTransactionOnDate.transactionParticulars,
-    currentTransactionOnDate.transactionAmount,
-    fromAccountId,
-    toAccountId,
-  ));
+      await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
+    TransactionModel(
+      _accountLedgerGistV2.userId,
+      '$_currentEventDate $_currentEventTime',
+      _currentTransactionOnDate.transactionParticulars,
+      _currentTransactionOnDate.transactionAmount,
+      _fromAccountId,
+      _toAccountId,
+    ),
+    beforeOperationActions: () {
+      print('Running Account Ledger Insert Transaction Operation...');
+    },
+  );
   if (insertTransactionResult.accountLedgerApiResultStatus.status == 0) {
+    print(insertTransactionResult);
     _currentEventTime =
         insertTransactionResult.newDateTime.split(' ').elementAt(1);
   } else {
-    handleInput(
+    await handleInput(
       displayPrompt: () {
         print(
             'Insert Transaction Operation Failure due to ${insertTransactionResult.accountLedgerApiResultStatus.error}, '
@@ -308,53 +250,44 @@ void insertTransactionWithRetryOption(
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
-        'E': () {
+        'E': () async {
           printExitMessage();
         },
-        '': () {
-          insertTransactionWithRetryOption(
-            accountLedgerGistV2,
-            currentEventDate,
-            currentTransactionOnDate,
-            fromAccountId,
-            toAccountId,
+        '': () async {
+          await insertTransactionWithRetryOption(
+            _toAccountId,
           );
         },
-      }..addAll(_skipMap),
+      }..addAll(_skipOperationsMap),
     );
   }
 }
 
-void printTransactionDetails(
-  u32 userId,
-  String currentEventDateTime,
-  TransactionOnDateModel currentTransactionOnDate,
-  u32 fromAccountId,
-  u32 toAccountId,
-) {
+void printTransactionDetails() {
   print('\nTransaction Details');
   print('-----------------------');
-  print('userId: $userId'
-      '\neventDateTime: $currentEventDateTime'
-      '\nparticulars: ${currentTransactionOnDate.transactionParticulars}'
-      '\namount: ${currentTransactionOnDate.transactionAmount}'
-      '\nfromAccountId: $fromAccountId'
-      '\ntoAccountId: $toAccountId\n');
+  print('userId: ${_accountLedgerGistV2.userId}'
+      '\neventDateTime: $_currentEventDate $_currentEventTime'
+      '\nparticulars: ${_currentTransactionOnDate.transactionParticulars}'
+      '\namount: ${_currentTransactionOnDate.transactionAmount}'
+      '\nfromAccountId: $_fromAccountId'
+      '\ntoAccountId: $_toAccountId\n');
 }
 
-u32 getValidAccountIdFromRelations(
-  u32 desiredAccountId,
-  AccountLedgerGistV2Model accountLedgerGistV2,
-  TransactionOnDateModel currentTransactionOnDate,
+Future<u32> getValidAccountIdFromRelations(
   String dataSpecification,
   u32 alreadyKnownAccountId,
-) {
-  Map<String, void Function()> actionsWithKeys = {
-    'R': () {
-      getValidAccountIdFromRelations(
-        desiredAccountId,
-        accountLedgerGistV2,
-        currentTransactionOnDate,
+) async {
+  late u32 desiredAccountId;
+  List<AccountRelationModel>? accountRelations = getDetailedAccountRelations(
+      _accountLedgerGistV2.userId,
+      alreadyKnownAccountId,
+      _currentTransactionOnDate.transactionParticulars,
+      _accountHeads);
+
+  Map<String, Future<void> Function()> actionsWithKeys = {
+    'R': () async {
+      desiredAccountId = await getValidAccountIdFromRelations(
         dataSpecification,
         alreadyKnownAccountId,
       );
@@ -362,21 +295,45 @@ u32 getValidAccountIdFromRelations(
     '': () async {
       desiredAccountId = await getValidAccountIdFromUserInput(
         dataSpecification,
-        accountLedgerGistV2.userId,
+        _accountLedgerGistV2.userId,
         _accountHeads,
+        isZeroUsedForBack: true,
       );
     },
+    'I': () async {
+      if ((accountRelations == null) || accountRelations.isEmpty) {
+        printInvalidInputMessage();
+      } else {
+        Tuple3<u32, List<AccountHeadModel>, bool> getValidAccountIdResult =
+            await getValidAccountId(
+          _accountLedgerGistV2.userId,
+          _accountHeads,
+          () {
+            printInvalidMessage(dataSpecification: 'A/C ID');
+          },
+          accountIdToCheck: desiredAccountId,
+          isZeroUsedForBack: true,
+        );
+        _accountHeads = getValidAccountIdResult.item2;
+        if (getValidAccountIdResult.item3) {
+          desiredAccountId = getValidAccountIdResult.item1;
+        } else {
+          desiredAccountId = await getValidAccountIdFromUserInput(
+            dataSpecification,
+            _accountLedgerGistV2.userId,
+            _accountHeads,
+            isZeroUsedForBack: true,
+          );
+        }
+      }
+    }
   };
-  List<AccountRelationModel>? accountRelations = getDetailedAccountRelations(
-      accountLedgerGistV2.userId,
-      alreadyKnownAccountId,
-      currentTransactionOnDate.transactionParticulars,
-      _accountHeads);
+
   if ((accountRelations == null) || accountRelations.isEmpty) {
-    handleInput(
+    await handleInput(
       displayPrompt: () {
         print(
-            'A/C ID $alreadyKnownAccountId not Associated any A/Cs for Particulars: ${currentTransactionOnDate.transactionParticulars}, '
+            'A/C ID $alreadyKnownAccountId not Associated any A/Cs for Particulars: ${_currentTransactionOnDate.transactionParticulars}, '
             'Enter R to Refresh Relation of Accounts, '
             'Enter to Continue : ');
       },
@@ -384,19 +341,21 @@ u32 getValidAccountIdFromRelations(
       actionsWithKeys: actionsWithKeys,
     );
   } else {
-    handleInput(
+    await handleInput(
       displayPrompt: () {
         print('A/C ID $alreadyKnownAccountId Associated A/Cs');
         print('=============================================');
         for (int i = 0; i < accountRelations.length; i++) {
-          print('For Indicator "${accountRelations[i].indicator}"');
+          print('\nFor Indicator "${accountRelations[i].indicator}"');
           print('----------------------------------------------------');
-          for (Pair<u32, String> element
+          for (Tuple2<u32, String> accountRelation
               in accountRelations[i].associatedAccountIds) {
-            print('${element.left} : ${element.right}');
+            desiredAccountId = accountRelation.item1;
+            print('${accountRelation.item1} : ${accountRelation.item2}');
           }
         }
         print('Enter R to Refresh Relation of Accounts, '
+            'Enter I to Continue with $desiredAccountId, '
             'Enter to Continue : ');
       },
       invalidInputActions: printInvalidInputMessage,
@@ -407,20 +366,23 @@ u32 getValidAccountIdFromRelations(
 }
 
 Future<u32> getValidAccountIdFromUserInput(
-  String dataSpecification,
-  u32 userId,
-  List<AccountHeadModel> accountHeads,
-) async {
-  Pair<u32, List<AccountHeadModel>> getValidAccountIdResult = await getValidAccountId(
-      () {
-        return inputValidUnsignedPositiveInteger(
-            dataSpecification: dataSpecification);
-      },
-      userId,
-      accountHeads,
-      () {
-        printInvalidMessage(dataSpecification: 'A/C ID');
-      });
-  _accountHeads = getValidAccountIdResult.right!;
-  return getValidAccountIdResult.left!;
+    String dataSpecification, u32 userId, List<AccountHeadModel> accountHeads,
+    {bool isZeroUsedForBack = false}) async {
+  Tuple3<u32, List<AccountHeadModel>, bool> getValidAccountIdResult =
+      await getValidAccountId(
+    userId,
+    accountHeads,
+    () {
+      printInvalidMessage(dataSpecification: 'A/C ID');
+    },
+    getValidUnsignedPositiveIntegerFunction: () {
+      return inputValidUnsignedPositiveInteger(
+        dataSpecification: dataSpecification,
+        isZeroUsedForBack: isZeroUsedForBack,
+      );
+    },
+    isZeroUsedForBack: isZeroUsedForBack,
+  );
+  _accountHeads = getValidAccountIdResult.item2;
+  return getValidAccountIdResult.item1;
 }
