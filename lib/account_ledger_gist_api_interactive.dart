@@ -95,20 +95,30 @@ Map<String, Future<void> Function()> _timeOperationsMap = {
   },
 };
 
+bool _reloadGistRequested = false;
+String _reloadGistPrompt = 'Enter RG to reload Gist Contents, ';
+Map<String, Future<void> Function()> _reloadGistOperationMap = {
+  'RG': () async {
+    _reloadGistRequested = true;
+  }
+};
+
 Future<void> processAccountLedgerGistV2InterActive(
-  AccountLedgerGistV2Model accountLedgerGistV2,
-) async {
+    AccountLedgerGistV2Model accountLedgerGistV2,
+    {bool isNotFromReloadGist = true}) async {
   _accountLedgerGistV2 = accountLedgerGistV2;
-  _accountHeads = await getUserAccountHeads(
-    [],
-    _accountLedgerGistV2.userId,
-    (AccountsWithExecutionStatusModel accountsWithExecutionStatus) {
-      printErrorMessage(accountsWithExecutionStatus.error!);
-    },
-    actionsBeforeExecution: () {
-      print('Running GetAccounts Operation...');
-    },
-  );
+  if (isNotFromReloadGist) {
+    _accountHeads = await getUserAccountHeads(
+      [],
+      _accountLedgerGistV2.userId,
+      (AccountsWithExecutionStatusModel accountsWithExecutionStatus) {
+        printErrorMessage(accountsWithExecutionStatus.error!);
+      },
+      actionsBeforeExecution: () {
+        print('Running GetAccounts Operation...');
+      },
+    );
+  }
 
   if (verifyAccountLedgerGistInteractive(
     accountLedgerGistV2: _accountLedgerGistV2,
@@ -116,10 +126,19 @@ Future<void> processAccountLedgerGistV2InterActive(
   )) {
     for (AccountLedgerPageModel currentAccountLedgerPage
         in _accountLedgerGistV2.accountLedgerPages) {
+      if (_reloadGistRequested) {
+        break;
+      }
       for (AccountLedgerDatePageModel currentAccountLedgerDatePage
           in currentAccountLedgerPage.accountLedgerDatePages) {
+        if (_reloadGistRequested) {
+          break;
+        }
         for (TransactionOnDateModel localCurrentTransactionOnDate
             in currentAccountLedgerDatePage.transactionsOnDate) {
+          if (_reloadGistRequested) {
+            break;
+          }
           _currentTransactionOnDate = localCurrentTransactionOnDate;
           if (_currentTransactionOnDate.transactionAmount.isNegative) {
             _fromAccountId = currentAccountLedgerPage.accountId;
@@ -136,6 +155,20 @@ Future<void> processAccountLedgerGistV2InterActive(
       }
     }
   }
+  if (_reloadGistRequested) {
+    _reloadGistRequested = false;
+    await processAccountLedgerGistV2InterActive(
+        AccountLedgerGistV2Model.fromJson(
+            jsonDecode(runAccountLedgerGistV2Operation(
+          actionsBeforeExecution: () {
+            print('Running GistV2 Operation');
+          },
+          actionsAfterExecution: (String result) {
+            // print('Result : $result');
+          },
+        ))),
+        isNotFromReloadGist: false);
+  }
 }
 
 Future<void> processTransactionForTime() async {
@@ -148,6 +181,7 @@ Future<void> processTransactionForTime() async {
 
         print('$_timeInputPrompt'
             '$_skipInputPrompt'
+            '$_reloadGistPrompt'
             'Enter to Continue : ');
       },
       invalidInputActions: printInvalidInputMessage,
@@ -157,7 +191,8 @@ Future<void> processTransactionForTime() async {
         },
       }
         ..addAll(_timeOperationsMap)
-        ..addAll(_skipOperationsMap),
+        ..addAll(_skipOperationsMap)
+        ..addAll(_reloadGistOperationMap),
     );
   }
 }
@@ -186,6 +221,7 @@ Future<void> processTransactionForAccountIds() async {
             'Enter AF to Change From A/C ID, '
             'Enter AT to Change To A/C ID, '
             '$_skipInputPrompt'
+            '$_reloadGistPrompt'
             'Enter to Continue : ');
       },
       invalidInputActions: printInvalidInputMessage,
@@ -211,7 +247,8 @@ Future<void> processTransactionForAccountIds() async {
         },
       }
         ..addAll(_timeOperationsMap)
-        ..addAll(_skipOperationsMap),
+        ..addAll(_skipOperationsMap)
+        ..addAll(_reloadGistOperationMap),
     );
   } else {
     await processTransactionForAccountIds();
