@@ -120,10 +120,7 @@ Future<void> processAccountLedgerGistV2InterActive(
     );
   }
 
-  if (verifyAccountLedgerGistInteractive(
-    accountLedgerGistV2: _accountLedgerGistV2,
-    isVersion2: true,
-  )) {
+  if (true) {
     for (AccountLedgerPageModel currentAccountLedgerPage
         in _accountLedgerGistV2.accountLedgerPages) {
       if (_reloadGistRequested) {

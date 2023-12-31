@@ -30,7 +30,7 @@ Future<void> startAccountLedgerCli() async {
           "\n9 : Get User Account Heads"
           "\n10 : Get Relation of Accounts from file"
           "\n11 : Process Gist (Version 2) Account Ledger (Interactive)"
-          "\n12 : Verify Gist (Version 2) Account Ledger"
+          // "\n12 : Verify Gist (Version 2) Account Ledger"
           "\n13 : Process Gist (Version 2) Account Ledger (Auto)"
           "\n0 : Exit"
           "\n"
@@ -193,9 +193,9 @@ Future<void> startAccountLedgerCli() async {
           },
         ))));
       },
-      "12": () async {
-        verifyAccountLedgerGistInteractive(isVersion2: true);
-      },
+      // "12": () async {
+      //   verifyAccountLedgerGistInteractive(isVersion2: true);
+      // },
       "13": () async {
         printComingSoonMessage();
       },
