@@ -18,6 +18,7 @@ Future<String> runAccountLedgerInsertTransactionOperation(
     TransactionModel transaction,
     {void Function()? beforeOperationActions = dummyFunction}) async {
   return (await http.post(
+          Uri.parse('INSERT_TRANSACTION_FULL_URL'),
           body: {
         'user_id': transaction.userId.toString(),
         'event_date_time':
@@ -35,6 +36,7 @@ Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
     void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) async {
   http.Response getAccountsFromServerHttpResponse = await http.get(Uri.parse(
+      'SELECT_USER_ACCOUNTS_FULL_FULL_URL'));
   if (getAccountsFromServerHttpResponse.statusCode == 200) {
     GetAccountsFromServerResponseModel getAccountsFromServerResponse =
         GetAccountsFromServerResponseModel.fromJson(
