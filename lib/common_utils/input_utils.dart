@@ -111,18 +111,21 @@ DateTime getValidTimeInNormalTimeFormat({
   required void Function() displayPrompt,
   void Function() invalidDataActions = dummyFunction,
 }) {
-  DateTime? convertedTime = normalTimeFormat.tryParse(getNonEmptyText(
-    displayPrompt: displayPrompt,
-    invalidDataActions: invalidDataActions,
-  ));
-  if (convertedTime == null) {
+  try {
+    DateTime convertedTime = normalTimeFormat.parse(
+      getNonEmptyText(
+        displayPrompt: displayPrompt,
+        invalidDataActions: invalidDataActions,
+      ),
+    );
+    return convertedTime;
+  } catch (e) {
     invalidDataActions.call();
     return getValidTimeInNormalTimeFormat(
       displayPrompt: displayPrompt,
       invalidDataActions: invalidDataActions,
     );
   }
-  return convertedTime;
 }
 
 Future<void> handleInput(
