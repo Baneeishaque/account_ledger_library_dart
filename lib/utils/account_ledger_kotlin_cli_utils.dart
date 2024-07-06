@@ -16,7 +16,7 @@ String runAccountLedgerKotlinCliOperation(
     accountLedgerKotlinCliArguments,
     environment: platform.isWindows
         ? {
-            "JAVA_HOME": r"C:\Users\dk\scoop\apps\jabba\0.13.0\jdk\openjdk@20.0.1",
+            "JAVA_HOME": r"C:\Users\dk\scoop\apps\jabba\current\jdk\oracle@22.0.1",
           }
         : {},
     workingDirectory: File(accountLedgerCliExecutable).parent.path,
