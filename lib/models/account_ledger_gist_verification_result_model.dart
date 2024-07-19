@@ -57,9 +57,9 @@ class AccountLedgerPageModel {
 
   AccountLedgerPageModel.fromJson(Map<String, dynamic> json) {
     accountId = u32(json['accountId']);
-    if (json['accountLedgerDatePages'] != null) {
+    if (json['transactionDatePages'] != null) {
       accountLedgerDatePages = <AccountLedgerDatePageModel>[];
-      json['accountLedgerDatePages'].forEach((v) {
+      json['transactionDatePages'].forEach((v) {
         accountLedgerDatePages.add(AccountLedgerDatePageModel.fromJson(v));
       });
     }
@@ -92,15 +92,15 @@ class AccountLedgerDatePageModel {
       this.finalBalanceOnDate});
 
   AccountLedgerDatePageModel.fromJson(Map<String, dynamic> json) {
-    accountLedgerPageDate = json['accountLedgerPageDate'];
-    initialBalanceOnDate = json['initialBalanceOnDate'];
-    if (json['transactionsOnDate'] != null) {
+    accountLedgerPageDate = json['transactionDate'];
+    initialBalanceOnDate = json['initialBalance'];
+    if (json['transactions'] != null) {
       transactionsOnDate = <TransactionOnDateModel>[];
-      json['transactionsOnDate'].forEach((v) {
+      json['transactions'].forEach((v) {
         transactionsOnDate.add(TransactionOnDateModel.fromJson(v));
       });
     }
-    finalBalanceOnDate = json['finalBalanceOnDate'];
+    finalBalanceOnDate = json['finalBalance'];
   }
 
   Map<String, dynamic> toJson() {
