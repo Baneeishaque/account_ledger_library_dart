@@ -71,6 +71,7 @@ Map<String, Future<void> Function()> _skipOperationsMap = {
         _currentEventTime);
   },
 };
+String? _currentParticulars;
 
 late AccountLedgerGistV2Model _accountLedgerGistV2;
 late String _currentEventDate;
@@ -105,7 +106,8 @@ Map<String, Future<void> Function()> _reloadGistOperationMap = {
 
 Future<void> processAccountLedgerGistV2InterActive(
     AccountLedgerGistV2Model accountLedgerGistV2,
-    {bool isNotFromReloadGist = true}) async {
+    {bool isNotFromReloadGist = true,
+    bool isVersion3 = false}) async {
   _accountLedgerGistV2 = accountLedgerGistV2;
   if (isNotFromReloadGist) {
     _accountHeads = await getUserAccountHeads(
@@ -137,12 +139,33 @@ Future<void> processAccountLedgerGistV2InterActive(
             break;
           }
           _currentTransactionOnDate = localCurrentTransactionOnDate;
-          if (_currentTransactionOnDate.transactionAmount.isNegative) {
+          if (isVersion3) {
             _fromAccountId = currentAccountLedgerPage.accountId;
-            _toAccountId = u32(0);
+            // TODO: Check Particulars contains =>, if it is - error
+            int particularsEndIndex = _currentTransactionOnDate
+                .transactionParticulars
+                .indexOf(' => ');
+            _toAccountId = u32.tryParse(_currentTransactionOnDate
+                .transactionParticulars
+                .substring(particularsEndIndex + 4)
+                .trim())!;
+            String transactionContents = _currentTransactionOnDate
+                .transactionParticulars
+                .substring(0, particularsEndIndex)
+                .trim();
+            int timeEndIndicator = transactionContents.indexOf(' ');
+            _currentEventTime =
+                transactionContents.substring(0, timeEndIndicator);
+            _currentParticulars =
+                transactionContents.substring(timeEndIndicator + 1);
           } else {
-            _fromAccountId = u32(0);
-            _toAccountId = currentAccountLedgerPage.accountId;
+            if (_currentTransactionOnDate.transactionAmount.isNegative) {
+              _fromAccountId = currentAccountLedgerPage.accountId;
+              _toAccountId = u32(0);
+            } else {
+              _fromAccountId = u32(0);
+              _toAccountId = currentAccountLedgerPage.accountId;
+            }
           }
 
           _currentEventDate =
@@ -260,7 +283,7 @@ Future<void> insertTransactionWithRetryOption(
     TransactionModel(
       _accountLedgerGistV2.userId,
       '$_currentEventDate $_currentEventTime',
-      _currentTransactionOnDate.transactionParticulars,
+      _currentParticulars ?? _currentTransactionOnDate.transactionParticulars,
       _currentTransactionOnDate.transactionAmount,
       _fromAccountId,
       _toAccountId,
@@ -302,7 +325,7 @@ void printTransactionDetails() {
   print('-----------------------');
   print('userId: ${_accountLedgerGistV2.userId}'
       '\neventDateTime: $_currentEventDate $_currentEventTime'
-      '\nparticulars: ${_currentTransactionOnDate.transactionParticulars}'
+      '\nparticulars: ${_currentParticulars ?? _currentTransactionOnDate.transactionParticulars}'
       '\namount: ${_currentTransactionOnDate.transactionAmount}'
       '\nfromAccountId: $_fromAccountId'
       '\ntoAccountId: $_toAccountId\n');

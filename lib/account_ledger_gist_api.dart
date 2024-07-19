@@ -24,6 +24,17 @@ String runAccountLedgerGistV2Operation(
   );
 }
 
+String runAccountLedgerGistV3Operation(
+    {void Function() actionsBeforeExecution = dummyFunction,
+      void Function(String)? actionsAfterExecution}) {
+  return runAccountLedgerKotlinCliOperation(
+    ["GistV3"],
+    actionsBeforeExecution: actionsBeforeExecution,
+    actionsAfterExecution: actionsAfterExecution,
+  );
+}
+
+
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
   AccountLedgerGistModel accountLedgerGist,
   void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)

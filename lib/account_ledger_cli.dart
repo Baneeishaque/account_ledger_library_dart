@@ -32,6 +32,7 @@ Future<void> startAccountLedgerCli() async {
           "\n11 : Process Gist (Version 2) Account Ledger (Interactive)"
           // "\n12 : Verify Gist (Version 2) Account Ledger"
           "\n13 : Process Gist (Version 2) Account Ledger (Auto)"
+          "\n14 : Process Gist (Version 3) Account Ledger (Interactive)"
           "\n0 : Exit"
           "\n"
           "\nEnter Your Choice : ");
@@ -198,6 +199,20 @@ Future<void> startAccountLedgerCli() async {
       // },
       "13": () async {
         printComingSoonMessage();
+      },
+      "14": () async {
+        await processAccountLedgerGistV2InterActive(
+          AccountLedgerGistV2Model.fromJson(
+            jsonDecode(
+              runAccountLedgerGistV3Operation(
+                actionsBeforeExecution: () {
+                  print('Running GistV3 Operation');
+                },
+              ),
+            ),
+          ),
+          isVersion3: true,
+        );
       },
       "0": () async {},
     },
