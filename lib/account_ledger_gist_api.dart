@@ -34,6 +34,16 @@ String runAccountLedgerGistV3Operation(
   );
 }
 
+String runAccountLedgerGistV4Operation(
+    {void Function() actionsBeforeExecution = dummyFunction,
+      void Function(String)? actionsAfterExecution}) {
+  return runAccountLedgerKotlinCliOperation(
+    ["GistV4"],
+    actionsBeforeExecution: actionsBeforeExecution,
+    actionsAfterExecution: actionsAfterExecution,
+  );
+}
+
 
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
   AccountLedgerGistModel accountLedgerGist,
