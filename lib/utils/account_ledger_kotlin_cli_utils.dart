@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dotenv/dotenv.dart';
 import 'package:os_detect/os_detect.dart' as platform;
 import 'package:tuple/tuple.dart';
 
@@ -11,13 +12,14 @@ Tuple2<bool, String> runAccountLedgerKotlinCliOperation(
     {void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) {
   // print(accountLedgerKotlinCliArguments);
+  var env = DotEnv(includePlatformEnvironment: true)..load();
   actionsBeforeExecution();
   ProcessResult processResult = Process.runSync(
     accountLedgerCliExecutable,
     accountLedgerKotlinCliArguments,
-    environment: platform.isWindows
+    environment: (platform.isWindows && env.isDefined('JAVA_HOME'))
         ? {
-            "JAVA_HOME": r"C:\Users\dk\scoop\apps\jabba\current\jdk\oracle@22.0.1",
+            "JAVA_HOME": env['JAVA_HOME']!,
           }
         : {},
     workingDirectory: File(accountLedgerCliExecutable).parent.path,
