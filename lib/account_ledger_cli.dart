@@ -187,13 +187,22 @@ Future<void> startAccountLedgerCli() async {
         print(readRelationsOfAccountsInNormalForm());
       },
       "11": () async {
-        await processAccountLedgerGistV2InterActive(
-            AccountLedgerGistV2Model.fromJson(
-                jsonDecode(runAccountLedgerGistV2Operation(
+        Tuple2<bool, String> gistOperationResult =
+            runAccountLedgerGistV2Operation(
           actionsBeforeExecution: () {
-            print('Running GistV2 Operation');
+            print('Running GistV2 Operation...');
           },
-        ))));
+        );
+        if (gistOperationResult.item1) {
+          await processAccountLedgerGistV2InterActive(
+            AccountLedgerGistV2Model.fromJson(
+              jsonDecode(gistOperationResult.item2),
+            ),
+          );
+        } else {
+          print("Gist Operation Failure...");
+          print(gistOperationResult.item2);
+        }
       },
       // "12": () async {
       //   verifyAccountLedgerGistInteractive(isVersion2: true);
@@ -202,32 +211,42 @@ Future<void> startAccountLedgerCli() async {
         printComingSoonMessage();
       },
       "14": () async {
-        await processAccountLedgerGistV2InterActive(
-          AccountLedgerGistV2Model.fromJson(
-            jsonDecode(
-              runAccountLedgerGistV3Operation(
-                actionsBeforeExecution: () {
-                  print('Running GistV3 Operation');
-                },
-              ),
-            ),
-          ),
-          isVersion3: true,
+        Tuple2<bool, String> gistOperationResult =
+            runAccountLedgerGistV3Operation(
+          actionsBeforeExecution: () {
+            print('Running GistV3 Operation');
+          },
         );
+        if (gistOperationResult.item1) {
+          await processAccountLedgerGistV2InterActive(
+            AccountLedgerGistV2Model.fromJson(
+              jsonDecode(gistOperationResult.item2),
+            ),
+            isVersion3: true,
+          );
+        } else {
+          print("Gist Operation Failure...");
+          print(gistOperationResult.item2);
+        }
       },
       "15": () async {
-        await processAccountLedgerGistV2InterActive(
-          AccountLedgerGistV2Model.fromJson(
-            jsonDecode(
-              runAccountLedgerGistV4Operation(
-                actionsBeforeExecution: () {
-                  print('Running GistV4 Operation');
-                },
-              ),
-            ),
-          ),
-          isVersion3: true,
+        Tuple2<bool, String> gistOperationResult =
+            runAccountLedgerGistV4Operation(
+          actionsBeforeExecution: () {
+            print('Running GistV4 Operation');
+          },
         );
+        if (gistOperationResult.item1) {
+          await processAccountLedgerGistV2InterActive(
+            AccountLedgerGistV2Model.fromJson(
+              jsonDecode(gistOperationResult.item2),
+            ),
+            isVersion3: true,
+          );
+        } else {
+          print("Gist Operation Failure...");
+          print(gistOperationResult.item2);
+        }
       },
       "0": () async {},
     },

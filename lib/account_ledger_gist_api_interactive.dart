@@ -26,37 +26,49 @@ bool verifyAccountLedgerGistInteractive({
   AccountLedgerGistV2Model? accountLedgerGistV2,
   bool isVersion2 = false,
 }) {
-  var verifyAccountLedgerGistResult = isVersion2
-      ? verifyAccountLedgerGistV2(
-          accountLedgerGistV2 ??
-              AccountLedgerGistV2Model.fromJson(
-                  jsonDecode(runAccountLedgerGistV2Operation(
-                actionsBeforeExecution: () {
-                  print('Running GistV2 Operation...');
-                },
-              ))),
-          (AccountLedgerPageModel accountLedgerPage,
-              AccountLedgerDatePageModel accountLedgerDatePage) {
-            print(
-                "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+  Tuple2<bool, String> gistOperationResult = isVersion2
+      ? runAccountLedgerGistV2Operation(
+          actionsBeforeExecution: () {
+            print('Running GistV2 Operation...');
           },
         )
-      : verifyAccountLedgerGist(AccountLedgerGistModel.fromJson(
-          jsonDecode(runAccountLedgerGistOperation(
+      : runAccountLedgerGistOperation(
           actionsBeforeExecution: () {
             print('Running Gist Operation...');
           },
-        ))), (AccountLedgerPageModel accountLedgerPage,
-          AccountLedgerDatePageModel accountLedgerDatePage) {
-          print(
-              "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
-        });
-  if (verifyAccountLedgerGistResult.status) {
-    print("Gist Account Ledger Verification Success...");
-    return true;
+        );
+  if (gistOperationResult.item1) {
+    var verifyAccountLedgerGistResult = isVersion2
+        ? verifyAccountLedgerGistV2(
+            accountLedgerGistV2 ??
+                AccountLedgerGistV2Model.fromJson(
+                  jsonDecode(gistOperationResult.item2),
+                ),
+            (AccountLedgerPageModel accountLedgerPage,
+                AccountLedgerDatePageModel accountLedgerDatePage) {
+              print(
+                  "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+            },
+          )
+        : verifyAccountLedgerGist(
+            AccountLedgerGistModel.fromJson(
+              jsonDecode(gistOperationResult.item2),
+            ), (AccountLedgerPageModel accountLedgerPage,
+                AccountLedgerDatePageModel accountLedgerDatePage) {
+            print(
+                "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+          });
+    if (verifyAccountLedgerGistResult.status) {
+      print("Gist Account Ledger Verification Success...");
+      return true;
+    } else {
+      print("Gist Account Ledger Verification Failure...");
+      print(verifyAccountLedgerGistResult.failedAccountLedgerPage);
+      return false;
+    }
   } else {
-    print("Gist Account Ledger Verification Failure...");
-    print(verifyAccountLedgerGistResult.failedAccountLedgerPage);
+    print("Gist Operation Failure...");
+    print(gistOperationResult.item2);
     return false;
   }
 }
@@ -177,17 +189,24 @@ Future<void> processAccountLedgerGistV2InterActive(
   }
   if (_reloadGistRequested) {
     _reloadGistRequested = false;
-    await processAccountLedgerGistV2InterActive(
-        AccountLedgerGistV2Model.fromJson(
-            jsonDecode(runAccountLedgerGistV2Operation(
-          actionsBeforeExecution: () {
-            print('Running GistV2 Operation');
-          },
-          actionsAfterExecution: (String result) {
-            // print('Result : $result');
-          },
-        ))),
-        isNotFromReloadGist: false);
+    Tuple2<bool, String> gistOperationResult = runAccountLedgerGistV2Operation(
+      actionsBeforeExecution: () {
+        print('Running GistV2 Operation...');
+      },
+      actionsAfterExecution: (String result) {
+        // print('Result : $result');
+      },
+    );
+    if (gistOperationResult.item1) {
+      await processAccountLedgerGistV2InterActive(
+          AccountLedgerGistV2Model.fromJson(
+            jsonDecode(gistOperationResult.item2),
+          ),
+          isNotFromReloadGist: false);
+    } else {
+      print("Gist Operation Failure...");
+      print(gistOperationResult.item2);
+    }
   }
 }
 

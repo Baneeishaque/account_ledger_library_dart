@@ -4,6 +4,7 @@ import 'package:account_ledger_library/common_utils/mysql_utils.dart';
 import 'package:account_ledger_library/models/get_accounts_from_server_response_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:integer/integer.dart';
+import 'package:tuple/tuple.dart';
 
 import 'common_utils/common_utils.dart';
 import 'common_utils/date_time_utils.dart';
@@ -56,16 +57,27 @@ Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
   }
 }
 
-AccountsUrlWithExecutionStatusModel runAccountLedgerGetAccountsUrlOperation(
-    [u32? userId]) {
-  return AccountsUrlWithExecutionStatusModel.fromJson(
-      jsonDecode(runAccountLedgerOperationWithUserId(
+Tuple3<bool, AccountsUrlWithExecutionStatusModel?, String?>
+    runAccountLedgerGetAccountsUrlOperation([u32? userId]) {
+  Tuple2<bool, String> gistOperationResult =
+      runAccountLedgerOperationWithUserId(
     ([userId]) => getGetAccountsUrlArguments(userId),
     userId: userId,
-  )));
+  );
+  if (gistOperationResult.item1) {
+    return Tuple3(
+        true,
+        AccountsUrlWithExecutionStatusModel.fromJson(
+          jsonDecode(gistOperationResult.item2),
+        ),
+        null);
+  } else {
+    return Tuple3(
+        false, null, "Gist Operation Failure: ${gistOperationResult.item2}");
+  }
 }
 
-String runAccountLedgerOperationWithUserId(
+Tuple2<bool, String> runAccountLedgerOperationWithUserId(
     List<String> Function([u32? userId]) getOperationArgumentsWithUserId,
     {u32? userId,
     void Function() actionsBeforeExecution = dummyFunction,

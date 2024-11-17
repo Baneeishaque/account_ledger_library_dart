@@ -11,6 +11,7 @@ dependencies:
   tuple: ^2.0.2
   os_detect: ^2.0.1
   http: ^1.1.2
+  dotenv: ^4.2.0
 
 dev_dependencies:
   lints: ^3.0.0

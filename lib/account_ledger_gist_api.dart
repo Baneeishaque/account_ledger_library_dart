@@ -1,9 +1,11 @@
+import 'package:tuple/tuple.dart';
+
 import 'common_utils/common_utils.dart';
 import 'models/account_ledger_gist_model_v2.dart';
 import 'models/account_ledger_gist_verification_result_model.dart';
 import 'utils/account_ledger_kotlin_cli_utils.dart';
 
-String runAccountLedgerGistOperation(
+Tuple2<bool, String> runAccountLedgerGistOperation(
     {void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
@@ -14,7 +16,7 @@ String runAccountLedgerGistOperation(
   );
 }
 
-String runAccountLedgerGistV2Operation(
+Tuple2<bool, String> runAccountLedgerGistV2Operation(
     {void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
@@ -24,9 +26,9 @@ String runAccountLedgerGistV2Operation(
   );
 }
 
-String runAccountLedgerGistV3Operation(
+Tuple2<bool, String> runAccountLedgerGistV3Operation(
     {void Function() actionsBeforeExecution = dummyFunction,
-      void Function(String)? actionsAfterExecution}) {
+    void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV3"],
     actionsBeforeExecution: actionsBeforeExecution,
@@ -34,16 +36,15 @@ String runAccountLedgerGistV3Operation(
   );
 }
 
-String runAccountLedgerGistV4Operation(
+Tuple2<bool, String> runAccountLedgerGistV4Operation(
     {void Function() actionsBeforeExecution = dummyFunction,
-      void Function(String)? actionsAfterExecution}) {
+    void Function(String)? actionsAfterExecution}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV4"],
     actionsBeforeExecution: actionsBeforeExecution,
     actionsAfterExecution: actionsAfterExecution,
   );
 }
-
 
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
   AccountLedgerGistModel accountLedgerGist,
