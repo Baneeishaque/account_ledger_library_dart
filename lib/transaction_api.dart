@@ -59,21 +59,21 @@ Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
 
 Tuple3<bool, AccountsUrlWithExecutionStatusModel?, String?>
     runAccountLedgerGetAccountsUrlOperation([u32? userId]) {
-  Tuple2<bool, String> gistOperationResult =
+  Tuple2<bool, String> accountLedgerCliOperationResult =
       runAccountLedgerOperationWithUserId(
     ([userId]) => getGetAccountsUrlArguments(userId),
     userId: userId,
   );
-  if (gistOperationResult.item1) {
+  if (accountLedgerCliOperationResult.item1) {
     return Tuple3(
         true,
         AccountsUrlWithExecutionStatusModel.fromJson(
-          jsonDecode(gistOperationResult.item2),
+          jsonDecode(accountLedgerCliOperationResult.item2),
         ),
         null);
   } else {
-    return Tuple3(
-        false, null, "Gist Operation Failure: ${gistOperationResult.item2}");
+    return Tuple3(false, null,
+        "Account Ledger CLI Operation Failure: ${accountLedgerCliOperationResult.item2}");
   }
 }
 
