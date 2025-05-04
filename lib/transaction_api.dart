@@ -37,7 +37,7 @@ Future<AccountsWithExecutionStatusModel> runAccountLedgerGetAccountsOperation(
     void Function() actionsBeforeExecution = dummyFunction,
     void Function(String)? actionsAfterExecution}) async {
   http.Response getAccountsFromServerHttpResponse = await http.get(Uri.parse(
-      'SELECT_USER_ACCOUNTS_FULL_FULL_URL'));
+      'SELECT_USER_ACCOUNTS_FULL_URL'));
   if (getAccountsFromServerHttpResponse.statusCode == 200) {
     GetAccountsFromServerResponseModel getAccountsFromServerResponse =
         GetAccountsFromServerResponseModel.fromJson(
