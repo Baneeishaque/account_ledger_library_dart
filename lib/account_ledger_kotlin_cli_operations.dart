@@ -1,4 +1,3 @@
-import 'package:account_ledger_library/models/relation_of_accounts_model.dart';
 import 'package:integer/integer.dart';
 
 import 'common_utils/common_utils.dart';
