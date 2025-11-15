@@ -3,7 +3,9 @@ class AccountLedgerApiResultMessageModel {
   AccountLedgerApiResultStatusModel accountLedgerApiResultStatus;
 
   AccountLedgerApiResultMessageModel(
-      this.newDateTime, this.accountLedgerApiResultStatus);
+    this.newDateTime,
+    this.accountLedgerApiResultStatus,
+  );
 
   @override
   String toString() {

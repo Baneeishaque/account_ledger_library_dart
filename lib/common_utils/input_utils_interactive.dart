@@ -11,7 +11,8 @@ void printInvalidMessage({
   required String dataSpecification,
 }) {
   print(
-      "${inputPromptPrefix ?? ''}Error : Please Enter Valid $dataSpecification...");
+    "${inputPromptPrefix ?? ''}Error : Please Enter Valid $dataSpecification...",
+  );
 }
 
 // dynamic getDataFromTerminal<T>({required String dataSpecification}) {
@@ -60,7 +61,8 @@ u32 inputValidUnsignedPositiveInteger({
   return getValidUnsignedPositiveInteger(
     displayPrompt: () {
       print(
-          '${inputPromptPrefix ?? ''}Enter $dataSpecification${isZeroUsedForBack ? ', or 0 to back' : ''} : ');
+        '${inputPromptPrefix ?? ''}Enter $dataSpecification${isZeroUsedForBack ? ', or 0 to back' : ''} : ',
+      );
     },
     invalidDataActions: () {
       printInvalidMessage(dataSpecification: dataSpecification);
@@ -115,10 +117,12 @@ String inputValidTimeInNormalTimeFormatAsText({
   String? inputPromptPrefix,
   required String dataSpecification,
 }) {
-  return normalTimeFormat.format(inputValidTimeInNormalTimeFormat(
-    inputPromptPrefix: inputPromptPrefix,
-    dataSpecification: dataSpecification,
-  ));
+  return normalTimeFormat.format(
+    inputValidTimeInNormalTimeFormat(
+      inputPromptPrefix: inputPromptPrefix,
+      dataSpecification: dataSpecification,
+    ),
+  );
 }
 
 void printInvalidInputMessage() {
@@ -133,9 +137,10 @@ void printErrorMessage(String message) {
   print('Error : $message');
 }
 
-void printExitMessage(
-    {void Function() actionsBeforeExecution = dummyFunction,
-    void Function() actionsAfterExecution = dummyFunction}) {
+void printExitMessage({
+  void Function() actionsBeforeExecution = dummyFunction,
+  void Function() actionsAfterExecution = dummyFunction,
+}) {
   actionsBeforeExecution();
   print('Good Bye...');
   actionsAfterExecution();

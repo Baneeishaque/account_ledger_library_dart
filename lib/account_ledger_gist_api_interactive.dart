@@ -44,20 +44,28 @@ bool verifyAccountLedgerGistInteractive({
                 AccountLedgerGistV2Model.fromJson(
                   jsonDecode(gistOperationResult.item2),
                 ),
-            (AccountLedgerPageModel accountLedgerPage,
-                AccountLedgerDatePageModel accountLedgerDatePage) {
+            (
+              AccountLedgerPageModel accountLedgerPage,
+              AccountLedgerDatePageModel accountLedgerDatePage,
+            ) {
               print(
-                  "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
+                "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}",
+              );
             },
           )
         : verifyAccountLedgerGist(
             AccountLedgerGistModel.fromJson(
               jsonDecode(gistOperationResult.item2),
-            ), (AccountLedgerPageModel accountLedgerPage,
-                AccountLedgerDatePageModel accountLedgerDatePage) {
-            print(
-                "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}");
-          });
+            ),
+            (
+              AccountLedgerPageModel accountLedgerPage,
+              AccountLedgerDatePageModel accountLedgerDatePage,
+            ) {
+              print(
+                "Gist Account Ledger Verification is Success Up-to Account ID ${accountLedgerPage.accountId} - ${accountLedgerDatePage.accountLedgerPageDate}, The Final Balance is ${accountLedgerDatePage.finalBalanceOnDate}",
+              );
+            },
+          );
     if (verifyAccountLedgerGistResult.status) {
       print("Gist Account Ledger Verification Success...");
       return true;
@@ -80,7 +88,8 @@ Map<String, Future<void> Function()> _skipOperationsMap = {
   'S': () async {},
   'ST': () async {
     _currentEventTime = get5MinutesIncrementedNormalTimeTextFromNormalTimeText(
-        _currentEventTime);
+      _currentEventTime,
+    );
   },
 };
 String? _currentParticulars;
@@ -103,7 +112,8 @@ Map<String, Future<void> Function()> _timeOperationsMap = {
   },
   'T5': () async {
     _currentEventTime = get5MinutesIncrementedNormalTimeTextFromNormalTimeText(
-        _currentEventTime);
+      _currentEventTime,
+    );
     await processTransactionForTime();
   },
 };
@@ -113,13 +123,14 @@ String _reloadGistPrompt = 'Enter RG to reload Gist Contents, ';
 Map<String, Future<void> Function()> _reloadGistOperationMap = {
   'RG': () async {
     _reloadGistRequested = true;
-  }
+  },
 };
 
 Future<void> processAccountLedgerGistV2InterActive(
-    AccountLedgerGistV2Model accountLedgerGistV2,
-    {bool isNotFromReloadGist = true,
-    bool isVersion3 = false}) async {
+  AccountLedgerGistV2Model accountLedgerGistV2, {
+  bool isNotFromReloadGist = true,
+  bool isVersion3 = false,
+}) async {
   _accountLedgerGistV2 = accountLedgerGistV2;
   if (isNotFromReloadGist) {
     _accountHeads = await getUserAccountHeads(
@@ -157,19 +168,23 @@ Future<void> processAccountLedgerGistV2InterActive(
             int particularsEndIndex = _currentTransactionOnDate
                 .transactionParticulars
                 .indexOf(' => ');
-            _toAccountId = u32.tryParse(_currentTransactionOnDate
-                .transactionParticulars
-                .substring(particularsEndIndex + 4)
-                .trim())!;
+            _toAccountId = u32.tryParse(
+              _currentTransactionOnDate.transactionParticulars
+                  .substring(particularsEndIndex + 4)
+                  .trim(),
+            )!;
             String transactionContents = _currentTransactionOnDate
                 .transactionParticulars
                 .substring(0, particularsEndIndex)
                 .trim();
             int timeEndIndicator = transactionContents.indexOf(' ');
-            _currentEventTime =
-                transactionContents.substring(0, timeEndIndicator);
-            _currentParticulars =
-                transactionContents.substring(timeEndIndicator + 1);
+            _currentEventTime = transactionContents.substring(
+              0,
+              timeEndIndicator,
+            );
+            _currentParticulars = transactionContents.substring(
+              timeEndIndicator + 1,
+            );
           } else {
             if (_currentTransactionOnDate.transactionAmount.isNegative) {
               _fromAccountId = currentAccountLedgerPage.accountId;
@@ -199,10 +214,11 @@ Future<void> processAccountLedgerGistV2InterActive(
     );
     if (gistOperationResult.item1) {
       await processAccountLedgerGistV2InterActive(
-          AccountLedgerGistV2Model.fromJson(
-            jsonDecode(gistOperationResult.item2),
-          ),
-          isNotFromReloadGist: false);
+        AccountLedgerGistV2Model.fromJson(
+          jsonDecode(gistOperationResult.item2),
+        ),
+        isNotFromReloadGist: false,
+      );
     } else {
       print("Gist Operation Failure...");
       print(gistOperationResult.item2);
@@ -218,10 +234,12 @@ Future<void> processTransactionForTime() async {
       displayPrompt: () {
         printTransactionDetails();
 
-        print('$_timeInputPrompt'
-            '$_skipInputPrompt'
-            '$_reloadGistPrompt'
-            'Enter to Continue : ');
+        print(
+          '$_timeInputPrompt'
+          '$_skipInputPrompt'
+          '$_reloadGistPrompt'
+          'Enter to Continue : ',
+        );
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
@@ -238,17 +256,11 @@ Future<void> processTransactionForTime() async {
 
 Future<void> processTransactionForAccountIds() async {
   _fromAccountId = _fromAccountId == u32(0)
-      ? await getValidAccountIdFromRelations(
-          'From A/C ID',
-          _toAccountId,
-        )
+      ? await getValidAccountIdFromRelations('From A/C ID', _toAccountId)
       : _fromAccountId;
 
   _toAccountId = _toAccountId == u32(0)
-      ? await getValidAccountIdFromRelations(
-          'To A/C ID',
-          _fromAccountId,
-        )
+      ? await getValidAccountIdFromRelations('To A/C ID', _fromAccountId)
       : _toAccountId;
 
   if (isNonZeroUnsignedNumbers([_fromAccountId, _toAccountId])) {
@@ -256,12 +268,14 @@ Future<void> processTransactionForAccountIds() async {
       displayPrompt: () {
         printTransactionDetails();
 
-        print('$_timeInputPrompt'
-            'Enter AF to Change From A/C ID, '
-            'Enter AT to Change To A/C ID, '
-            '$_skipInputPrompt'
-            '$_reloadGistPrompt'
-            'Enter to Continue : ');
+        print(
+          '$_timeInputPrompt'
+          'Enter AF to Change From A/C ID, '
+          'Enter AT to Change To A/C ID, '
+          '$_skipInputPrompt'
+          '$_reloadGistPrompt'
+          'Enter to Continue : ',
+        );
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
@@ -280,9 +294,7 @@ Future<void> processTransactionForAccountIds() async {
           await processTransactionForAccountIds();
         },
         '': () async {
-          await insertTransactionWithRetryOption(
-            _toAccountId,
-          );
+          await insertTransactionWithRetryOption(_toAccountId);
         },
       }
         ..addAll(_timeOperationsMap)
@@ -294,9 +306,7 @@ Future<void> processTransactionForAccountIds() async {
   }
 }
 
-Future<void> insertTransactionWithRetryOption(
-  u32 toAccountId,
-) async {
+Future<void> insertTransactionWithRetryOption(u32 toAccountId) async {
   AccountLedgerApiResultMessageModel insertTransactionResult =
       await runAccountLedgerInsertTransactionOperationWithTimeIncrementOnSuccess(
     TransactionModel(
@@ -319,10 +329,11 @@ Future<void> insertTransactionWithRetryOption(
     await handleInput(
       displayPrompt: () {
         print(
-            'Insert Transaction Operation Failure due to ${insertTransactionResult.accountLedgerApiResultStatus.error}, '
-            '$_skipInputPrompt'
-            'E to Exit, '
-            'Enter to Retry : ');
+          'Insert Transaction Operation Failure due to ${insertTransactionResult.accountLedgerApiResultStatus.error}, '
+          '$_skipInputPrompt'
+          'E to Exit, '
+          'Enter to Retry : ',
+        );
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: {
@@ -330,9 +341,7 @@ Future<void> insertTransactionWithRetryOption(
           printExitMessage();
         },
         '': () async {
-          await insertTransactionWithRetryOption(
-            _toAccountId,
-          );
+          await insertTransactionWithRetryOption(_toAccountId);
         },
       }..addAll(_skipOperationsMap),
     );
@@ -342,12 +351,14 @@ Future<void> insertTransactionWithRetryOption(
 void printTransactionDetails() {
   print('\nTransaction Details');
   print('-----------------------');
-  print('userId: ${_accountLedgerGistV2.userId}'
-      '\neventDateTime: $_currentEventDate $_currentEventTime'
-      '\nparticulars: ${_currentParticulars ?? _currentTransactionOnDate.transactionParticulars}'
-      '\namount: ${_currentTransactionOnDate.transactionAmount}'
-      '\nfromAccountId: $_fromAccountId'
-      '\ntoAccountId: $_toAccountId\n');
+  print(
+    'userId: ${_accountLedgerGistV2.userId}'
+    '\neventDateTime: $_currentEventDate $_currentEventTime'
+    '\nparticulars: ${_currentParticulars ?? _currentTransactionOnDate.transactionParticulars}'
+    '\namount: ${_currentTransactionOnDate.transactionAmount}'
+    '\nfromAccountId: $_fromAccountId'
+    '\ntoAccountId: $_toAccountId\n',
+  );
 }
 
 Future<u32> getValidAccountIdFromRelations(
@@ -356,10 +367,11 @@ Future<u32> getValidAccountIdFromRelations(
 ) async {
   late u32 desiredAccountId;
   List<AccountRelationModel>? accountRelations = getDetailedAccountRelations(
-      _accountLedgerGistV2.userId,
-      alreadyKnownAccountId,
-      _currentTransactionOnDate.transactionParticulars,
-      _accountHeads);
+    _accountLedgerGistV2.userId,
+    alreadyKnownAccountId,
+    _currentTransactionOnDate.transactionParticulars,
+    _accountHeads,
+  );
 
   Map<String, Future<void> Function()> actionsWithKeys = {
     'R': () async {
@@ -402,16 +414,17 @@ Future<u32> getValidAccountIdFromRelations(
           );
         }
       }
-    }
+    },
   };
 
   if ((accountRelations == null) || accountRelations.isEmpty) {
     await handleInput(
       displayPrompt: () {
         print(
-            'A/C ID $alreadyKnownAccountId not Associated any A/Cs for Particulars: ${_currentTransactionOnDate.transactionParticulars}, '
-            'Enter R to Refresh Relation of Accounts, '
-            'Enter to Continue : ');
+          'A/C ID $alreadyKnownAccountId not Associated any A/Cs for Particulars: ${_currentTransactionOnDate.transactionParticulars}, '
+          'Enter R to Refresh Relation of Accounts, '
+          'Enter to Continue : ',
+        );
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: actionsWithKeys,
@@ -430,9 +443,11 @@ Future<u32> getValidAccountIdFromRelations(
             print('${accountRelation.item1} : ${accountRelation.item2}');
           }
         }
-        print('Enter R to Refresh Relation of Accounts, '
-            'Enter I to Continue with $desiredAccountId, '
-            'Enter to Continue : ');
+        print(
+          'Enter R to Refresh Relation of Accounts, '
+          'Enter I to Continue with $desiredAccountId, '
+          'Enter to Continue : ',
+        );
       },
       invalidInputActions: printInvalidInputMessage,
       actionsWithKeys: actionsWithKeys,
@@ -442,8 +457,11 @@ Future<u32> getValidAccountIdFromRelations(
 }
 
 Future<u32> getValidAccountIdFromUserInput(
-    String dataSpecification, u32 userId, List<AccountHeadModel> accountHeads,
-    {bool isZeroUsedForBack = false}) async {
+  String dataSpecification,
+  u32 userId,
+  List<AccountHeadModel> accountHeads, {
+  bool isZeroUsedForBack = false,
+}) async {
   Tuple3<u32, List<AccountHeadModel>, bool> getValidAccountIdResult =
       await getValidAccountId(
     userId,

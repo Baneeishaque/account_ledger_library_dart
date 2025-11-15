@@ -4,8 +4,10 @@ class GetAccountsFromServerResponseModel {
   late int status;
   List<AccountHeadModel>? accounts;
 
-  GetAccountsFromServerResponseModel(
-      {required this.status, required this.accounts});
+  GetAccountsFromServerResponseModel({
+    required this.status,
+    required this.accounts,
+  });
 
   GetAccountsFromServerResponseModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
