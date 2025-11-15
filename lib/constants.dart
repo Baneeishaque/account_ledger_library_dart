@@ -16,6 +16,7 @@ String accountLedgerCliExecutable = Platform
         : (platform.isMacOS
             ? "${Platform.environment['HOME']}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli"
             : '/workspace/Account-Ledger-Cli/bin/Account-Ledger-Cli'));
+
 String oneTwoThreeOneText = "1 -> 2, 3 -> 1";
 String oneTwoTwoThreeThreeFourFourOneText = "1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1";
 String oneTwoTwoThreeThreeFourText = "1 -> 2, 2 -> 3, 3 -> 4";
