@@ -95,15 +95,15 @@ Future<void> insertOneTwoTwoThreeThreeFourFourOneTransaction(
 
   Tuple3<String, String, double> insertNextTransactionResult =
       await insertNextTransaction(
-        userId,
-        normalDateTimeFormat.format(
-          normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-        ),
-        particulars,
-        amount,
-        party2accountId,
-        party3accountId,
-      );
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
@@ -156,15 +156,15 @@ Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
 
   Tuple3<String, String, double> insertNextTransactionResult =
       await insertNextTransaction(
-        userId,
-        normalDateTimeFormat.format(
-          normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-        ),
-        particulars,
-        amount,
-        party2accountId,
-        party3accountId,
-      );
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
@@ -230,15 +230,15 @@ Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
 
   Tuple3<String, String, double> insertNextTransactionResult =
       await insertNextTransaction(
-        userId,
-        normalDateTimeFormat.format(
-          normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-        ),
-        particulars,
-        amount,
-        party2accountId,
-        party3accountId,
-      );
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
@@ -317,15 +317,15 @@ Future<void> insertOneTwoTwoThreeThreeFourTransaction(
 
   Tuple3<String, String, double> insertNextTransactionResult =
       await insertNextTransaction(
-        userId,
-        normalDateTimeFormat.format(
-          normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-        ),
-        particulars,
-        amount,
-        party2accountId,
-        party3accountId,
-      );
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;
@@ -364,15 +364,15 @@ Future<void> insertOneTwoTwoThreeThreeOneTransaction(
 
   Tuple3<String, String, double> insertNextTransactionResult =
       await insertNextTransaction(
-        userId,
-        normalDateTimeFormat.format(
-          normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
-        ),
-        particulars,
-        amount,
-        party2accountId,
-        party3accountId,
-      );
+    userId,
+    normalDateTimeFormat.format(
+      normalDateTimeFormat.parse(eventDateTime).add(Duration(minutes: 5)),
+    ),
+    particulars,
+    amount,
+    party2accountId,
+    party3accountId,
+  );
 
   eventDateTime = insertNextTransactionResult.item1;
   particulars = insertNextTransactionResult.item2;

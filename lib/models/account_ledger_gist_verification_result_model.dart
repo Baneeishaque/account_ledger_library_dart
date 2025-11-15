@@ -32,9 +32,8 @@ class AccountLedgerGistModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userName'] = userName;
-    data['accountLedgerPages'] = accountLedgerPages
-        .map((v) => v.toJson())
-        .toList();
+    data['accountLedgerPages'] =
+        accountLedgerPages.map((v) => v.toJson()).toList();
     return data;
   }
 
@@ -73,9 +72,8 @@ class AccountLedgerPageModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['accountId'] = accountId;
-    data['accountLedgerDatePages'] = accountLedgerDatePages
-        .map((v) => v.toJson())
-        .toList();
+    data['accountLedgerDatePages'] =
+        accountLedgerDatePages.map((v) => v.toJson()).toList();
     return data;
   }
 
@@ -114,9 +112,8 @@ class AccountLedgerDatePageModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['accountLedgerPageDate'] = accountLedgerPageDate;
     data['initialBalanceOnDate'] = initialBalanceOnDate;
-    data['transactionsOnDate'] = transactionsOnDate
-        .map((v) => v.toJson())
-        .toList();
+    data['transactionsOnDate'] =
+        transactionsOnDate.map((v) => v.toJson()).toList();
     data['finalBalanceOnDate'] = finalBalanceOnDate;
     return data;
   }

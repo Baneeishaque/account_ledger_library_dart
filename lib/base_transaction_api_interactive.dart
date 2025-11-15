@@ -95,13 +95,13 @@ Future<void> insertSplitTransaction(
         for (int i = 1; i <= noOfSplits.value; i++) {
           Tuple3<String, String, double> insertTransactionResult =
               await insertNextTransaction(
-                userId,
-                eventDateTime,
-                particulars,
-                splitAmount,
-                fromAccountId,
-                toAccountId,
-              );
+            userId,
+            eventDateTime,
+            particulars,
+            splitAmount,
+            fromAccountId,
+            toAccountId,
+          );
           eventDateTime = insertTransactionResult.item1;
           particulars = insertTransactionResult.item2;
           amount = insertTransactionResult.item3;

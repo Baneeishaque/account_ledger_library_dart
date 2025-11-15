@@ -4,7 +4,7 @@ import 'package:tuple/tuple.dart';
 import '../common_utils/input_utils_interactive.dart';
 
 Tuple7<u32, String, String, double, u32, u32, u32>
-getUserInputUpToThreeParties({
+    getUserInputUpToThreeParties({
   String party1AccountIdDataSpecification = "Party 1 Account ID",
   String party2AccountIdDataSpecification = "Party 2 Account ID",
   String party3AccountIdDataSpecification = "Party 3 Account ID",

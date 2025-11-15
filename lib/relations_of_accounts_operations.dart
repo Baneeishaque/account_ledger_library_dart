@@ -39,23 +39,23 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
           if (accountsNormalisedMap.containsKey(associatedAccountId.item1)) {
             accountsNormalisedMap[associatedAccountId.item1] =
                 (accountsNormalisedMap[associatedAccountId.item1]!) +
-                [
-                  AccountRelationModel(
-                    indicator: accountRelation.indicator,
-                    associatedAccountIds:
-                        getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
+                    [
+                      AccountRelationModel(
+                        indicator: accountRelation.indicator,
+                        associatedAccountIds:
+                            getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
                           account.accountIds,
                         ),
-                  ),
-                ];
+                      ),
+                    ];
           } else {
             accountsNormalisedMap[associatedAccountId.item1] = [
               AccountRelationModel(
                 indicator: accountRelation.indicator,
                 associatedAccountIds:
                     getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
-                      account.accountIds,
-                    ),
+                  account.accountIds,
+                ),
               ),
             ];
           }
@@ -91,9 +91,10 @@ List<AccountRelationModel>? getDetailedAccountRelations(
   List<AccountHeadModel> accountHeads,
 ) {
   return (getDetailedRelationsOfAccounts(
-        readRelationsOfAccountsInNormalForm(),
-        accountHeads,
-      )).userAccounts[userId]?[accountId]
+    readRelationsOfAccountsInNormalForm(),
+    accountHeads,
+  ))
+      .userAccounts[userId]?[accountId]
       ?.where(
         (AccountRelationModel relation) =>
             transactionParticulars.toLowerCase().contains(relation.indicator),
@@ -123,15 +124,15 @@ RelationOfAccountsNormalisedModel getDetailedRelationsOfAccounts(
 
           result.userAccounts[userId]![accountId]![i].associatedAccountIds[j] =
               Tuple2(
-                associatedAccountId,
-                accountHeads
-                    .firstWhere(
-                      (AccountHeadModel accountHead) =>
-                          accountHead.id == associatedAccountId,
-                      orElse: () => dummyAccountHead,
-                    )
-                    .fullName,
-              );
+            associatedAccountId,
+            accountHeads
+                .firstWhere(
+                  (AccountHeadModel accountHead) =>
+                      accountHead.id == associatedAccountId,
+                  orElse: () => dummyAccountHead,
+                )
+                .fullName,
+          );
         }
       }
     });

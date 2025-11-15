@@ -20,9 +20,8 @@ class AccountLedgerApiResultStatusModel {
   AccountLedgerApiResultStatusModel({required this.status, this.error});
 
   AccountLedgerApiResultStatusModel.fromJson(Map<String, dynamic> json) {
-    status = (json['status'] is String
-        ? int.parse(json['status'])
-        : json['status']);
+    status =
+        (json['status'] is String ? int.parse(json['status']) : json['status']);
     error = json['error'];
   }
 

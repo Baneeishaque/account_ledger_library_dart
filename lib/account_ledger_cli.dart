@@ -74,10 +74,10 @@ Future<void> startAccountLedgerCli() async {
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties(
-              party1AccountIdDataSpecification: "From Account ID",
-              party2AccountIdDataSpecification: "Via. Account ID",
-              party3AccountIdDataSpecification: "To Account ID",
-            );
+          party1AccountIdDataSpecification: "From Account ID",
+          party2AccountIdDataSpecification: "Via. Account ID",
+          party3AccountIdDataSpecification: "To Account ID",
+        );
 
         await insertOneTwoTwoThreeThreeOneTransaction(
           userInputs.item1,
@@ -213,10 +213,10 @@ Future<void> startAccountLedgerCli() async {
       "11": () async {
         Tuple2<bool, String> gistOperationResult =
             runAccountLedgerGistV2Operation(
-              actionsBeforeExecution: () {
-                print('Running GistV2 Operation...');
-              },
-            );
+          actionsBeforeExecution: () {
+            print('Running GistV2 Operation...');
+          },
+        );
         if (gistOperationResult.item1) {
           await processAccountLedgerGistV2InterActive(
             AccountLedgerGistV2Model.fromJson(
@@ -237,10 +237,10 @@ Future<void> startAccountLedgerCli() async {
       "14": () async {
         Tuple2<bool, String> gistOperationResult =
             runAccountLedgerGistV3Operation(
-              actionsBeforeExecution: () {
-                print('Running GistV3 Operation');
-              },
-            );
+          actionsBeforeExecution: () {
+            print('Running GistV3 Operation');
+          },
+        );
         if (gistOperationResult.item1) {
           await processAccountLedgerGistV2InterActive(
             AccountLedgerGistV2Model.fromJson(
@@ -256,10 +256,10 @@ Future<void> startAccountLedgerCli() async {
       "15": () async {
         Tuple2<bool, String> gistOperationResult =
             runAccountLedgerGistV4Operation(
-              actionsBeforeExecution: () {
-                print('Running GistV4 Operation');
-              },
-            );
+          actionsBeforeExecution: () {
+            print('Running GistV4 Operation');
+          },
+        );
         if (gistOperationResult.item1) {
           await processAccountLedgerGistV2InterActive(
             AccountLedgerGistV2Model.fromJson(

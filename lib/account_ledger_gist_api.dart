@@ -53,7 +53,7 @@ Tuple2<bool, String> runAccountLedgerGistV4Operation({
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
   AccountLedgerGistModel accountLedgerGist,
   void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
-  actionsOnVerificationSuccessForAccountLedgerDatePage,
+      actionsOnVerificationSuccessForAccountLedgerDatePage,
 ) {
   AccountLedgerGistVerificationResultModel accountLedgerVerificationResult =
       AccountLedgerGistVerificationResultModel(status: true);
@@ -71,14 +71,14 @@ AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
             in accountLedgerDatePage.transactionsOnDate) {
           accountLedgerDatePageInitialBalance =
               accountLedgerDatePageInitialBalance +
-              transactionOnDate.transactionAmount;
+                  transactionOnDate.transactionAmount;
         }
         if (accountLedgerDatePage.finalBalanceOnDate != null) {
           if (accountLedgerDatePageInitialBalance.round() !=
               accountLedgerDatePage.finalBalanceOnDate?.round()) {
             accountLedgerVerificationResult.status = false;
-            accountLedgerVerificationResult
-                .failedAccountLedgerPage = AccountLedgerPageModel.withRemarks(
+            accountLedgerVerificationResult.failedAccountLedgerPage =
+                AccountLedgerPageModel.withRemarks(
               accountId: accountLedgerPage.accountId,
               accountLedgerDatePages: [accountLedgerDatePage],
               remarks:
@@ -103,7 +103,7 @@ AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGistV2(
   AccountLedgerGistV2Model accountLedgerGistV2,
   void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
-  actionsOnVerificationSuccessForAccountLedgerDatePage,
+      actionsOnVerificationSuccessForAccountLedgerDatePage,
 ) {
   return verifyAccountLedgerGist(
     AccountLedgerGistModel(

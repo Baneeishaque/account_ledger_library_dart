@@ -20,7 +20,7 @@ List<Tuple2<u32, String>> getUnsignedIntegerListWithMetaTextFromIntegers(
 }
 
 List<Tuple2<u32, String>>
-getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(List<u32> integers) {
+    getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(List<u32> integers) {
   List<Tuple2<u32, String>> result = [];
   for (u32 unsignedInteger in integers) {
     result.add(Tuple2(unsignedInteger, ''));
