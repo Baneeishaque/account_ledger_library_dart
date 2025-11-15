@@ -51,10 +51,12 @@ u32 getValidUnsignedInteger({
   required void Function() displayPrompt,
   void Function() invalidDataActions = dummyFunction,
 }) {
-  u32? convertedData = u32.tryParse(getValidUnsignedNumberAsText(
-    displayPrompt: displayPrompt,
-    invalidDataActions: invalidDataActions,
-  ));
+  u32? convertedData = u32.tryParse(
+    getValidUnsignedNumberAsText(
+      displayPrompt: displayPrompt,
+      invalidDataActions: invalidDataActions,
+    ),
+  );
   if (convertedData == null) {
     invalidDataActions.call();
     return getValidUnsignedInteger(
@@ -93,10 +95,12 @@ double getValidUnsignedDouble({
   required void Function() displayPrompt,
   void Function() invalidDataActions = dummyFunction,
 }) {
-  double? convertedData = double.tryParse(getValidUnsignedNumberAsText(
-    displayPrompt: displayPrompt,
-    invalidDataActions: invalidDataActions,
-  ));
+  double? convertedData = double.tryParse(
+    getValidUnsignedNumberAsText(
+      displayPrompt: displayPrompt,
+      invalidDataActions: invalidDataActions,
+    ),
+  );
   if (convertedData == null) {
     invalidDataActions.call();
     return getValidUnsignedDouble(
@@ -111,10 +115,12 @@ DateTime getValidTimeInNormalTimeFormat({
   required void Function() displayPrompt,
   void Function() invalidDataActions = dummyFunction,
 }) {
-  DateTime? convertedTime = normalTimeFormat.tryParse(getNonEmptyText(
-    displayPrompt: displayPrompt,
-    invalidDataActions: invalidDataActions,
-  ));
+  DateTime? convertedTime = normalTimeFormat.tryParse(
+    getNonEmptyText(
+      displayPrompt: displayPrompt,
+      invalidDataActions: invalidDataActions,
+    ),
+  );
   if (convertedTime == null) {
     invalidDataActions.call();
     return getValidTimeInNormalTimeFormat(
@@ -125,18 +131,20 @@ DateTime getValidTimeInNormalTimeFormat({
   return convertedTime;
 }
 
-Future<void> handleInput(
-    {required void Function() displayPrompt,
-    required void Function() invalidInputActions,
-    required Map<String, Future<void> Function()> actionsWithKeys}) async {
+Future<void> handleInput({
+  required void Function() displayPrompt,
+  required void Function() invalidInputActions,
+  required Map<String, Future<void> Function()> actionsWithKeys,
+}) async {
   displayPrompt.call();
   String? input = stdin.readLineSync();
   if (input == null) {
     invalidInputActions.call();
     await handleInput(
-        displayPrompt: displayPrompt,
-        invalidInputActions: invalidInputActions,
-        actionsWithKeys: actionsWithKeys);
+      displayPrompt: displayPrompt,
+      invalidInputActions: invalidInputActions,
+      actionsWithKeys: actionsWithKeys,
+    );
   } else {
     if (actionsWithKeys.containsKey(input.toLowerCase())) {
       await actionsWithKeys[input.toLowerCase()]!.call();
@@ -145,9 +153,10 @@ Future<void> handleInput(
     } else {
       invalidInputActions.call();
       await handleInput(
-          displayPrompt: displayPrompt,
-          invalidInputActions: invalidInputActions,
-          actionsWithKeys: actionsWithKeys);
+        displayPrompt: displayPrompt,
+        invalidInputActions: invalidInputActions,
+        actionsWithKeys: actionsWithKeys,
+      );
     }
   }
 }

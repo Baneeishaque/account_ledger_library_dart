@@ -4,9 +4,7 @@ import 'package:tuple/tuple.dart';
 import '../common_utils/u32_utils.dart';
 
 class RelationOfAccountsModel {
-  RelationOfAccountsModel({
-    required this.users,
-  });
+  RelationOfAccountsModel({required this.users});
 
   RelationOfAccountsModel.fromJson(dynamic json) {
     if (json['users'] != null) {
@@ -35,10 +33,7 @@ class UserModel {
   late List<u32> userIds;
   late List<AccountModel> accounts;
 
-  UserModel({
-    required this.userIds,
-    required this.accounts,
-  });
+  UserModel({required this.userIds, required this.accounts});
 
   UserModel.fromJson(dynamic json) {
     userIds = json['userIds'] != null
@@ -69,10 +64,7 @@ class AccountModel {
   late List<u32> accountIds;
   late List<AccountRelationModel> relations;
 
-  AccountModel({
-    required this.accountIds,
-    required this.relations,
-  });
+  AccountModel({required this.accountIds, required this.relations});
 
   AccountModel.fromJson(dynamic json) {
     accountIds = json['accountIds'] != null
@@ -112,7 +104,8 @@ class AccountRelationModel {
     indicator = json['indicator'];
     associatedAccountIds = json['associatedAccountId'] != null
         ? getUnsignedIntegerListWithMetaTextFromIntegers(
-            json['associatedAccountId'].cast<int>())
+            json['associatedAccountId'].cast<int>(),
+          )
         : [];
   }
 
@@ -132,9 +125,7 @@ class AccountRelationModel {
 class RelationOfAccountsNormalisedModel {
   Map<u32, Map<u32, List<AccountRelationModel>>> userAccounts;
 
-  RelationOfAccountsNormalisedModel({
-    required this.userAccounts,
-  });
+  RelationOfAccountsNormalisedModel({required this.userAccounts});
 
   @override
   String toString() {
