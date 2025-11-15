@@ -8,7 +8,7 @@ in `lib/`, and example unit test in `test/`.
 The library requires the Account Ledger CLI executable to be configured. You can specify the path in one of two ways:
 
 1. **Using Environment Variable (Recommended)**:
-   - Copy `.env.example` to `.env`
+   - Copy `.env_example` to `.env`
    - Set the `ACCOUNT_LEDGER_CLI_EXECUTABLE` variable to your CLI executable path:
      ```
      ACCOUNT_LEDGER_CLI_EXECUTABLE=/path/to/Account-Ledger-Cli/bin/Account-Ledger-Cli

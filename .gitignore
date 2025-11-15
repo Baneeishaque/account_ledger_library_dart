@@ -16,9 +16,8 @@ pubspec.lock
 doc/api/
 
 # dotenv environment variables file
-.env
-.env.local
-.env.*.local
+.env*
+!.env_example
 
 # Avoid committing generated Javascript files:
 *.dart.js
