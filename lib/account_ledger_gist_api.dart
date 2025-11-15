@@ -5,9 +5,10 @@ import 'models/account_ledger_gist_model_v2.dart';
 import 'models/account_ledger_gist_verification_result_model.dart';
 import 'utils/account_ledger_kotlin_cli_utils.dart';
 
-Tuple2<bool, String> runAccountLedgerGistOperation(
-    {void Function() actionsBeforeExecution = dummyFunction,
-    void Function(String)? actionsAfterExecution}) {
+Tuple2<bool, String> runAccountLedgerGistOperation({
+  void Function() actionsBeforeExecution = dummyFunction,
+  void Function(String)? actionsAfterExecution,
+}) {
   return runAccountLedgerKotlinCliOperation(
     //TODO : Use Enums
     ["Gist"],
@@ -16,9 +17,10 @@ Tuple2<bool, String> runAccountLedgerGistOperation(
   );
 }
 
-Tuple2<bool, String> runAccountLedgerGistV2Operation(
-    {void Function() actionsBeforeExecution = dummyFunction,
-    void Function(String)? actionsAfterExecution}) {
+Tuple2<bool, String> runAccountLedgerGistV2Operation({
+  void Function() actionsBeforeExecution = dummyFunction,
+  void Function(String)? actionsAfterExecution,
+}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV2"],
     actionsBeforeExecution: actionsBeforeExecution,
@@ -26,9 +28,10 @@ Tuple2<bool, String> runAccountLedgerGistV2Operation(
   );
 }
 
-Tuple2<bool, String> runAccountLedgerGistV3Operation(
-    {void Function() actionsBeforeExecution = dummyFunction,
-    void Function(String)? actionsAfterExecution}) {
+Tuple2<bool, String> runAccountLedgerGistV3Operation({
+  void Function() actionsBeforeExecution = dummyFunction,
+  void Function(String)? actionsAfterExecution,
+}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV3"],
     actionsBeforeExecution: actionsBeforeExecution,
@@ -36,9 +39,10 @@ Tuple2<bool, String> runAccountLedgerGistV3Operation(
   );
 }
 
-Tuple2<bool, String> runAccountLedgerGistV4Operation(
-    {void Function() actionsBeforeExecution = dummyFunction,
-    void Function(String)? actionsAfterExecution}) {
+Tuple2<bool, String> runAccountLedgerGistV4Operation({
+  void Function() actionsBeforeExecution = dummyFunction,
+  void Function(String)? actionsAfterExecution,
+}) {
   return runAccountLedgerKotlinCliOperation(
     ["GistV4"],
     actionsBeforeExecution: actionsBeforeExecution,
@@ -49,7 +53,7 @@ Tuple2<bool, String> runAccountLedgerGistV4Operation(
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
   AccountLedgerGistModel accountLedgerGist,
   void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
-      actionsOnVerificationSuccessForAccountLedgerDatePage,
+  actionsOnVerificationSuccessForAccountLedgerDatePage,
 ) {
   AccountLedgerGistVerificationResultModel accountLedgerVerificationResult =
       AccountLedgerGistVerificationResultModel(status: true);
@@ -67,14 +71,14 @@ AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
             in accountLedgerDatePage.transactionsOnDate) {
           accountLedgerDatePageInitialBalance =
               accountLedgerDatePageInitialBalance +
-                  transactionOnDate.transactionAmount;
+              transactionOnDate.transactionAmount;
         }
         if (accountLedgerDatePage.finalBalanceOnDate != null) {
           if (accountLedgerDatePageInitialBalance.round() !=
               accountLedgerDatePage.finalBalanceOnDate?.round()) {
             accountLedgerVerificationResult.status = false;
-            accountLedgerVerificationResult.failedAccountLedgerPage =
-                AccountLedgerPageModel.withRemarks(
+            accountLedgerVerificationResult
+                .failedAccountLedgerPage = AccountLedgerPageModel.withRemarks(
               accountId: accountLedgerPage.accountId,
               accountLedgerDatePages: [accountLedgerDatePage],
               remarks:
@@ -83,7 +87,9 @@ AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
             break;
           } else {
             actionsOnVerificationSuccessForAccountLedgerDatePage(
-                accountLedgerPage, accountLedgerDatePage);
+              accountLedgerPage,
+              accountLedgerDatePage,
+            );
           }
         }
       }
@@ -95,12 +101,15 @@ AccountLedgerGistVerificationResultModel verifyAccountLedgerGist(
 }
 
 AccountLedgerGistVerificationResultModel verifyAccountLedgerGistV2(
-    AccountLedgerGistV2Model accountLedgerGistV2,
-    void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
-        actionsOnVerificationSuccessForAccountLedgerDatePage) {
+  AccountLedgerGistV2Model accountLedgerGistV2,
+  void Function(AccountLedgerPageModel, AccountLedgerDatePageModel)
+  actionsOnVerificationSuccessForAccountLedgerDatePage,
+) {
   return verifyAccountLedgerGist(
-      AccountLedgerGistModel(
-          userName: accountLedgerGistV2.userName,
-          accountLedgerPages: accountLedgerGistV2.accountLedgerPages),
-      actionsOnVerificationSuccessForAccountLedgerDatePage);
+    AccountLedgerGistModel(
+      userName: accountLedgerGistV2.userName,
+      accountLedgerPages: accountLedgerGistV2.accountLedgerPages,
+    ),
+    actionsOnVerificationSuccessForAccountLedgerDatePage,
+  );
 }

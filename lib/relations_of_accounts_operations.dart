@@ -11,7 +11,8 @@ import 'utils/account_utils.dart';
 
 RelationOfAccountsModel readRelationsOfAccountsJsonFile() {
   return RelationOfAccountsModel.fromJson(
-      jsonDecode(File("relationOfAccounts.json").readAsStringSync()));
+    jsonDecode(File("relationOfAccounts.json").readAsStringSync()),
+  );
 }
 
 RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
@@ -38,20 +39,24 @@ RelationOfAccountsNormalisedModel readRelationsOfAccountsInNormalForm() {
           if (accountsNormalisedMap.containsKey(associatedAccountId.item1)) {
             accountsNormalisedMap[associatedAccountId.item1] =
                 (accountsNormalisedMap[associatedAccountId.item1]!) +
-                    [
-                      AccountRelationModel(
-                          indicator: accountRelation.indicator,
-                          associatedAccountIds:
-                              getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
-                                  account.accountIds)),
-                    ];
+                [
+                  AccountRelationModel(
+                    indicator: accountRelation.indicator,
+                    associatedAccountIds:
+                        getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
+                          account.accountIds,
+                        ),
+                  ),
+                ];
           } else {
             accountsNormalisedMap[associatedAccountId.item1] = [
               AccountRelationModel(
-                  indicator: accountRelation.indicator,
-                  associatedAccountIds:
-                      getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
-                          account.accountIds)),
+                indicator: accountRelation.indicator,
+                associatedAccountIds:
+                    getUnsignedIntegerListWithMetaTextFromUnsignedIntegers(
+                      account.accountIds,
+                    ),
+              ),
             ];
           }
         }
@@ -72,8 +77,10 @@ List<AccountRelationModel>? getAccountRelations(
 ) {
   return (readRelationsOfAccountsInNormalForm())
       .userAccounts[userId]?[accountId]
-      ?.where((AccountRelationModel relation) =>
-          transactionParticulars.toLowerCase().contains(relation.indicator))
+      ?.where(
+        (AccountRelationModel relation) =>
+            transactionParticulars.toLowerCase().contains(relation.indicator),
+      )
       .toList();
 }
 
@@ -84,10 +91,13 @@ List<AccountRelationModel>? getDetailedAccountRelations(
   List<AccountHeadModel> accountHeads,
 ) {
   return (getDetailedRelationsOfAccounts(
-          readRelationsOfAccountsInNormalForm(), accountHeads))
-      .userAccounts[userId]?[accountId]
-      ?.where((AccountRelationModel relation) =>
-          transactionParticulars.toLowerCase().contains(relation.indicator))
+        readRelationsOfAccountsInNormalForm(),
+        accountHeads,
+      )).userAccounts[userId]?[accountId]
+      ?.where(
+        (AccountRelationModel relation) =>
+            transactionParticulars.toLowerCase().contains(relation.indicator),
+      )
       .toList();
 }
 
@@ -96,10 +106,14 @@ RelationOfAccountsNormalisedModel getDetailedRelationsOfAccounts(
   List<AccountHeadModel> accountHeads,
 ) {
   RelationOfAccountsNormalisedModel result = relationOfAccounts;
-  relationOfAccounts.userAccounts
-      .forEach((u32 userId, Map<u32, List<AccountRelationModel>> accounts) {
-    accounts
-        .forEach((u32 accountId, List<AccountRelationModel> accountRelations) {
+  relationOfAccounts.userAccounts.forEach((
+    u32 userId,
+    Map<u32, List<AccountRelationModel>> accounts,
+  ) {
+    accounts.forEach((
+      u32 accountId,
+      List<AccountRelationModel> accountRelations,
+    ) {
       for (int i = 0; i < accountRelations.length; i++) {
         AccountRelationModel accountRelation = accountRelations[i];
 
@@ -109,14 +123,15 @@ RelationOfAccountsNormalisedModel getDetailedRelationsOfAccounts(
 
           result.userAccounts[userId]![accountId]![i].associatedAccountIds[j] =
               Tuple2(
-            associatedAccountId,
-            accountHeads
-                .firstWhere(
-                    (AccountHeadModel accountHead) =>
-                        accountHead.id == associatedAccountId,
-                    orElse: () => dummyAccountHead)
-                .fullName,
-          );
+                associatedAccountId,
+                accountHeads
+                    .firstWhere(
+                      (AccountHeadModel accountHead) =>
+                          accountHead.id == associatedAccountId,
+                      orElse: () => dummyAccountHead,
+                    )
+                    .fullName,
+              );
         }
       }
     });

@@ -8,7 +8,7 @@ Future<List<AccountHeadModel>> getUserAccountHeads(
   List<AccountHeadModel> accountHeads,
   u32 userId,
   void Function(AccountsWithExecutionStatusModel accountsWithExecutionStatus)
-      actionsOnApiError, {
+  actionsOnApiError, {
   String? filter,
   void Function() actionsBeforeExecution = dummyFunction,
   void Function(String)? actionsAfterExecution,
@@ -16,10 +16,10 @@ Future<List<AccountHeadModel>> getUserAccountHeads(
   if (accountHeads.isEmpty) {
     AccountsWithExecutionStatusModel accountsWithExecutionStatus =
         await runAccountLedgerGetAccountsOperation(
-      userId: userId,
-      actionsBeforeExecution: actionsBeforeExecution,
-      actionsAfterExecution: actionsAfterExecution,
-    );
+          userId: userId,
+          actionsBeforeExecution: actionsBeforeExecution,
+          actionsAfterExecution: actionsAfterExecution,
+        );
     if (accountsWithExecutionStatus.isOK) {
       accountHeads = accountsWithExecutionStatus.data!;
     } else {
@@ -31,17 +31,21 @@ Future<List<AccountHeadModel>> getUserAccountHeads(
     var accountId = int.tryParse(filter);
     if (accountId == null) {
       return accountHeads
-          .where((element) => element.name
-              .toLowerCase()
-              .contains(filter.toString().toLowerCase()))
+          .where(
+            (element) => element.name.toLowerCase().contains(
+              filter.toString().toLowerCase(),
+            ),
+          )
           .toList();
     } else {
       return accountHeads
-          .where((element) =>
-              ((element.id.toString().contains(filter.toString())) ||
-                  (element.name
-                      .toLowerCase()
-                      .contains(filter.toString().toLowerCase()))))
+          .where(
+            (element) =>
+                ((element.id.toString().contains(filter.toString())) ||
+                (element.name.toLowerCase().contains(
+                  filter.toString().toLowerCase(),
+                ))),
+          )
           .toList();
     }
   }

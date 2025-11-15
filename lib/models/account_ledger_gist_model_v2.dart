@@ -12,7 +12,7 @@ class AccountLedgerGistV2Model extends AccountLedgerGistModel {
   });
 
   AccountLedgerGistV2Model.fromJson(Map<String, dynamic> json)
-      : super.fromJson(json) {
+    : super.fromJson(json) {
     userName = json['userName'];
     userId = u32(json['userId']);
     if (json['accountLedgerPages'] != null) {
@@ -28,8 +28,9 @@ class AccountLedgerGistV2Model extends AccountLedgerGistModel {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['userName'] = userName;
     data['userId'] = userId;
-    data['accountLedgerPages'] =
-        accountLedgerPages.map((v) => v.toJson()).toList();
+    data['accountLedgerPages'] = accountLedgerPages
+        .map((v) => v.toJson())
+        .toList();
     return data;
   }
 
