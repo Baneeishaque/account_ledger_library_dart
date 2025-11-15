@@ -8,12 +8,14 @@ import "package:os_detect/os_detect.dart" as platform;
 /// If not set, uses platform-specific defaults:
 /// - Windows: C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat
 /// - macOS: ${HOME}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli
-/// - Linux: ${HOME}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli
+/// - Linux: /workspace/Account-Ledger-Cli/bin/Account-Ledger-Cli
 String accountLedgerCliExecutable = Platform
         .environment['ACCOUNT_LEDGER_CLI_EXECUTABLE'] ??
     (platform.isWindows
         ? r"C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat"
-        : "${Platform.environment['HOME']}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli");
+        : (platform.isMacOS
+            ? "${Platform.environment['HOME']}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli"
+            : '/workspace/Account-Ledger-Cli/bin/Account-Ledger-Cli'));
 String oneTwoThreeOneText = "1 -> 2, 3 -> 1";
 String oneTwoTwoThreeThreeFourFourOneText = "1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1";
 String oneTwoTwoThreeThreeFourText = "1 -> 2, 2 -> 3, 3 -> 4";

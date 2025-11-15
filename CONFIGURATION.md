@@ -36,9 +36,9 @@ If the environment variable is not set, the library uses the following default p
 
 - **Windows**: `C:\Programs\Account-Ledger-Cli\bin\Account-Ledger-Cli.bat`
 - **macOS**: `${HOME}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli` (uses the standard HOME environment variable)
-- **Linux**: `${HOME}/Programs/Account-Ledger-Cli/bin/Account-Ledger-Cli` (uses the standard HOME environment variable)
+- **Linux**: `/workspace/Account-Ledger-Cli/bin/Account-Ledger-Cli`
 
-On UNIX-like systems (macOS and Linux), the `${HOME}` environment variable automatically expands to the current user's home directory (e.g., `/home/username` on Linux or `/Users/username` on macOS), eliminating the need for user-specific configuration.
+On macOS, the `${HOME}` environment variable automatically expands to the current user's home directory (e.g., `/Users/username`), eliminating the need for user-specific configuration.
 
 ### Example
 
