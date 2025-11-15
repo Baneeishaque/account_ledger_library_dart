@@ -17,26 +17,28 @@ import 'utils/user_input_utils_interactive.dart';
 Future<void> startAccountLedgerCli() async {
   await handleInput(
     displayPrompt: () {
-      print("Account Ledger CLI"
-          "\n-----------------------"
-          "\n1 : Verify Gist Account Ledger"
-          "\n2 : Add $oneTwoThreeOneText Transaction"
-          "\n3 : Add $oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
-          "\n4 : Add $oneTwoTwoThreeThreeFourFourOneText Transaction"
-          "\n5 : Add $oneTwoTwoThreeThreeFourText Transaction"
-          "\n6 : Add $oneTwoTwoThreeText (Via.) Transaction"
-          "\n7 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
-          "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
-          "\n9 : Get User Account Heads"
-          "\n10 : Get Relation of Accounts from file"
-          "\n11 : Process Gist (Version 2) Account Ledger (Interactive)"
-          // "\n12 : Verify Gist (Version 2) Account Ledger"
-          "\n13 : Process Gist (Version 2) Account Ledger (Auto)"
-          "\n14 : Process Gist (Version 3) Account Ledger (Interactive)"
-          "\n15 : Process Gist (Version 3) Account Ledger (Interactive)"
-          "\n0 : Exit"
-          "\n"
-          "\nEnter Your Choice : ");
+      print(
+        "Account Ledger CLI"
+        "\n-----------------------"
+        "\n1 : Verify Gist Account Ledger"
+        "\n2 : Add $oneTwoThreeOneText Transaction"
+        "\n3 : Add $oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
+        "\n4 : Add $oneTwoTwoThreeThreeFourFourOneText Transaction"
+        "\n5 : Add $oneTwoTwoThreeThreeFourText Transaction"
+        "\n6 : Add $oneTwoTwoThreeText (Via.) Transaction"
+        "\n7 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
+        "\n8 : Add $oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
+        "\n9 : Get User Account Heads"
+        "\n10 : Get Relation of Accounts from file"
+        "\n11 : Process Gist (Version 2) Account Ledger (Interactive)"
+        // "\n12 : Verify Gist (Version 2) Account Ledger"
+        "\n13 : Process Gist (Version 2) Account Ledger (Auto)"
+        "\n14 : Process Gist (Version 3) Account Ledger (Interactive)"
+        "\n15 : Process Gist (Version 3) Account Ledger (Interactive)"
+        "\n0 : Exit"
+        "\n"
+        "\nEnter Your Choice : ",
+      );
     },
     invalidInputActions: () {
       printInvalidInputMessage();
@@ -46,8 +48,10 @@ Future<void> startAccountLedgerCli() async {
         verifyAccountLedgerGistInteractive();
       },
       "2": () async {
-        print("$oneTwoThreeOneText Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoThreeOneText Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -63,8 +67,10 @@ Future<void> startAccountLedgerCli() async {
         );
       },
       "3": () async {
-        print("$oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
-            "\n----------------------------");
+        print(
+          "$oneTwoTwoThreeThreeOneText (Cyclic Via.) Transaction"
+          "\n----------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties(
@@ -84,8 +90,10 @@ Future<void> startAccountLedgerCli() async {
         );
       },
       "4": () async {
-        print("$oneTwoTwoThreeThreeFourFourOneText Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoTwoThreeThreeFourFourOneText Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -99,12 +107,15 @@ Future<void> startAccountLedgerCli() async {
           userInputs.item6,
           userInputs.item7,
           inputValidUnsignedPositiveInteger(
-              dataSpecification: "Party 4 Account ID"),
+            dataSpecification: "Party 4 Account ID",
+          ),
         );
       },
       "5": () async {
-        print("$oneTwoTwoThreeThreeFourText Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoTwoThreeThreeFourText Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -118,12 +129,15 @@ Future<void> startAccountLedgerCli() async {
           userInputs.item6,
           userInputs.item7,
           inputValidUnsignedPositiveInteger(
-              dataSpecification: "Party 4 Account ID"),
+            dataSpecification: "Party 4 Account ID",
+          ),
         );
       },
       "6": () async {
-        print("$oneTwoTwoThreeText (Via.) Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoTwoThreeText (Via.) Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -139,8 +153,10 @@ Future<void> startAccountLedgerCli() async {
         );
       },
       "7": () async {
-        print("$oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoTwoThreeThreeTwoTwoFourFourOneText Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -154,12 +170,15 @@ Future<void> startAccountLedgerCli() async {
           userInputs.item6,
           userInputs.item7,
           inputValidUnsignedPositiveInteger(
-              dataSpecification: "Party 4 Account ID"),
+            dataSpecification: "Party 4 Account ID",
+          ),
         );
       },
       "8": () async {
-        print("$oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
-            "\n------------------------");
+        print(
+          "$oneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoText Transaction"
+          "\n------------------------",
+        );
 
         Tuple7<u32, String, String, double, u32, u32, u32> userInputs =
             getUserInputUpToThreeParties();
@@ -173,13 +192,18 @@ Future<void> startAccountLedgerCli() async {
           userInputs.item6,
           userInputs.item7,
           inputValidUnsignedPositiveInteger(
-              dataSpecification: "Party 4 Account ID"),
+            dataSpecification: "Party 4 Account ID",
+          ),
         );
       },
       "9": () async {
-        print(await runAccountLedgerGetAccountsOperation(
+        print(
+          await runAccountLedgerGetAccountsOperation(
             userId: inputValidUnsignedPositiveInteger(
-                dataSpecification: "User ID")));
+              dataSpecification: "User ID",
+            ),
+          ),
+        );
       },
       "10": () async {
         print(readRelationsOfAccountsJsonFile());

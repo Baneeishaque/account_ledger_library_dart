@@ -73,14 +73,15 @@ Future<void> insertOneTwoTwoThreeTransaction(
 
 //1 -> 2, 2 -> 3, 3 -> 4, 4 -> 1
 Future<void> insertOneTwoTwoThreeThreeFourFourOneTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party1accountId,
-    u32 party2accountId,
-    u32 party3accountId,
-    u32 party4accountId) async {
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+  u32 party4accountId,
+) async {
   await insertTransaction(
     TransactionModel(
       userId,
@@ -133,14 +134,15 @@ Future<void> insertOneTwoTwoThreeThreeFourFourOneTransaction(
 
 //1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1
 Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party1accountId,
-    u32 party2accountId,
-    u32 party3accountId,
-    u32 party4accountId) async {
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+  u32 party4accountId,
+) async {
   await insertTransaction(
     TransactionModel(
       userId,
@@ -206,14 +208,15 @@ Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneTransaction(
 
 //1 -> 2, 2 -> 3, 3 -> 2, 2 -> 4, 4 -> 1, 4 -> 2
 Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party1accountId,
-    u32 party2accountId,
-    u32 party3accountId,
-    u32 party4accountId) async {
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+  u32 party4accountId,
+) async {
   await insertTransaction(
     TransactionModel(
       userId,
@@ -292,14 +295,15 @@ Future<void> insertOneTwoTwoThreeThreeTwoTwoFourFourOneFourTwoTransaction(
 
 //1 -> 2, 2 -> 3, 3 -> 4
 Future<void> insertOneTwoTwoThreeThreeFourTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party1accountId,
-    u32 party2accountId,
-    u32 party3accountId,
-    u32 party4accountId) async {
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+  u32 party4accountId,
+) async {
   await insertTransaction(
     TransactionModel(
       userId,
@@ -339,13 +343,14 @@ Future<void> insertOneTwoTwoThreeThreeFourTransaction(
 
 //1 -> 2, 2 -> 3, 3 -> 1
 Future<void> insertOneTwoTwoThreeThreeOneTransaction(
-    u32 userId,
-    String eventDateTime,
-    String particulars,
-    double amount,
-    u32 party1accountId,
-    u32 party2accountId,
-    u32 party3accountId) async {
+  u32 userId,
+  String eventDateTime,
+  String particulars,
+  double amount,
+  u32 party1accountId,
+  u32 party2accountId,
+  u32 party3accountId,
+) async {
   await insertTransaction(
     TransactionModel(
       userId,

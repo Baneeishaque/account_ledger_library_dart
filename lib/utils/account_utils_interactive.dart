@@ -6,13 +6,14 @@ import '../common_utils/input_utils_interactive.dart';
 import '../models/accounts_with_execution_status_model.dart';
 
 Future<Tuple3<u32, List<AccountHeadModel>, bool>> getValidAccountId(
-    u32 userId,
-    List<AccountHeadModel> accountHeads,
-    void Function() actionsOnInvalidAccountId,
-    {bool isNotRefresh = true,
-    u32 Function()? getValidUnsignedPositiveIntegerFunction,
-    u32? accountIdToCheck,
-    bool isZeroUsedForBack = false}) async {
+  u32 userId,
+  List<AccountHeadModel> accountHeads,
+  void Function() actionsOnInvalidAccountId, {
+  bool isNotRefresh = true,
+  u32 Function()? getValidUnsignedPositiveIntegerFunction,
+  u32? accountIdToCheck,
+  bool isZeroUsedForBack = false,
+}) async {
   if (isNotRefresh && (getValidUnsignedPositiveIntegerFunction != null)) {
     accountIdToCheck = getValidUnsignedPositiveIntegerFunction();
   }
@@ -49,8 +50,12 @@ Future<Tuple3<u32, List<AccountHeadModel>, bool>> getValidAccountId(
   if (getValidUnsignedPositiveIntegerFunction == null) {
     return Tuple3(accountIdToCheck!, accountHeads, false);
   } else {
-    return getValidAccountId(userId, accountHeads, actionsOnInvalidAccountId,
-        getValidUnsignedPositiveIntegerFunction:
-            getValidUnsignedPositiveIntegerFunction);
+    return getValidAccountId(
+      userId,
+      accountHeads,
+      actionsOnInvalidAccountId,
+      getValidUnsignedPositiveIntegerFunction:
+          getValidUnsignedPositiveIntegerFunction,
+    );
   }
 }

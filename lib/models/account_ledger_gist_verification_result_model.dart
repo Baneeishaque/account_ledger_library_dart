@@ -4,16 +4,20 @@ class AccountLedgerGistVerificationResultModel {
   bool status;
   AccountLedgerPageModel? failedAccountLedgerPage;
 
-  AccountLedgerGistVerificationResultModel(
-      {required this.status, this.failedAccountLedgerPage});
+  AccountLedgerGistVerificationResultModel({
+    required this.status,
+    this.failedAccountLedgerPage,
+  });
 }
 
 class AccountLedgerGistModel {
   late String userName;
   late List<AccountLedgerPageModel> accountLedgerPages;
 
-  AccountLedgerGistModel(
-      {required this.userName, required this.accountLedgerPages});
+  AccountLedgerGistModel({
+    required this.userName,
+    required this.accountLedgerPages,
+  });
 
   AccountLedgerGistModel.fromJson(Map<String, dynamic> json) {
     userName = json['userName'];
@@ -85,11 +89,12 @@ class AccountLedgerDatePageModel {
   late List<TransactionOnDateModel> transactionsOnDate;
   double? finalBalanceOnDate;
 
-  AccountLedgerDatePageModel(
-      {required this.accountLedgerPageDate,
-      this.initialBalanceOnDate,
-      required this.transactionsOnDate,
-      this.finalBalanceOnDate});
+  AccountLedgerDatePageModel({
+    required this.accountLedgerPageDate,
+    this.initialBalanceOnDate,
+    required this.transactionsOnDate,
+    this.finalBalanceOnDate,
+  });
 
   AccountLedgerDatePageModel.fromJson(Map<String, dynamic> json) {
     accountLedgerPageDate = json['transactionDate'];
@@ -123,8 +128,10 @@ class TransactionOnDateModel {
   late String transactionParticulars;
   late double transactionAmount;
 
-  TransactionOnDateModel(
-      {required this.transactionParticulars, required this.transactionAmount});
+  TransactionOnDateModel({
+    required this.transactionParticulars,
+    required this.transactionAmount,
+  });
 
   TransactionOnDateModel.fromJson(Map<String, dynamic> json) {
     transactionParticulars = json['transactionParticulars'];

@@ -31,17 +31,20 @@ Future<List<AccountHeadModel>> getUserAccountHeads(
     var accountId = int.tryParse(filter);
     if (accountId == null) {
       return accountHeads
-          .where((element) => element.name
-              .toLowerCase()
-              .contains(filter.toString().toLowerCase()))
+          .where(
+            (element) => element.name.toLowerCase().contains(
+                  filter.toString().toLowerCase(),
+                ),
+          )
           .toList();
     } else {
       return accountHeads
-          .where((element) =>
-              ((element.id.toString().contains(filter.toString())) ||
-                  (element.name
-                      .toLowerCase()
-                      .contains(filter.toString().toLowerCase()))))
+          .where(
+            (element) => ((element.id.toString().contains(filter.toString())) ||
+                (element.name.toLowerCase().contains(
+                      filter.toString().toLowerCase(),
+                    ))),
+          )
           .toList();
     }
   }

@@ -14,11 +14,14 @@ Tuple7<u32, String, String, double, u32, u32, u32>
   String particulars = inputValidText(dataSpecification: "Particulars");
   double amount = inputValidDouble(dataSpecification: "Amount");
   u32 party1AccountId = inputValidUnsignedPositiveInteger(
-      dataSpecification: party1AccountIdDataSpecification);
+    dataSpecification: party1AccountIdDataSpecification,
+  );
   u32 party2AccountId = inputValidUnsignedPositiveInteger(
-      dataSpecification: party2AccountIdDataSpecification);
+    dataSpecification: party2AccountIdDataSpecification,
+  );
   u32 party3AccountId = inputValidUnsignedPositiveInteger(
-      dataSpecification: party3AccountIdDataSpecification);
+    dataSpecification: party3AccountIdDataSpecification,
+  );
   return Tuple7(
     userId,
     eventDateTime,

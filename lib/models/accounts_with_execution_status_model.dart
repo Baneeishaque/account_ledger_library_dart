@@ -47,24 +47,27 @@ class AccountHeadModel {
   late String taxable;
   late String placeHolder;
 
-  AccountHeadModel(
-      {required this.id,
-      required this.fullName,
-      required this.name,
-      required this.parentAccountId,
-      required this.accountType,
-      required this.notes,
-      required this.commodityType,
-      required this.commodityValue,
-      required this.ownerId,
-      required this.taxable,
-      required this.placeHolder});
+  AccountHeadModel({
+    required this.id,
+    required this.fullName,
+    required this.name,
+    required this.parentAccountId,
+    required this.accountType,
+    required this.notes,
+    required this.commodityType,
+    required this.commodityValue,
+    required this.ownerId,
+    required this.taxable,
+    required this.placeHolder,
+  });
 
   AccountHeadModel.fromJson(Map<String, dynamic> json) {
     id = u32(int.parse(json['id'] ?? json['account_id']));
     fullName = json['fullName'] ?? json['full_name'];
     name = json['name'];
-    parentAccountId = u32(int.parse(json['parentAccountId'] ?? json['parent_account_id']));
+    parentAccountId = u32(
+      int.parse(json['parentAccountId'] ?? json['parent_account_id']),
+    );
     accountType = json['accountType'] ?? json['account_id'];
     notes = json['notes'] ?? "";
     commodityType = json['commodityType'] ?? json['commodity_type'];
